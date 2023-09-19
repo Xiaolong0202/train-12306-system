@@ -2,6 +2,7 @@ package com.lxl.member.controller;
 
 import com.lxl.member.domain.Member;
 import com.lxl.member.service.MemberService;
+import com.lxl.resp.CommonResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +27,12 @@ public class MemberController {
     }
 
     @GetMapping("/count")
-    public int conut(){
-        return memberService.count();
+    public CommonResp<?> conut(){
+        return new CommonResp<>(memberService.count());
     }
 
     @PostMapping("/register")
-    public long register(@RequestBody Member member){
-        return memberService.register(member);
+    public CommonResp<?> register(@RequestBody Member member){
+        return new CommonResp<>(memberService.register(member));
     }
 }

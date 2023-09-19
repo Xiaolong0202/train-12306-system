@@ -35,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
         LambdaQueryWrapper<Member> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Member::getMobile,member.getMobile());
         List<Member> members = memberMapper.selectList(queryWrapper);
-        if (CollUtil.isEmpty(members)){
+        if (CollUtil.isNotEmpty(members)){
             throw new RuntimeException("手机号已经注册");
         }
         memberMapper.insert(member);
