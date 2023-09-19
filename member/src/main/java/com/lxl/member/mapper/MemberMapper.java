@@ -1,5 +1,7 @@
 package com.lxl.member.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lxl.member.domain.Member;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -8,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @DateTime 2023/9/19  20:35
  **/
 @Mapper
-public interface MemberMapper {
+public interface MemberMapper extends BaseMapper<Member> {
 
     int count();
 }
