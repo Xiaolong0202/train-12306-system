@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--写对应的接口名-->
+<mapper namespace="com.lxl.member.mapper.MemberMapper">
+
+    <!-- 开启二级缓存-->
+    <cache eviction="LRU" flushInterval="100000" readOnly="true" size="1024"></cache>
+
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(id) from  member;
+    </select>
+    <!--  mapper方法名与id一致  -->
+
+</mapper>

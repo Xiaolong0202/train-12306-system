@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
  **/
 @Slf4j
 @SpringBootApplication
+@ComponentScan("com.lxl.*")
 public class MemberMain {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(MemberMain.class);
