@@ -1,6 +1,8 @@
 package com.lxl.resp;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author LiuXiaolong
@@ -8,6 +10,8 @@ import lombok.Data;
  * @DateTime 2023/9/19  22:26
  **/
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommonResp<T>{
     private boolean success;
     private String message;
