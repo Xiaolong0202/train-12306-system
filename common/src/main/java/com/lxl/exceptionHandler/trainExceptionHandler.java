@@ -1,5 +1,7 @@
 package com.lxl.exceptionHandler;
 
+import com.lxl.exception.BusinessException;
+import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.resp.CommonResp;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,12 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class trainExceptionHandler {
 
         @ResponseBody
-        @ExceptionHandler(Exception.class)
-        public CommonResp<?> handler(Exception e){
+        @ExceptionHandler(BusinessException.class)
+        public CommonResp<?> handler(BusinessException e){
             CommonResp<String> commonResp = new CommonResp<>();
             commonResp.setSuccess(false);
             commonResp.setMessage("出现全局异常");
-            commonResp.setContent(e.getMessage());
+            commonResp.setContent(e.getExceptionEnum().desc);
             return commonResp;
         }
 

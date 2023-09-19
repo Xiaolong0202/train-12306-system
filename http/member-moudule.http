@@ -2,7 +2,7 @@ POST http://localhost/member/register
 Content-Type: application/json
 
 {
-  "mobile" : "15165465"
+  "mobile" : "15116778931"
 }
 
 ###

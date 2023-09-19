@@ -2,6 +2,8 @@ package com.lxl.member.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.lxl.exception.BusinessException;
+import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.member.domain.Member;
 import com.lxl.member.mapper.MemberMapper;
 import com.lxl.member.service.MemberService;
@@ -36,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
         queryWrapper.eq(Member::getMobile,member.getMobile());
         List<Member> members = memberMapper.selectList(queryWrapper);
         if (CollUtil.isNotEmpty(members)){
-            throw new RuntimeException("手机号已经注册");
+            throw new BusinessException(BussinessExceptionEnum.MEMBER_REGISTER_ERROR);
         }
         memberMapper.insert(member);
         return member.getId();
