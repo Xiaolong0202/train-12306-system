@@ -1,5 +1,6 @@
 package com.lxl.member;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @DateTime 2023/9/19  17:18
  **/
 @RestController
+@ComponentScan("com.lxl.*")
 public class TestController {
 
     @GetMapping("hello")
