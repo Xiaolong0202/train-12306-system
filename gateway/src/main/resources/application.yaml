@@ -1,0 +1,10 @@
+server:
+  port: 80
+spring:
+  cloud:
+    gateway:
+      routes: #配置路由转发
+        - uri: http://127.0.0.1:8001
+          id: member
+          predicates:
+            - Path=/member/**

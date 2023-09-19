@@ -2,3 +2,5 @@ GET http://localhost:8001/member/hello
 Accept: application/json
 
 ###
+GET http://localhost/member/hello
+Accept: application/json
