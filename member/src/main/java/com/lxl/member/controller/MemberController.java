@@ -1,9 +1,12 @@
 package com.lxl.member.controller;
 
+import com.lxl.member.domain.Member;
 import com.lxl.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -25,5 +28,10 @@ public class MemberController {
     @GetMapping("/count")
     public int conut(){
         return memberService.count();
+    }
+
+    @PostMapping("/register")
+    public long register(@RequestBody Member member){
+        return memberService.register(member);
     }
 }

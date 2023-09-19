@@ -1,5 +1,6 @@
 package com.lxl.member.service;
 
+import com.lxl.member.domain.Member;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -11,5 +12,7 @@ import org.springframework.stereotype.Service;
 public interface MemberService {
 
     int count();
+
+    long register(Member member);
 
 }
