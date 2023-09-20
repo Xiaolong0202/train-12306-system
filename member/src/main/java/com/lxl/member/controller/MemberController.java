@@ -1,10 +1,13 @@
 package com.lxl.member.controller;
 
 import com.lxl.member.domain.Member;
+import com.lxl.member.req.MemberRegisterReq;
 import com.lxl.member.service.MemberService;
 import com.lxl.resp.CommonResp;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +35,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public CommonResp<?> register(@RequestBody Member member){
-        return new CommonResp<>(memberService.register(member));
+    public CommonResp<?> register(@RequestBody @Valid MemberRegisterReq req){
+        return new CommonResp<>(memberService.register(req.getMobile()));
     }
 }

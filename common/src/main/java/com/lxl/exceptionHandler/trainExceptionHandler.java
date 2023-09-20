@@ -3,6 +3,7 @@ package com.lxl.exceptionHandler;
 import com.lxl.exception.BusinessException;
 import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.resp.CommonResp;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +22,17 @@ public class trainExceptionHandler {
         public CommonResp<?> handler(BusinessException e){
             CommonResp<String> commonResp = new CommonResp<>();
             commonResp.setSuccess(false);
-            commonResp.setMessage("出现全局异常");
-            commonResp.setContent(e.getExceptionEnum().desc);
+            commonResp.setMessage(e.getExceptionEnum().desc);
             return commonResp;
         }
+
+    @ResponseBody
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public CommonResp<?> handleValid(MethodArgumentNotValidException e){
+        CommonResp<String> commonResp = new CommonResp<>();
+        commonResp.setSuccess(false);
+        commonResp.setMessage(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return commonResp;
+    }
 
 }

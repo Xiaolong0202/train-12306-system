@@ -10,7 +10,6 @@ import com.lxl.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -33,14 +32,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public long register(Member member) {
+    public long register( String mobile) {
         LambdaQueryWrapper<Member> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Member::getMobile,member.getMobile());
+        queryWrapper.eq(Member::getMobile,mobile);
         List<Member> members = memberMapper.selectList(queryWrapper);
         if (CollUtil.isNotEmpty(members)){
             throw new BusinessException(BussinessExceptionEnum.MEMBER_REGISTER_ERROR);
         }
-        memberMapper.insert(member);
-        return member.getId();
+        Member entity = new Member();
+        entity.setMobile(mobile);
+        memberMapper.insert(entity);
+        return entity.getId();
     }
 }
