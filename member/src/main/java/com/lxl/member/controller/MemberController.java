@@ -2,6 +2,7 @@ package com.lxl.member.controller;
 
 import com.lxl.member.domain.Member;
 import com.lxl.member.req.MemberRegisterReq;
+import com.lxl.member.req.MemberSendCodeReq;
 import com.lxl.member.service.MemberService;
 import com.lxl.resp.CommonResp;
 import jakarta.validation.Valid;
@@ -37,5 +38,13 @@ public class MemberController {
     @PostMapping("/register")
     public CommonResp<?> register(@RequestBody @Valid MemberRegisterReq req){
         return new CommonResp<>(memberService.register(req.getMobile()));
+    }
+
+    @PostMapping("/send-code")
+    public CommonResp<?> sendCode(@RequestBody @Valid MemberSendCodeReq req){
+        CommonResp<Object> objectCommonResp = new CommonResp<>();
+        memberService.sendCode(req.getMobile());
+        objectCommonResp.setSuccess(true);
+        return objectCommonResp;
     }
 }

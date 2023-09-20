@@ -1,6 +1,7 @@
 package com.lxl.member.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lxl.exception.BusinessException;
 import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
@@ -45,5 +46,23 @@ public class MemberServiceImpl implements MemberService {
         entity.setMobile(mobile);
         memberMapper.insert(entity);
         return entity.getId();
+    }
+
+    @Override
+    public void sendCode(String mobile) {
+        LambdaQueryWrapper<Member> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Member::getMobile,mobile);
+        List<Member> members = memberMapper.selectList(queryWrapper);
+        if (CollUtil.isEmpty(members)){
+            log.info("数据库中没有手机号,插入");
+            Member entity = new Member();
+            entity.setId(SnowUtils.nextSnowId());
+            entity.setMobile(mobile);
+            memberMapper.insert(entity);
+        }else {
+            log.info("该手机号已经存在");
+        }
+        String code = RandomUtil.randomString(4);
+        log.info("验证码{}",code);
     }
 }

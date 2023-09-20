@@ -11,4 +11,5 @@ public interface MemberService {
 
     long register(String member);
 
+    void sendCode(String mobile);
 }

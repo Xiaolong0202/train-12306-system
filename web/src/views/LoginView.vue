@@ -3,7 +3,6 @@
         <a-col :span="8" :offset="8" class="login-main">
             <a-form
                     :model="formState"
-                    name="basic"
                     autocomplete="off"
                     @finish="onFinish"
                     @finishFailed="onFinishFailed"
