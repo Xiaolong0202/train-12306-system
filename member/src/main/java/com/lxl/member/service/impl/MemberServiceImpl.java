@@ -7,6 +7,7 @@ import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.member.domain.Member;
 import com.lxl.member.mapper.MemberMapper;
 import com.lxl.member.service.MemberService;
+import com.lxl.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class MemberServiceImpl implements MemberService {
             throw new BusinessException(BussinessExceptionEnum.MEMBER_REGISTER_ERROR);
         }
         Member entity = new Member();
+        entity.setId(SnowUtils.nextSnowId());
         entity.setMobile(mobile);
         memberMapper.insert(entity);
         return entity.getId();
