@@ -19,7 +19,7 @@ public class MemberTokenUtils {
     private final static String MOBILE_KEY = "mobile";
 
     public static String generateToken(String mobile,long tokenLife){
-        Map<String, Object> map = new HashMap<String, Object>() {
+        Map<String, Object> map = new HashMap<>() {
             {
                 put(MOBILE_KEY, mobile);
                 put(EXPIRE_TIME_KEY, System.currentTimeMillis() + tokenLife);
@@ -33,5 +33,5 @@ public class MemberTokenUtils {
         long payload = Long.parseLong(String.valueOf(jwt.getPayload(EXPIRE_TIME_KEY)));
         return JWTUtil.verify(token,KEY.getBytes(StandardCharsets.UTF_8))&&payload>System.currentTimeMillis();
     }
-    
+
 }

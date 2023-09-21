@@ -1,6 +1,12 @@
 <template>
     <a-layout-header class="header">
         <div class="logo"/>
+        <div style="float: right; color: white;font-size: large">
+               您好: {{member.mobile}} &nbsp;&nbsp;
+            <router-link to="/login" style="text-decoration-color: dodgerblue;font-size: small" >
+                退出登录
+            </router-link>
+        </div>
         <a-menu
                 v-model:selectedKeys="selectedKeys1"
                 theme="dark"
@@ -8,17 +14,19 @@
                 :style="{ lineHeight: '64px' }"
         >
             <a-menu-item key="1">nav 1</a-menu-item>
-            <a-menu-item key="2">nav 2</a-menu-item>
-            <a-menu-item key="3">nav 3</a-menu-item>
+            <a-menu-item key="2">{{ member.mobile }}</a-menu-item>
         </a-menu>
+
     </a-layout-header>
 </template>
 
 
 <script setup>
 import {ref} from "vue";
+import store from "@/store";
 
-const selectedKeys1 = ref(['2']);
+const member = store.state.member
+const selectedKeys1 = ref(['2'])
 </script>
 
 <style scoped>

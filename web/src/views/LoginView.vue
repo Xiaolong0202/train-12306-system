@@ -44,6 +44,7 @@ import {reactive} from 'vue';
 import axios from "axios";
 import {openNotificationWithIcon} from "@/util/info";
 import {useRouter} from "vue-router";
+import store from "@/store";
 
 
 const router = useRouter()
@@ -60,6 +61,7 @@ const login = () => {
         }
         openNotificationWithIcon(type, resp.data.message)
         if (resp.data.success) {
+            store.commit('setMember',resp.data.content)
             router.push("/")
         }
     })

@@ -10,6 +10,7 @@ import com.lxl.member.mapper.MemberMapper;
 import com.lxl.member.req.MemberLoginReq;
 import com.lxl.member.resp.MemberLoginResp;
 import com.lxl.member.service.MemberService;
+import com.lxl.utils.MemberTokenUtils;
 import com.lxl.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -77,6 +78,7 @@ public class MemberServiceImpl implements MemberService {
         }
         MemberLoginResp memberLoginResp = new MemberLoginResp();
         BeanUtils.copyProperties(member,memberLoginResp);
+        memberLoginResp.setToken(MemberTokenUtils.generateToken(member.getMobile(),1000*60*10));//生命周期为10分钟
         return memberLoginResp;
     }
 
