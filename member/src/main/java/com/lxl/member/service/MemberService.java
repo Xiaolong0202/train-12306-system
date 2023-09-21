@@ -1,5 +1,8 @@
 package com.lxl.member.service;
 
+import com.lxl.member.req.MemberLoginReq;
+import com.lxl.member.resp.MemberLoginResp;
+
 /**
  * @Author LiuXiaolong
  * @Description train-12306-system
@@ -12,4 +15,6 @@ public interface MemberService {
     long register(String member);
 
     void sendCode(String mobile);
+
+    MemberLoginResp login(MemberLoginReq req);
 }

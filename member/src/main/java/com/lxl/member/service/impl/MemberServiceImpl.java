@@ -7,11 +7,15 @@ import com.lxl.exception.BusinessException;
 import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.member.domain.Member;
 import com.lxl.member.mapper.MemberMapper;
+import com.lxl.member.req.MemberLoginReq;
+import com.lxl.member.resp.MemberLoginResp;
 import com.lxl.member.service.MemberService;
 import com.lxl.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -34,11 +38,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public long register( String mobile) {
-        LambdaQueryWrapper<Member> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Member::getMobile,mobile);
-        List<Member> members = memberMapper.selectList(queryWrapper);
-        if (CollUtil.isNotEmpty(members)){
+    public long register(String mobile) {
+        Member member = getMember(mobile);
+        if (!ObjectUtils.isEmpty(member)) {
             throw new BusinessException(BussinessExceptionEnum.MEMBER_REGISTER_ERROR);
         }
         Member entity = new Member();
@@ -50,19 +52,38 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void sendCode(String mobile) {
-        LambdaQueryWrapper<Member> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Member::getMobile,mobile);
-        List<Member> members = memberMapper.selectList(queryWrapper);
-        if (CollUtil.isEmpty(members)){
+        Member member = getMember(mobile);
+        if (ObjectUtils.isEmpty(member)) {
             log.info("数据库中没有手机号,插入");
             Member entity = new Member();
             entity.setId(SnowUtils.nextSnowId());
             entity.setMobile(mobile);
             memberMapper.insert(entity);
-        }else {
+        } else {
             log.info("该手机号已经存在");
         }
         String code = RandomUtil.randomString(4);
-        log.info("验证码{}",code);
+        log.info("验证码{}", code);
+    }
+
+    @Override
+    public MemberLoginResp login(MemberLoginReq req) {
+        Member member = getMember(req.getMobile());
+        if (ObjectUtils.isEmpty(member)){
+            throw new BusinessException(BussinessExceptionEnum.MEMBER_MOBILE_NOT_EXIST);
+        }
+        if (!"8888".equals(req.getCode())){
+            throw new BusinessException(BussinessExceptionEnum.MEMBER_CODE_ERROR);
+        }
+        MemberLoginResp memberLoginResp = new MemberLoginResp();
+        BeanUtils.copyProperties(member,memberLoginResp);
+        return memberLoginResp;
+    }
+
+    private Member getMember(String mobile) {
+        LambdaQueryWrapper<Member> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Member::getMobile, mobile);
+        List<Member> members = memberMapper.selectList(queryWrapper);
+        return CollUtil.isEmpty(members) ? null : members.get(0);
     }
 }

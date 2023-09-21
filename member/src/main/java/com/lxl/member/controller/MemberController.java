@@ -1,8 +1,10 @@
 package com.lxl.member.controller;
 
 import com.lxl.member.domain.Member;
+import com.lxl.member.req.MemberLoginReq;
 import com.lxl.member.req.MemberRegisterReq;
 import com.lxl.member.req.MemberSendCodeReq;
+import com.lxl.member.resp.MemberLoginResp;
 import com.lxl.member.service.MemberService;
 import com.lxl.resp.CommonResp;
 import jakarta.validation.Valid;
@@ -47,4 +49,11 @@ public class MemberController {
         objectCommonResp.setSuccess(true);
         return objectCommonResp;
     }
+
+    @PostMapping("/login")
+    public CommonResp<?> login(@RequestBody @Valid MemberLoginReq req){
+        MemberLoginResp commonResp = memberService.login(req);
+        return new CommonResp<>(commonResp);
+    }
+
 }
