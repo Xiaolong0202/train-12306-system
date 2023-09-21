@@ -39,6 +39,7 @@
 
 <script setup>
 import {reactive} from 'vue';
+import axios from "axios";
 
 const formState = reactive({
     mobile: '',
@@ -55,6 +56,10 @@ const onMessage = () => {
     console.log("发送短信")
     console.log(formState.code);
     console.log(formState.mobile);
+    axios.post("/member/send-code",formState).then(resp=>{
+        console.log(resp.data);
+    })
+
 }
 </script>
 
