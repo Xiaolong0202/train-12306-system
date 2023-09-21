@@ -50,7 +50,6 @@ const formState = reactive({
 });
 const login = () => {
     axios.post("/member/login", formState).then(resp => {
-        console.log(resp.data);
         let type = 'success'
         if (!resp.data.success) {
             type = 'error'
@@ -60,7 +59,6 @@ const login = () => {
 }
 const onMessage = () => {
     axios.post("/member/send-code", formState).then(resp => {
-        console.log(resp.data);
         let type = 'success'
         if (!resp.data.success) {
             type = 'error'
