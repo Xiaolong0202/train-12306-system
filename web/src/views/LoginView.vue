@@ -9,7 +9,9 @@
             >
 
                 <a-form-item>
-                    <h1 style="text-align: center"><ThunderboltTwoTone />&nbsp;售票系统</h1>
+                    <h1 style="text-align: center">
+                        <ThunderboltTwoTone/>&nbsp;售票系统
+                    </h1>
                 </a-form-item>
                 <a-form-item
                         :rules="[{ required: true, message: '请输入手机号!' }]"
@@ -30,7 +32,7 @@
                 </a-form-item>
 
                 <a-form-item>
-                    <a-button type="primary" html-type="submit" size="large">登录</a-button>
+                    <a-button type="primary" @click="login" size="large">登录</a-button>
                 </a-form-item>
             </a-form>
         </a-col>
@@ -40,36 +42,42 @@
 <script setup>
 import {reactive} from 'vue';
 import axios from "axios";
+import {openNotificationWithIcon} from "@/util/info";
 
 const formState = reactive({
     mobile: '',
     code: '',
 });
-const onFinish = values => {
-    console.log('Success:', values);
-};
-const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
-};
-
-const onMessage = () => {
-    console.log("发送短信")
-    console.log(formState.code);
-    console.log(formState.mobile);
-    axios.post("/member/send-code",formState).then(resp=>{
+const login = () => {
+    axios.post("/member/login", formState).then(resp => {
         console.log(resp.data);
+        let type = 'success'
+        if (!resp.data.success) {
+            type = 'error'
+        }
+        openNotificationWithIcon(type, resp.data.message)
+    })
+}
+const onMessage = () => {
+    axios.post("/member/send-code", formState).then(resp => {
+        console.log(resp.data);
+        let type = 'success'
+        if (!resp.data.success) {
+            type = 'error'
+        }
+        openNotificationWithIcon(type, resp.data.message)
     })
 
 }
 </script>
 
 <style scoped>
-    .login-main{
-        margin-top: 15%;
-        padding: 30px;
-        border: 2px grey solid;
-        border-radius: 10px;
-        background-color: #f5fff5;
-        width: 80%;
-    }
+.login-main {
+    margin-top: 15%;
+    padding: 30px;
+    border: 2px grey solid;
+    border-radius: 10px;
+    background-color: #f5fff5;
+    width: 80%;
+}
 </style>

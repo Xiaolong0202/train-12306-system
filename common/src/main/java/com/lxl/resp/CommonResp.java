@@ -22,4 +22,25 @@ public class CommonResp<T>{
         this.success = true;
         this.message = "请求成功";
     }
+
+
+
+    public static <E> CommonResp<E> buildSuccess(E content, String message){
+        CommonResp commonResp = new CommonResp();
+        commonResp.setMessage(message);
+        commonResp.setContent(content);
+        commonResp.setSuccess(true);
+        return commonResp;
+    }
+    public static <E> CommonResp<E> buildSuccess(String message) {
+        return buildSuccess(null, message);
+    }
+
+    public static <E> CommonResp<E> buildFailure(E content,String message){
+        CommonResp commonResp = new CommonResp();
+        commonResp.setMessage(message);
+        commonResp.setContent(content);
+        commonResp.setSuccess(false);
+        return commonResp;
+    }
 }

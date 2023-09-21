@@ -44,16 +44,14 @@ public class MemberController {
 
     @PostMapping("/send-code")
     public CommonResp<?> sendCode(@RequestBody @Valid MemberSendCodeReq req){
-        CommonResp<Object> objectCommonResp = new CommonResp<>();
         memberService.sendCode(req.getMobile());
-        objectCommonResp.setSuccess(true);
-        return objectCommonResp;
+        return CommonResp.buildSuccess("验证码发送成功");
     }
 
     @PostMapping("/login")
     public CommonResp<?> login(@RequestBody @Valid MemberLoginReq req){
-        MemberLoginResp commonResp = memberService.login(req);
-        return new CommonResp<>(commonResp);
+        MemberLoginResp resp = memberService.login(req);
+        return CommonResp.buildSuccess(resp,"登录成功");
     }
 
 }
