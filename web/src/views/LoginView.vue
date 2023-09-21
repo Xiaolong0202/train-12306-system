@@ -43,6 +43,10 @@
 import {reactive} from 'vue';
 import axios from "axios";
 import {openNotificationWithIcon} from "@/util/info";
+import {useRouter} from "vue-router";
+
+
+const router = useRouter()
 
 const formState = reactive({
     mobile: '',
@@ -55,6 +59,9 @@ const login = () => {
             type = 'error'
         }
         openNotificationWithIcon(type, resp.data.message)
+        if (resp.data.success) {
+            router.push("/")
+        }
     })
 }
 const onMessage = () => {
