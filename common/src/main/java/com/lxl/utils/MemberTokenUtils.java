@@ -1,5 +1,6 @@
 package com.lxl.utils;
 
+import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +18,15 @@ import java.util.Map;
 public class MemberTokenUtils {
 
     private final static  String KEY = "1234";
-    private final static String EXPIRE_TIME_KEY = "expire_time";
-    private final static String MOBILE_KEY = "mobile";
+    public final static String EXPIRE_TIME_KEY = "expire_time";
+    public final static String MOBILE_KEY = "mobile";
+    public final static String MEMBER_ID_KEY = "memberId";
 
-    public static String generateToken(String mobile,long tokenLife){
+    public static String generateToken(String mobile,long memberId,long tokenLife){
         Map<String, Object> map = new HashMap<>() {
             {
                 put(MOBILE_KEY, mobile);
+                put(MEMBER_ID_KEY,memberId);
                 put(EXPIRE_TIME_KEY, System.currentTimeMillis() + tokenLife);
             }
         };
@@ -38,6 +41,17 @@ public class MemberTokenUtils {
         }catch (Throwable e){
             log.info("解析token时出现异常 " + e);
             return false;
+        }
+    }
+
+    public static Object getAttr(String token,String attrKey){
+        try {
+            JWT jwt = JWTUtil.parseToken(token);
+            Object payload = jwt.getPayload(attrKey);
+            return payload;
+        }catch (Throwable e){
+            log.info("解析token时出现异常 " + e);
+            return null;
         }
     }
 

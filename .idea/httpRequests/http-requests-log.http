@@ -1,5 +1,256 @@
 POST http://localhost/member/passenger/save
 Content-Type: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxNTExNjc3ODI5NiIsImV4cGlyZV90aW1lIjoxNjk1Mzk5Mzg4ODI4LCJtZW1iZXJJZCI6MTcwNDQyOTc1Njc3NjMyMTAyNH0.t9rEPAXCrkNZPl74knpo7lpXGppAMiibrDnqC55jLck
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+<> 2023-09-23T001045.200.json
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxNTExNjc3ODI5NiIsImV4cGlyZV90aW1lIjoxNjk1Mzk5Mzg4ODI4LCJtZW1iZXJJZCI6MTcwNDQyOTc1Njc3NjMyMTAyNH0.t9rEPAXCrkNZPl74knpo7lpXGppAMiibrDnqC55jLck
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+<> 2023-09-23T000816.200.json
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxNTExNjc3ODI5NiIsImV4cGlyZV90aW1lIjoxNjk1Mzk5Mzg4ODI4LCJtZW1iZXJJZCI6MTcwNDQyOTc1Njc3NjMyMTAyNH0.t9rEPAXCrkNZPl74knpo7lpXGppAMiibrDnqC55jLck
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+<> 2023-09-23T000636.500.html
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+<> 2023-09-23T000629.200.json
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOjE3MDQ0Mjk3NTY3NzYzMjEwMjQsImV4cGlyZV90aW1lIjoxNjk1Mzk4ODA3MTk5fQ.htNmQaO0OGg5bVxlYn-MuY-Hac_cAopTYI7kNRFFzPs
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+<> 2023-09-22T235856.500.html
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+<> 2023-09-22T235648.200.json
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOjE3MDQ0Mjk3NTY3NzYzMjEwMjQsImV4cGlyZV90aW1lIjoxNjk1Mzk4NDM4MTQ0fQ.7px7kE0FjO4VMod8JDBQGh6RoZgunSCHiXBJbQB49aI
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+<> 2023-09-22T235413.500.html
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOjE3MDQ0Mjk3NTY3NzYzMjEwMjQsImV4cGlyZV90aW1lIjoxNjk1Mzk4NDM4MTQ0fQ.7px7kE0FjO4VMod8JDBQGh6RoZgunSCHiXBJbQB49aI
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+<> 2023-09-22T235101.500.html
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+<> 2023-09-22T235038.200.json
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+token: 123
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+<> 2023-09-22T235004.200.json
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxNTExNjc3ODI5NiIsImV4cGlyZV90aW1lIjoxNjk1Mzk1ODM1NDA0fQ.XEQWuUOq6yqNFnjNbm0eaLRqiSGVOn8E8HFUcXaNUyU
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+<> 2023-09-22T230720.200.json
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+token: 123
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+<> 2023-09-22T230716.200.json
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+token: {{token}}
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+token: {{token}}
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+<> 2023-09-22T230611.200.json
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
 Content-Length: 91
 Connection: Keep-Alive
 User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
@@ -545,215 +796,6 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 }
 
 <> 2023-09-20T135335.400.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 3
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-}
-
-<> 2023-09-20T135317.400.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 30
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "15116778931"
-}
-
-<> 2023-09-20T135310.200.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 30
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "15116778931"
-}
-
-<> 2023-09-20T135308.200.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 30
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "15116778931"
-}
-
-<> 2023-09-19T232629.200.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 30
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "15116778931"
-}
-
-<> 2023-09-19T232625.200.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 30
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "15116778931"
-}
-
-<> 2023-09-19T232623.200.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 27
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "15165465"
-}
-
-<> 2023-09-19T223935.200.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 27
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "15165465"
-}
-
-<> 2023-09-19T223008.200.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 27
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "15165465"
-}
-
-<> 2023-09-19T222925.500.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 27
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "11312303"
-}
-
-<> 2023-09-19T221825.500.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 27
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "11312303"
-}
-
-<> 2023-09-19T220621.200.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 30
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "13027378933"
-}
-
-<> 2023-09-19T220239.200.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 30
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile" : "13027378933"
-}
-
-<> 2023-09-19T215402.500.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 29
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile": "13027378933"
-}
-
-<> 2023-09-19T215239.500.json
 
 ###
 

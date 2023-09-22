@@ -1,6 +1,8 @@
-package com.lxl.member.resp;
+package com.lxl.resp;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author LiuXiaolong
@@ -8,6 +10,8 @@ import lombok.Data;
  * @DateTime 2023/9/21  13:15
  **/
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MemberLoginResp {
 
     Long id;

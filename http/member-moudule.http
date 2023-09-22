@@ -16,10 +16,13 @@ Content-Type: application/json
 ###
 POST http://localhost/member/login
 Content-Type: application/json
-token: 123
 
 {
   "mobile": "15116778296",
   "code" : "8888"
 }
+
+> {%
+ client.global.set("token",response.body.content.token);
+ %}
 

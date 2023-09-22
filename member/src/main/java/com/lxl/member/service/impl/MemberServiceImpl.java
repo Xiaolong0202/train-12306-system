@@ -8,7 +8,7 @@ import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.member.domain.Member;
 import com.lxl.member.mapper.MemberMapper;
 import com.lxl.member.req.MemberLoginReq;
-import com.lxl.member.resp.MemberLoginResp;
+import com.lxl.resp.MemberLoginResp;
 import com.lxl.member.service.MemberService;
 import com.lxl.utils.MemberTokenUtils;
 import com.lxl.utils.SnowUtils;
@@ -78,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
         }
         MemberLoginResp memberLoginResp = new MemberLoginResp();
         BeanUtils.copyProperties(member,memberLoginResp);
-        memberLoginResp.setToken(MemberTokenUtils.generateToken(member.getMobile(),1000*60*10));//生命周期为10分钟
+        memberLoginResp.setToken(MemberTokenUtils.generateToken(member.getMobile(),member.getId(),1000*60*10));//生命周期为10分钟
         return memberLoginResp;
     }
 

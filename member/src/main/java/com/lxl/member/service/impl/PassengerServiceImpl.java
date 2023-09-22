@@ -2,6 +2,7 @@ package com.lxl.member.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
+import com.lxl.context.MemberInfoContext;
 import com.lxl.member.domain.Passenger;
 import com.lxl.member.mapper.PassengerMapper;
 import com.lxl.member.req.PassengerSaveOrEditReq;
@@ -28,6 +29,7 @@ public class PassengerServiceImpl implements PassengerService {
     public void save(PassengerSaveOrEditReq req) {
         Passenger passenger = BeanUtil.copyProperties(req, Passenger.class);
         Date now = DateTime.now();
+        passenger.setMemberId(MemberInfoContext.getMemberId());
         passenger.setId(SnowUtils.nextSnowId());
         passenger.setCreateTime(now);
         passenger.setUpdateTime(now);
