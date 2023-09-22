@@ -16,7 +16,7 @@ create table `passenger` (
     `name` varchar(20) not null comment '乘车人姓名',
     `id_card` varchar(18) not null comment '身份证',
     `type` char(1) not null comment '旅客类型|枚举',
-    `create_time` datetime not null comment '创建时间',
-    `update_time` datetime not null comment '修改时间',
+    `create_time` datetime(3) not null comment '创建时间',
+    `update_time` datetime(3) not null comment '修改时间',#精确到毫秒
     index(`member_id`)#创建索引便于查找
 )comment '乘客'

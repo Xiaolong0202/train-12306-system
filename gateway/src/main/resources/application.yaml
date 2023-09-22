@@ -11,5 +11,6 @@ spring:
 
 request:
   whiteList:
+    - /**
     - /member/login
     - /member/send-code

@@ -1,3 +1,36 @@
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+Content-Length: 91
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "memberId" : 13213,
+  "name" : "liuxiaolong",
+  "idCard" : "13132332",
+  "type" : "1"
+}
+
+<> 2023-09-22T161141.200.json
+
+###
+
+POST http://localhost/member/passenger/save
+Content-Type: application/json
+Content-Length: 6
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+
+}
+
+<> 2023-09-22T161003.200.json
+
+###
+
 POST http://localhost/member/register
 Content-Type: application/json
 Content-Length: 24
@@ -721,36 +754,6 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 }
 
 <> 2023-09-19T215239.500.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 29
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile": "13027378933"
-}
-
-<> 2023-09-19T214948.500.json
-
-###
-
-POST http://localhost/member/register
-Content-Type: application/json
-Content-Length: 29
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile": "13027378933"
-}
-
-<> 2023-09-19T214838.500.json
 
 ###
 
