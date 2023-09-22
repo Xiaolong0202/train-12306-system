@@ -25,6 +25,7 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
     const memberNum = ref(0)
     onMounted(()=>{
+        console.log(axios)
         axios.get('/member/count').then(resp=>{
             if (resp){
                 memberNum.value = resp.data.content
