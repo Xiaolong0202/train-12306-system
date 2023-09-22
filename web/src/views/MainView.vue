@@ -12,7 +12,7 @@
                 <a-layout-content
                         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
                 >
-                    Content
+                    {{ memberNum }}
                 </a-layout-content>
             </a-layout>
         </a-layout>
@@ -21,7 +21,16 @@
 <script setup>
 import TheHead from "@/components/TheHead.vue";
 import TheSide from "@/components/TheSide.vue";
-
+import {onMounted, ref} from "vue";
+import axios from "axios";
+    const memberNum = ref(0)
+    onMounted(()=>{
+        axios.get('/member/count').then(resp=>{
+            if (resp){
+                memberNum.value = resp.data.content
+            }
+        })
+    })
 
 </script>
 <style scoped>

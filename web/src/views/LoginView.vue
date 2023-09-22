@@ -55,24 +55,28 @@ const formState = reactive({
 });
 const login = () => {
     axios.post("/member/login", formState).then(resp => {
-        let type = 'success'
-        if (!resp.data.success) {
-            type = 'error'
-        }
-        openNotificationWithIcon(type, resp.data.message)
-        if (resp.data.success) {
-            store.commit('setMember',resp.data.content)
-            router.push("/")
+        if (resp){
+            let type = 'success'
+            if (!resp.data.success) {
+                type = 'error'
+            }
+            openNotificationWithIcon(type, resp.data.message)
+            if (resp.data.success) {
+                store.commit('setMember',resp.data.content)
+                router.push("/")
+            }
         }
     })
 }
 const onMessage = () => {
     axios.post("/member/send-code", formState).then(resp => {
-        let type = 'success'
-        if (!resp.data.success) {
-            type = 'error'
+        if (resp){
+            let type = 'success'
+            if (!resp.data.success) {
+                type = 'error'
+            }
+            openNotificationWithIcon(type, resp.data.message)
         }
-        openNotificationWithIcon(type, resp.data.message)
     })
 
 }
