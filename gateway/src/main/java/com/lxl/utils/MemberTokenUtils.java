@@ -2,7 +2,9 @@ package com.lxl.utils;
 
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
-import lombok.extern.slf4j.Slf4j;
+import com.lxl.filter.TokenFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -13,9 +15,8 @@ import java.util.Map;
  * @Description train-12306-system
  * @DateTime 2023/9/21  17:40
  **/
-@Slf4j
 public class MemberTokenUtils {
-
+    private final static Logger log = LoggerFactory.getLogger(TokenFilter.class);
     private final static  String KEY = "1234";
     private final static String EXPIRE_TIME_KEY = "expire_time";
     private final static String MOBILE_KEY = "mobile";
@@ -40,5 +41,4 @@ public class MemberTokenUtils {
             return false;
         }
     }
-
 }

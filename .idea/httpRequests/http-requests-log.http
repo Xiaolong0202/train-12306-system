@@ -1,3 +1,183 @@
+POST http://localhost/member/send-code
+Content-Type: application/json
+Content-Length: 29
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296"
+}
+
+<> 2023-09-22T124131.200.json
+
+###
+
+POST http://localhost/member/send-code
+Content-Type: application/json
+Content-Length: 29
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296"
+}
+
+###
+
+POST http://localhost/member/send-code
+Content-Type: application/json
+Content-Length: 29
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296"
+}
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+token: 123
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+<> 2023-09-22T123125.200.json
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+token: 123
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+token: 123
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+token: 123
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+<> 2023-09-22T114857.500.json
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+token: 123
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+<> 2023-09-22T114355.200.json
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "15116778296",
+  "code" : "8888"
+}
+
+<> 2023-09-22T113717.500.json
+
+###
+
 POST http://localhost/member/login
 Content-Type: application/json
 Content-Length: 48
@@ -561,125 +741,6 @@ User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
 Accept-Encoding: br,deflate,gzip,x-gzip
 
 <> 2023-09-19T211447.200.json
-
-###
-
-GET http://localhost/member/count
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T204914.200.json
-
-###
-
-GET http://localhost/member/count
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T204628.500.json
-
-###
-
-GET http://localhost:8001/member/hello
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T193839.200.json
-
-###
-
-GET http://localhost/member/hello
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T193837.200.json
-
-###
-
-GET http://localhost/member/hello
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T193811.200.json
-
-###
-
-GET http://localhost/member/hello
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T193808.200.json
-
-###
-
-GET http://localhost/member/hello
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T193457.200.json
-
-###
-
-GET http://localhost/member/hello
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T193448.200.json
-
-###
-
-GET http://localhost/member/hello
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T193112.200.json
-
-###
-
-GET http://localhost/member/hello
-Accept: application/json
- :
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-###
-
-GET http://localhost:8001/member/hello
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T193034.200.json
-
-###
-
-GET http://localhost:8001/member/hello
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-19T190333.200.json
 
 ###
 

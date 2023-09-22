@@ -8,3 +8,8 @@ spring:
           id: member
           predicates:
             - Path=/member/**
+
+request:
+  whiteList:
+    - /member/login
+    - /member/**
