@@ -1,6 +1,16 @@
 <template>
     <div>
-        <a-button type="primary" @click="showModal">add</a-button>
+        <div>
+            <a-button type="primary" @click="showModal" style="float: left">add</a-button>
+        </div>
+        <a-table :dataSource="dataSource" :columns="columns" :pagination="false" style="margin-top: 20px"/>
+        <a-pagination v-model:current="pagination.current"
+                      v-model:page-size="pagination.pageSize"
+                      v-model:total="pagination.total"
+                      :pageSizeOptions="['2','5','10','15']"
+                      :showSizeChanger="true"
+                      @change="queryPassengerList"
+        />
         <a-modal v-model:open="open"
                  title="enter passenger info"
                  :closable="false"
@@ -26,9 +36,9 @@
                     <a-input v-model:value="passenger.idCard"/>
                 </a-form-item>
                 <a-form-item
-                    label="typeOfPassenger"
-                    name="typeOfPassenger"
-                    >
+                        label="typeOfPassenger"
+                        name="typeOfPassenger"
+                >
                     <a-select v-model:value="passenger.type">
                         <a-select-option value="1">成人</a-select-option>
                         <a-select-option value="2">学生</a-select-option>
@@ -49,8 +59,9 @@
     </div>
 </template>
 <script setup>
-import {reactive, ref} from 'vue';
+import {onMounted, reactive, ref} from 'vue';
 import {doPost} from "@/util/axiosUtil";
+import axios from "axios";
 
 const passenger = reactive({
     id: '',
@@ -73,15 +84,56 @@ const confirm = async () => {
         open.value = false;
     }
 };
-const cancel = ()=>{
+const cancel = () => {
     resetPassenger()
     open.value = false;
 }
-function resetPassenger(){
-    passenger.name=''
-    passenger.idCard=''
-    passenger.type='1'
+
+function resetPassenger() {
+    passenger.name = ''
+    passenger.idCard = ''
+    passenger.type = '1'
 }
+
+const dataSource = ref([])
+const columns = [
+    {
+        title: '姓名',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: '身份证',
+        dataIndex: 'idCard',
+        key: 'idCard',
+    },
+    {
+        title: '乘客类型',
+        dataIndex: 'type',
+        key: 'type',
+    }]
+const pagination = reactive({
+    total: 0,
+    current: 1,
+    pageSize: 2,
+})
+const queryPassengerList = () => {
+    axios.get("/member/passenger/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize)
+        .then(req => {
+            if (req) {
+                if (req.data.success) {
+                    dataSource.value = req.data.content.list
+                    pagination.total = req.data.content.total
+                }
+            }
+        })
+}
+
+onMounted(() => {
+    queryPassengerList()
+})
+
+
 </script>
 <style scoped>
 
