@@ -3,6 +3,7 @@ package com.lxl.member.service;
 import com.lxl.member.req.PassengerQueryReq;
 import com.lxl.member.req.PassengerSaveOrEditReq;
 import com.lxl.member.resp.PassengerQueryResp;
+import com.lxl.resp.PageResp;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ import java.util.List;
 public interface PassengerService {
     void save(PassengerSaveOrEditReq req);
 
-    List<PassengerQueryResp> queryList(PassengerQueryReq req);
+    PageResp<PassengerQueryResp> queryList(PassengerQueryReq req);
 }

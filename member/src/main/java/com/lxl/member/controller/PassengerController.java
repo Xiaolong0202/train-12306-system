@@ -32,8 +32,7 @@ public class PassengerController {
     @GetMapping("/query-list")
     public CommonResp<?> queryList(PassengerQueryReq req){
         req.setMemberId(MemberInfoContext.getMemberId());
-        List<PassengerQueryResp> list = passengerService.queryList(req);
-        return CommonResp.buildSuccess(list,"查询成功");
+        return CommonResp.buildSuccess(passengerService.queryList(req),"查询成功");
     }
 
 

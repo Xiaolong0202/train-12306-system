@@ -1,5 +1,7 @@
 package com.lxl.member.req;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lxl.req.PageReq;
 import lombok.Data;
 
 /**
@@ -8,9 +10,6 @@ import lombok.Data;
  * @DateTime 2023/9/23  20:27
  **/
 @Data
-public class PassengerQueryReq
-{
+public class PassengerQueryReq extends PageReq {
     private Long memberId;
-    private Integer currentPage;
-    private Integer pageSize;
 }
