@@ -50,7 +50,8 @@ function getItem(label, key, icon, children, type) {
 }
 
 const items = reactive([
-    getItem('12312', '/main/welcome', null,null, null),
+    getItem('welcome', '/main/welcome', null,null, null),
+    getItem('passenger', '/main/passenger', null,null, null),
 ])
 
 const toPage = ({keyPath}) => {
