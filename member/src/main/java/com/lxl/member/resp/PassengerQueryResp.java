@@ -1,5 +1,7 @@
 package com.lxl.member.resp;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Date;
  * @Description train-12306-system
  * @DateTime 2023/9/23  20:34
  **/
+@Data
 public class PassengerQueryResp {
 
     private Long id;

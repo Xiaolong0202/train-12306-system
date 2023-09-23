@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.pagehelper.PageHelper;
 import com.lxl.context.MemberInfoContext;
 import com.lxl.exception.BusinessException;
 import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
@@ -59,11 +60,14 @@ public class PassengerServiceImpl implements PassengerService {
     public List<PassengerQueryResp> queryList(PassengerQueryReq req) {
         LambdaQueryWrapper<Passenger> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(!ObjectUtils.isEmpty(req.getMemberId()),Passenger::getMemberId,req.getMemberId());
+
+        PageHelper.startPage(1,2);
         List<Passenger> passengers = passengerMapper.selectList(wrapper);
         List<PassengerQueryResp> list = new ArrayList<>();
         passengers.forEach(passenger -> {
-           PassengerQueryReq queryReq = new PassengerQueryReq();
-           queryReq.setMemberId(passenger.getMemberId());
+           PassengerQueryResp queryResp = new PassengerQueryResp();
+           BeanUtils.copyProperties(passenger,queryResp);
+           list.add(queryResp);
         });
         return list;
     }
