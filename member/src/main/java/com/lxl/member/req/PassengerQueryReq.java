@@ -11,4 +11,6 @@ import lombok.Data;
 public class PassengerQueryReq
 {
     private Long memberId;
+    private Integer currentPage;
+    private Integer pageSize;
 }

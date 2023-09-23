@@ -61,7 +61,9 @@ public class PassengerServiceImpl implements PassengerService {
         LambdaQueryWrapper<Passenger> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(!ObjectUtils.isEmpty(req.getMemberId()),Passenger::getMemberId,req.getMemberId());
 
-        PageHelper.startPage(1,2);
+        if (!ObjectUtils.isEmpty(req.getPageSize())&&!ObjectUtils.isEmpty(req.getCurrentPage())){
+            PageHelper.startPage(req.getCurrentPage(),req.getPageSize());
+        }
         List<Passenger> passengers = passengerMapper.selectList(wrapper);
         List<PassengerQueryResp> list = new ArrayList<>();
         passengers.forEach(passenger -> {
