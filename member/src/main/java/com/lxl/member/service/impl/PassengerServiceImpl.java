@@ -9,13 +9,17 @@ import com.lxl.exception.BusinessException;
 import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.member.domain.Passenger;
 import com.lxl.member.mapper.PassengerMapper;
+import com.lxl.member.req.PassengerQueryReq;
 import com.lxl.member.req.PassengerSaveOrEditReq;
+import com.lxl.member.resp.PassengerQueryResp;
 import com.lxl.member.service.PassengerService;
 import com.lxl.utils.SnowUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,5 +53,18 @@ public class PassengerServiceImpl implements PassengerService {
             throw new BusinessException(BussinessExceptionEnum.PASSENGER_ALREADY_EXIST);
         }
         passengerMapper.insert(passenger);
+    }
+
+    @Override
+    public List<PassengerQueryResp> queryList(PassengerQueryReq req) {
+        LambdaQueryWrapper<Passenger> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(!ObjectUtils.isEmpty(req.getMemberId()),Passenger::getMemberId,req.getMemberId());
+        List<Passenger> passengers = passengerMapper.selectList(wrapper);
+        List<PassengerQueryResp> list = new ArrayList<>();
+        passengers.forEach(passenger -> {
+           PassengerQueryReq queryReq = new PassengerQueryReq();
+           queryReq.setMemberId(passenger.getMemberId());
+        });
+        return list;
     }
 }

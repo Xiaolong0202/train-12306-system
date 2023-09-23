@@ -1,11 +1,16 @@
 package com.lxl.member.controller;
 
+import com.lxl.context.MemberInfoContext;
+import com.lxl.member.req.PassengerQueryReq;
 import com.lxl.member.req.PassengerSaveOrEditReq;
+import com.lxl.member.resp.PassengerQueryResp;
 import com.lxl.member.service.PassengerService;
 import com.lxl.resp.CommonResp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Author LiuXiaolong
@@ -19,9 +24,16 @@ public class PassengerController {
     @Autowired
     PassengerService passengerService;
     @PostMapping("/save")
-    public CommonResp<?>  savePassenger(@RequestBody @Valid PassengerSaveOrEditReq req){
+    public CommonResp<?> savePassenger(@RequestBody @Valid PassengerSaveOrEditReq req){
         passengerService.save(req);
         return CommonResp.buildSuccess("保存成功");
+    }
+
+    @GetMapping("/query-list")
+    public CommonResp<?> queryList(PassengerQueryReq req){
+        req.setMemberId(MemberInfoContext.getMemberId());
+        List<PassengerQueryResp> list = passengerService.queryList(req);
+        return CommonResp.buildSuccess(list,"查询成功");
     }
 
 
