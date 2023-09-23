@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import store from "@/store";
-import {openNotificationWithIcon} from "@/util/info";
+import {info} from "@/util/info";
 
 
 const routes = [
@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
     if (to.meta.requiredAuth) {
         if (!store.state.member.token) {
             console.log("登录过期或非法")
-            openNotificationWithIcon("error", "未登录或登录超时，跳转到登录页面")
+            info("error", "未登录或登录超时，跳转到登录页面")
             next('/login')
         } else {
             next()

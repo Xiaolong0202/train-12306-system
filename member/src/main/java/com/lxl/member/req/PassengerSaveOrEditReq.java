@@ -2,6 +2,7 @@ package com.lxl.member.req;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.util.Date;
@@ -31,12 +32,14 @@ public class PassengerSaveOrEditReq {
      * 身份证
      */
     @NotBlank(message = "身份证不能为空")
+    @Pattern(regexp = "^([1-6][1-9]|50)\\d{4}(18|19|20)\\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$",message = "身份证号格式不对")
     private String idCard;
 
     /**
      * 旅客类型|枚举
      */
     @NotBlank(message = "乘车人类型不能为空")
+    @Pattern(regexp = "[123]?",message = "乘客类型参数异常")
     private String type;
 
     /**

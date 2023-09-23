@@ -1,5 +1,5 @@
 import { notification } from 'ant-design-vue';
-const openNotificationWithIcon = (type,description) => {
+const info = (type, description) => {
     notification[type]({
         message: type,
         description: description
@@ -7,5 +7,5 @@ const openNotificationWithIcon = (type,description) => {
 };
 
 export {
-    openNotificationWithIcon
+    info
 }

@@ -35,9 +35,13 @@ public class MemberTokenUtils {
         try {
             JWT jwt = JWTUtil.parseToken(token);
             long payload = Long.parseLong(String.valueOf(jwt.getPayload(EXPIRE_TIME_KEY)));
-            return JWTUtil.verify(token,KEY.getBytes(StandardCharsets.UTF_8))&&payload>System.currentTimeMillis();
+            if (payload<=System.currentTimeMillis()) {
+                log.info("token 超时");
+                return false;
+            }
+            return JWTUtil.verify(token,KEY.getBytes(StandardCharsets.UTF_8));
         }catch (Throwable e){
-            log.info("解析token时出现异常 " + e);
+            log.info("解析token时抛出异常 " + e);
             return false;
         }
     }

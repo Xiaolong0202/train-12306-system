@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "@/store";
-import {openNotificationWithIcon} from "@/util/info";
+import {info} from "@/util/info";
 import router from "@/router";
 
 
@@ -24,7 +24,7 @@ function configAxios() {
         if (err.response.status === 401) {
             console.log("未登录或登录超时，跳转到登录页面")
             store.commit("setMember", {})
-            openNotificationWithIcon("error","未登录或登录超时，跳转到登录页面")
+            info("error","未登录或登录超时，跳转到登录页面")
             router.push('/login')
         }else {
             Promise.reject(err)

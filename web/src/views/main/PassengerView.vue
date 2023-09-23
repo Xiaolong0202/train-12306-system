@@ -25,6 +25,16 @@
                 >
                     <a-input v-model:value="passenger.idCard"/>
                 </a-form-item>
+                <a-form-item
+                    label="typeOfPassenger"
+                    name="typeOfPassenger"
+                    >
+                    <a-select v-model:value="passenger.type">
+                        <a-select-option value="1">成人</a-select-option>
+                        <a-select-option value="2">学生</a-select-option>
+                        <a-select-option value="3">孩子</a-select-option>
+                    </a-select>
+                </a-form-item>
                 <a-form-item>
                     <a-popconfirm placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="confirm">
                         <template #title>
@@ -34,13 +44,13 @@
                     </a-popconfirm>
                     <a-button @click="cancel" style="margin-left: 10px">cancel</a-button>
                 </a-form-item>
-
             </a-form>
         </a-modal>
     </div>
 </template>
 <script setup>
 import {reactive, ref} from 'vue';
+import {doPost} from "@/util/axiosUtil";
 
 const passenger = reactive({
     id: '',
@@ -54,12 +64,17 @@ const passenger = reactive({
 
 const open = ref(false);
 const showModal = () => {
-    open.value = true;
+    open.value = true
 };
 const confirm = () => {
-    open.value = false;
+    let res = doPost('/member/passenger/save',passenger);
+    if (res){
+        open.value = false
+    }
 };
 const cancel = ()=>{
+    passenger.name=''
+    passenger.idCard=''
     open.value = false;
 }
 </script>

@@ -42,7 +42,7 @@
 <script setup>
 import {onMounted, reactive} from 'vue';
 import axios from "axios";
-import {openNotificationWithIcon} from "@/util/info";
+import {info} from "@/util/info";
 import {useRouter} from "vue-router";
 import store from "@/store";
 
@@ -60,7 +60,7 @@ const login = () => {
             if (!resp.data.success) {
                 type = 'error'
             }
-            openNotificationWithIcon(type, resp.data.message)
+            info(type, resp.data.message)
             if (resp.data.success) {
                 store.commit('setMember',resp.data.content)
                 router.push("/main")
@@ -75,7 +75,7 @@ const onMessage = () => {
             if (!resp.data.success) {
                 type = 'error'
             }
-            openNotificationWithIcon(type, resp.data.message)
+            info(type, resp.data.message)
         }
     })
 }
