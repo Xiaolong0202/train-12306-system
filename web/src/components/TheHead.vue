@@ -2,8 +2,8 @@
     <a-layout-header class="header">
         <div class="logo"/>
         <div style="float: right; color: white;font-size: large">
-               您好: {{member.mobile}} &nbsp;&nbsp;
-            <router-link to="/login" style="text-decoration-color: dodgerblue;font-size: small" >
+            您好: {{ member.mobile }} &nbsp;&nbsp;
+            <router-link to="/login" style="text-decoration-color: dodgerblue;font-size: small">
                 退出登录
             </router-link>
         </div>
@@ -12,9 +12,9 @@
                 theme="dark"
                 mode="horizontal"
                 :style="{ lineHeight: '64px' }"
+                :items="items"
+                @click="toPage"
         >
-            <a-menu-item key="1">nav 1</a-menu-item>
-            <a-menu-item key="2">{{ member.mobile }}</a-menu-item>
         </a-menu>
 
     </a-layout-header>
@@ -22,11 +22,45 @@
 
 
 <script setup>
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import store from "@/store";
+import {useRouter} from "vue-router";//该方法只能用于setUp当中
 
 const member = store.state.member
 const selectedKeys1 = ref(['2'])
+const router = useRouter()
+
+/**
+ * 快速构建一个Item对象,在该项目当中我将key设置为路径
+ * @param label
+ * @param key
+ * @param icon
+ * @param children
+ * @param type
+ * @returns {{children, icon, label, type, key}}
+ */
+function getItem(label, key, icon, children, type) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+    };
+}
+
+const items = reactive([
+    getItem('12312', '/main/welcome', null,null, null),
+])
+
+const toPage = ({keyPath}) => {
+    let finalPath = '';
+    for (let i = 0; i < keyPath.length; i++) {
+        finalPath += keyPath[i]
+    }
+    router.push(finalPath)
+}
+
 </script>
 
 <style scoped>
