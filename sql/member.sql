@@ -18,5 +18,6 @@ create table `passenger` (
     `type` char(1) not null comment '旅客类型|枚举',
     `create_time` datetime(3) not null comment '创建时间',
     `update_time` datetime(3) not null comment '修改时间',#精确到毫秒
-    index(`member_id`)#创建索引便于查找
+    index(`member_id`),#创建索引便于查找
+    unique (`member_id`,`id_card`)
 )comment '乘客'

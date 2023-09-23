@@ -8,7 +8,8 @@ package com.lxl.exception.exceptionEnum;
 public enum BussinessExceptionEnum {
     MEMBER_REGISTER_ERROR("该手机号已存在"),
     MEMBER_MOBILE_NOT_EXIST("请填写已经注册的手机号"),
-    MEMBER_CODE_ERROR("验证码填写错误");
+    MEMBER_CODE_ERROR("验证码填写错误"),
+    PASSENGER_ALREADY_EXIST("该乘客已经存在");
 
     public final String desc ;
 

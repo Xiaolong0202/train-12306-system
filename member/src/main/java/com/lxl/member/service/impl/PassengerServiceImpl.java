@@ -1,8 +1,12 @@
 package com.lxl.member.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lxl.context.MemberInfoContext;
+import com.lxl.exception.BusinessException;
+import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.member.domain.Passenger;
 import com.lxl.member.mapper.PassengerMapper;
 import com.lxl.member.req.PassengerSaveOrEditReq;
@@ -13,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author LiuXiaolong
@@ -33,6 +38,16 @@ public class PassengerServiceImpl implements PassengerService {
         passenger.setId(SnowUtils.nextSnowId());
         passenger.setCreateTime(now);
         passenger.setUpdateTime(now);
+
+        //实现unique约束
+        LambdaQueryWrapper<Passenger> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Passenger::getMemberId,passenger.getMemberId());
+        lambdaQueryWrapper.eq(Passenger::getIdCard,passenger.getIdCard());
+        List<Passenger> passengers = passengerMapper.selectList(lambdaQueryWrapper);
+        if (CollUtil.isNotEmpty(passengers)){
+            //不为空表示已经存在,则抛出异常
+            throw new BusinessException(BussinessExceptionEnum.PASSENGER_ALREADY_EXIST);
+        }
         passengerMapper.insert(passenger);
     }
 }
