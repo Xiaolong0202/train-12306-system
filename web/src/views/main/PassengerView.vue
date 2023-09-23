@@ -57,7 +57,7 @@ const passenger = reactive({
     memberId: '',
     name: '',
     idCard: '',
-    type: '',
+    type: '1',
     createTime: '',
     updateTime: '',
 })
@@ -66,16 +66,21 @@ const open = ref(false);
 const showModal = () => {
     open.value = true
 };
-const confirm = () => {
-    let res = doPost('/member/passenger/save',passenger);
-    if (res){
-        open.value = false
+const confirm = async () => {
+    let res = await doPost('/member/passenger/save', passenger);
+    if (res) {
+        resetPassenger()
+        open.value = false;
     }
 };
 const cancel = ()=>{
+    resetPassenger()
+    open.value = false;
+}
+function resetPassenger(){
     passenger.name=''
     passenger.idCard=''
-    open.value = false;
+    passenger.type='1'
 }
 </script>
 <style scoped>
