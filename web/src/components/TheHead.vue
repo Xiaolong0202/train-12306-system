@@ -8,7 +8,7 @@
             </router-link>
         </div>
         <a-menu
-                v-model:selectedKeys="selectedKeys1"
+                v-model:selectedKeys="selectedKeys"
                 theme="dark"
                 mode="horizontal"
                 :style="{ lineHeight: '64px' }"
@@ -22,23 +22,16 @@
 
 
 <script setup>
-import {reactive, ref} from "vue";
 import store from "@/store";
-import {useRouter} from "vue-router";//该方法只能用于setUp当中
+import { h, reactive, ref, watch} from "vue";
+import {SmileOutlined, TeamOutlined} from "@ant-design/icons-vue";
+import router from "@/router";
+
+//该方法只能用于setUp当中
 
 const member = store.state.member
-const selectedKeys1 = ref(['2'])
-const router = useRouter()
 
-/**
- * 快速构建一个Item对象,在该项目当中我将key设置为路径
- * @param label
- * @param key
- * @param icon
- * @param children
- * @param type
- * @returns {{children, icon, label, type, key}}
- */
+
 function getItem(label, key, icon, children, type) {
     return {
         key,
@@ -48,19 +41,26 @@ function getItem(label, key, icon, children, type) {
         type,
     };
 }
-
 const items = reactive([
-    getItem('welcome', '/main/welcome', null,null, null),
-    getItem('passenger', '/main/passenger', null,null, null),
+    getItem('welcome', '/main/welcome', h(SmileOutlined),null, null),
+    getItem('passenger', '/main/passenger', h(TeamOutlined),null, null),
 ])
-
-const toPage = ({keyPath}) => {
+const toPage = ({key,keyPath}) => {
     let finalPath = '';
+    sessionStorage.setItem('12306_selectedKey',JSON.stringify([key]))
     for (let i = 0; i < keyPath.length; i++) {
         finalPath += keyPath[i]
     }
     router.push(finalPath)
 }
+const selectedKeys = ref(['/main/welcome'])
+watch(()=>router.currentRoute.value.path,( ) => {
+    let item = sessionStorage.getItem('12306_selectedKey');
+    if (item && typeof(item)!== 'undefined' && item!=='undefined'){
+        selectedKeys.value =  JSON.parse(item)
+    }
+})
+
 
 </script>
 

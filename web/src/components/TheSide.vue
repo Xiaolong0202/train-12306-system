@@ -1,55 +1,56 @@
 <template>
     <a-layout-sider width="200" style="background: #fff">
         <a-menu
-                v-model:selectedKeys="selectedKeys2"
+                v-model:selectedKeys="selectedKeys"
                 v-model:openKeys="openKeys"
                 mode="inline"
                 :style="{ height: '100%', borderRight: 0 }"
+                :items="items"
+                @click="toPage"
         >
-            <a-sub-menu key="sub1">
-                <template #title>
-              <span>
-                <user-outlined/>
-                subnav 1
-              </span>
-                </template>
-                <a-menu-item key="1">option1</a-menu-item>
-                <a-menu-item key="2">option2</a-menu-item>
-                <a-menu-item key="3">option3</a-menu-item>
-                <a-menu-item key="4">option4</a-menu-item>
-            </a-sub-menu>
-            <a-sub-menu key="sub2">
-                <template #title>
-              <span>
-                <laptop-outlined/>
-                subnav 2
-              </span>
-                </template>
-                <a-menu-item key="5">option5</a-menu-item>
-                <a-menu-item key="6">option6</a-menu-item>
-                <a-menu-item key="7">option7</a-menu-item>
-                <a-menu-item key="8">option8</a-menu-item>
-            </a-sub-menu>
-            <a-sub-menu key="sub3">
-                <template #title>
-              <span>
-                <notification-outlined/>
-                subnav 3
-              </span>
-                </template>
-                <a-menu-item key="9">option9</a-menu-item>
-                <a-menu-item key="10">option10</a-menu-item>
-                <a-menu-item key="11">option11</a-menu-item>
-                <a-menu-item key="12">option12</a-menu-item>
-            </a-sub-menu>
         </a-menu>
     </a-layout-sider>
 </template>
 <script setup>
-import {ref} from "vue";
-
-const selectedKeys2 = ref(['1']);
+import { h, reactive, ref, watch} from "vue";
+import {SmileOutlined, TeamOutlined} from "@ant-design/icons-vue";
+import router from "@/router";
 const openKeys = ref(['sub1']);
+
+
+/**
+ * 快速构建一个Item对象,在该项目当中我将key设置为路径
+ */
+function getItem(label, key, icon, children, type) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+    };
+}
+const items = reactive([
+    getItem('welcome', '/main/welcome', h(SmileOutlined),null, null),
+    getItem('passenger', '/main/passenger', h(TeamOutlined),null, null),
+])
+const toPage = ({key,keyPath}) => {
+    let finalPath = '';
+    sessionStorage.setItem('12306_selectedKey',JSON.stringify([key]))
+    for (let i = 0; i < keyPath.length; i++) {
+        finalPath += keyPath[i]
+    }
+    router.push(finalPath)
+}
+const selectedKeys = ref(['/main/welcome'])
+watch(()=>router.currentRoute.value.path,( ) => {
+    let item = sessionStorage.getItem('12306_selectedKey');
+    if (item && typeof(item)!== 'undefined' && item!=='undefined'){
+        selectedKeys.value =  JSON.parse(item)
+    }
+})
+
+
 </script>
 <style scoped>
 .site-layout-background {
