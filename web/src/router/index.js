@@ -1,21 +1,34 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import store from "@/store";
 import {openNotificationWithIcon} from "@/util/info";
+import WelcomeView from "@/views/main/WelcomeView.vue";
 
 
 const routes = [
     {
-        path: '/',
+        path: '/main',
         name: 'home',
+        redirect : '/main/welcome',
         component: () => import("../views/MainView.vue"),
         meta: {
             requiredAuth: true
-        }
+        },
+        children:[
+            {
+                path: 'welcome',
+                component: WelcomeView
+            },
+        ]
     },
     {
         path: '/login',
         name: 'login',
         component: () => import("../views/LoginView.vue")
+    },
+    {
+        path: '',
+        alias: '/',
+        redirect : '/main/welcome'
     }
 ]
 

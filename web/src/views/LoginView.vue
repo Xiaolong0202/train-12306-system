@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import {reactive} from 'vue';
+import {onMounted, reactive} from 'vue';
 import axios from "axios";
 import {openNotificationWithIcon} from "@/util/info";
 import {useRouter} from "vue-router";
@@ -63,7 +63,7 @@ const login = () => {
             openNotificationWithIcon(type, resp.data.message)
             if (resp.data.success) {
                 store.commit('setMember',resp.data.content)
-                router.push("/")
+                router.push("/main")
             }
         }
     })
@@ -78,8 +78,11 @@ const onMessage = () => {
             openNotificationWithIcon(type, resp.data.message)
         }
     })
-
 }
+
+onMounted(()=>{
+    store.commit("setMember",{})
+})
 </script>
 
 <style scoped>
