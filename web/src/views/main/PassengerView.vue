@@ -3,7 +3,7 @@
         <div>
             <a-button type="primary" @click="showModal" style="float: left">add</a-button>
         </div>
-        <a-table :dataSource="dataSource" :columns="columns" :pagination="false" style="margin-top: 20px"/>
+        <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading" style="margin-top: 20px"/>
         <a-pagination v-model:current="pagination.current"
                       v-model:page-size="pagination.pageSize"
                       v-model:total="pagination.total"
@@ -74,6 +74,7 @@ const passenger = reactive({
 })
 
 const open = ref(false);
+const loading = ref(false);
 const showModal = () => {
     open.value = true
 };
@@ -81,6 +82,7 @@ const confirm = async () => {
     let res = await doPost('/member/passenger/save', passenger);
     if (res) {
         resetPassenger()
+        queryPassengerList()
         open.value = false;
     }
 };
@@ -118,8 +120,10 @@ const pagination = reactive({
     pageSize: 2,
 })
 const queryPassengerList = () => {
+    loading.value = true
     axios.get("/member/passenger/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize)
         .then(req => {
+            loading.value = false
             if (req) {
                 if (req.data.success) {
                     dataSource.value = req.data.content.list

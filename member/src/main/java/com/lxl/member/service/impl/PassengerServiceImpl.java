@@ -64,6 +64,7 @@ public class PassengerServiceImpl implements PassengerService {
     public PageResp<PassengerQueryResp> queryList(PassengerQueryReq req) {
         LambdaQueryWrapper<Passenger> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(!ObjectUtils.isEmpty(req.getMemberId()),Passenger::getMemberId,req.getMemberId());
+        wrapper.orderByDesc(Passenger::getId);
 
         if (!ObjectUtils.isEmpty(req.getPageSize())&&!ObjectUtils.isEmpty(req.getCurrentPage())){
             log.info("当前页码：{}",req.getCurrentPage());
