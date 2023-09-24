@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PassengerMapper extends BaseMapper<Passenger> {
 
+    String selectIdCardByIdInt(Long id);
 }
 
 

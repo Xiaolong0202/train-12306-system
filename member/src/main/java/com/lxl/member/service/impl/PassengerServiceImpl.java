@@ -46,14 +46,23 @@ public class PassengerServiceImpl implements PassengerService {
         passenger.setUpdateTime(now);
         passenger.setMemberId(MemberInfoContext.getMemberId());//从上下文当中获取id
 
-        //实现unique约束
-        LambdaQueryWrapper<Passenger> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Passenger::getMemberId,passenger.getMemberId());
-        lambdaQueryWrapper.eq(Passenger::getIdCard,passenger.getIdCard());
-        List<Passenger> passengers = passengerMapper.selectList(lambdaQueryWrapper);
-        if (CollUtil.isNotEmpty(passengers)){
-            //不为空表示已经存在,则抛出异常
-            throw new BusinessException(BussinessExceptionEnum.PASSENGER_ALREADY_EXIST);
+        boolean isIdCardUpdate = true;
+
+        if (!ObjectUtils.isEmpty(passenger.getId())){
+            //如果有id
+            isIdCardUpdate = !passenger.getIdCard().equals(passengerMapper.selectIdCardByIdInt(passenger.getId()));
+        }
+
+        if (isIdCardUpdate){
+            //实现unique约束
+            LambdaQueryWrapper<Passenger> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(Passenger::getMemberId,passenger.getMemberId());
+            lambdaQueryWrapper.eq(Passenger::getIdCard,passenger.getIdCard());
+            List<Passenger> passengers = passengerMapper.selectList(lambdaQueryWrapper);
+            if (CollUtil.isNotEmpty(passengers)){
+                //不为空表示已经存在,则抛出异常
+                throw new BusinessException(BussinessExceptionEnum.PASSENGER_ALREADY_EXIST);
+            }
         }
 
         if (ObjectUtils.isEmpty(passenger.getId())){

@@ -3,7 +3,20 @@
         <div>
             <a-button type="primary" @click="showModal" style="float: left">add</a-button>
         </div>
-        <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading" style="margin-top: 20px"/>
+        <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading" style="margin-top: 20px">
+            <template #bodyCell="{column , record}">
+                <template v-if="column.dataIndex === 'action'">
+                  <a-popconfirm
+                      v-if="dataSource.length"
+                      title="Sure to edit?"
+                      @confirm="handleEdit(record)"
+                  >
+                      <a>Edit</a>
+                  </a-popconfirm>
+                </template>
+            </template>
+
+        </a-table>
         <a-pagination v-model:current="pagination.current"
                       v-model:page-size="pagination.pageSize"
                       v-model:total="pagination.total"
@@ -113,6 +126,11 @@ const columns = [
         title: '乘客类型',
         dataIndex: 'type',
         key: 'type',
+    },
+    {
+        title: '操作',
+        dataIndex: 'action',
+        key: 'action',
     }]
 const pagination = reactive({
     total: 0,
@@ -131,6 +149,12 @@ const queryPassengerList = () => {
                 }
             }
         })
+}
+const handleEdit = (record) => {
+    console.log(record.id)
+    Object.assign(passenger,record)//该方法相当于BeanUtil.copyProperties
+    console.log(passenger.id)
+    open.value = true
 }
 
 onMounted(() => {

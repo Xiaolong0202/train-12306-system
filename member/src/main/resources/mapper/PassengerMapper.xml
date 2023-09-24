@@ -19,4 +19,7 @@
         id_card,type,create_time,
         update_time
     </sql>
+    <select id="selectIdCardByIdInt" resultType="java.lang.String">
+        select passenger.id_card from passenger where passenger.id = #{id}
+    </select>
 </mapper>
