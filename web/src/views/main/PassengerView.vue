@@ -5,6 +5,13 @@
         </div>
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading" style="margin-top: 20px">
             <template #bodyCell="{column , record}">
+                <template v-if="column.dataIndex === 'type'">
+                    <template v-for="item in passenger_type" :key="item.key">
+                        <span v-if="item.key===record.type">
+                            {{item.value}}
+                        </span>
+                    </template>
+                </template>
                 <template v-if="column.dataIndex === 'action'">
                   <a-popconfirm
                       v-if="dataSource.length"
@@ -60,9 +67,7 @@
                         name="typeOfPassenger"
                 >
                     <a-select v-model:value="passenger.type">
-                        <a-select-option value="1">成人</a-select-option>
-                        <a-select-option value="2">学生</a-select-option>
-                        <a-select-option value="3">孩子</a-select-option>
+                        <a-select-option v-for="item in passenger_type" :value="item.key" :key="item.key">{{item.value}}</a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item>
@@ -94,6 +99,8 @@ const passenger = reactive({
     updateTime: '',
 })
 
+
+const passenger_type = [{key:"1",value:"成人"},{key:"2",value:"学生"},{key:"3",value:"小孩"}]
 const open = ref(false);
 const loading = ref(false);
 const showModal = () => {
