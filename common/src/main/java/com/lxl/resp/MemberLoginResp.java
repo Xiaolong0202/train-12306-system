@@ -1,5 +1,7 @@
 package com.lxl.resp;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberLoginResp {
 
+    @JsonSerialize(using = ToStringSerializer.class)
     Long id;
 
     String mobile;
