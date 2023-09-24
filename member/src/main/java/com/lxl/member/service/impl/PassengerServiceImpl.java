@@ -43,10 +43,8 @@ public class PassengerServiceImpl implements PassengerService {
     public void save(PassengerSaveOrEditReq req) {
         Passenger passenger = BeanUtil.copyProperties(req, Passenger.class);
         Date now = DateTime.now();
-        passenger.setMemberId(MemberInfoContext.getMemberId());
-        passenger.setId(SnowUtils.nextSnowId());
-        passenger.setCreateTime(now);
         passenger.setUpdateTime(now);
+        passenger.setMemberId(MemberInfoContext.getMemberId());//从上下文当中获取id
 
         //实现unique约束
         LambdaQueryWrapper<Passenger> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -57,7 +55,22 @@ public class PassengerServiceImpl implements PassengerService {
             //不为空表示已经存在,则抛出异常
             throw new BusinessException(BussinessExceptionEnum.PASSENGER_ALREADY_EXIST);
         }
-        passengerMapper.insert(passenger);
+
+        if (ObjectUtils.isEmpty(passenger.getId())){
+            log.info("进行新增");
+            //id为空则进行新增
+            passenger.setCreateTime(now);
+            passenger.setId(SnowUtils.nextSnowId());
+
+            passengerMapper.insert(passenger);
+        }else {
+            //id不为空则进行update
+            log.info("进行update");
+            passenger.setMemberId(null);
+            passenger.setCreateTime(null);
+            passengerMapper.updateById(passenger);
+        }
+
     }
 
     @Override

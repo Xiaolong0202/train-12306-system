@@ -3,9 +3,10 @@ Content-Type: application/json
 token: {{token}}
 
 {
+  "id" : "1705555827190009856",
   "memberId" : 13213,
   "name" : "liuxiaolong",
-  "idCard" : "13132332",
+  "idCard" : "430902200402020593",
   "type" : "1"
 }
 
