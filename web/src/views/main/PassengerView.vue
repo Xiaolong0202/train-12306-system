@@ -13,6 +13,13 @@
                   >
                       <a>Edit</a>
                   </a-popconfirm>
+                    <a-popconfirm
+                        v-if="dataSource.length"
+                        title="Sure to delete?"
+                        @confirm="handleDelete(record)"
+                    >
+                        <a style="margin-left:  10px">delete</a>
+                    </a-popconfirm>
                 </template>
             </template>
 
@@ -75,6 +82,7 @@
 import {onMounted, reactive, ref} from 'vue';
 import {doPost} from "@/util/axiosUtil";
 import axios from "axios";
+import {info} from "@/util/info";
 
 const passenger = reactive({
     id: '',
@@ -151,10 +159,24 @@ const queryPassengerList = () => {
         })
 }
 const handleEdit = (record) => {
-    console.log(record.id)
     Object.assign(passenger,record)//该方法相当于BeanUtil.copyProperties
-    console.log(passenger.id)
     open.value = true
+}
+
+const handleDelete = (record)=>{
+    axios.delete('/member/passenger/delete/'+record.id)
+        .then(resp => {
+            if (resp) {
+                const data = resp.data
+                if (data.success) {
+                    info('success', data.message)
+                    queryPassengerList()
+                }
+                if (data.success === false) {
+                    info('error', data.message)
+                }
+            }
+        })
 }
 
 onMounted(() => {

@@ -10,8 +10,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * @Author LiuXiaolong
  * @Description train-12306-system
@@ -33,6 +31,12 @@ public class PassengerController {
     public CommonResp<?> queryList(PassengerQueryReq req){
         req.setMemberId(MemberInfoContext.getMemberId());
         return CommonResp.buildSuccess(passengerService.queryList(req),"查询成功");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public CommonResp<?> delete(@PathVariable("id") Long id){
+        passengerService.delete(id);
+        return CommonResp.buildSuccess("删除成功");
     }
 
 

@@ -111,4 +111,9 @@ public class PassengerServiceImpl implements PassengerService {
         pageResp.setTotal(total);
         return  pageResp;
     }
+
+    @Override
+    public void delete(Long id) {
+        passengerMapper.deleteById(id);
+    }
 }
