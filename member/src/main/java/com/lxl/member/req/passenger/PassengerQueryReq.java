@@ -1,7 +1,6 @@
 package com.lxl.member.req.passenger;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lxl.req.PageReq;
+import com.lxl.common.req.PageReq;
 import lombok.Data;
 
 /**

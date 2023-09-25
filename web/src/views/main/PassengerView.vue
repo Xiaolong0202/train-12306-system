@@ -168,7 +168,7 @@ const queryPassengerList = () => {
 
 const queryPassengerType = ()=>{
     loading.value = true
-    axios.get('/member/get-enum/Passenger')
+    axios.get('/member/get-enum/member.enums.Passenger')
         .then(res =>{
             loading.value = false
             if (res) {

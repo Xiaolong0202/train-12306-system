@@ -1,10 +1,10 @@
 package com.lxl.member.controller;
 
-import com.lxl.context.MemberInfoContext;
-import com.lxl.member.req.passenger.PassengerQueryReq;
+import com.lxl.common.context.MemberInfoContext;
 import com.lxl.member.req.passenger.PassengerSaveOrEditReq;
+import com.lxl.common.resp.CommonResp;
+import com.lxl.member.req.passenger.PassengerQueryReq;
 import com.lxl.member.service.PassengerService;
-import com.lxl.resp.CommonResp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

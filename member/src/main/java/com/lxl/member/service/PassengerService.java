@@ -1,9 +1,9 @@
 package com.lxl.member.service;
 
-import com.lxl.member.req.passenger.PassengerQueryReq;
 import com.lxl.member.req.passenger.PassengerSaveOrEditReq;
 import com.lxl.member.resp.passenger.PassengerQueryResp;
-import com.lxl.resp.PageResp;
+import com.lxl.common.resp.PageResp;
+import com.lxl.member.req.passenger.PassengerQueryReq;
 
 /**
  * @Author LiuXiaolong

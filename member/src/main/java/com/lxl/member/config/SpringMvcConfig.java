@@ -1,6 +1,6 @@
 package com.lxl.member.config;
 
-import com.lxl.interceptor.MemberInterceptor;
+import com.lxl.common.interceptor.MemberInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

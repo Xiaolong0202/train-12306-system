@@ -1,11 +1,11 @@
 package com.lxl.member.controller;
 
+import com.lxl.common.resp.CommonResp;
 import com.lxl.member.req.member.MemberLoginReq;
 import com.lxl.member.req.member.MemberRegisterReq;
 import com.lxl.member.req.member.MemberSendCodeReq;
-import com.lxl.resp.MemberLoginResp;
+import com.lxl.common.resp.MemberLoginResp;
 import com.lxl.member.service.MemberService;
-import com.lxl.resp.CommonResp;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
