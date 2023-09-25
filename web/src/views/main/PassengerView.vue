@@ -120,9 +120,15 @@ const cancel = () => {
 }
 
 function resetPassenger() {
-    passenger.name = ''
-    passenger.idCard = ''
-    passenger.type = '1'
+    Object.assign(passenger,{
+        id: '',
+        memberId: '',
+        name: '',
+        idCard: '',
+        type: '1',
+        createTime: '',
+        updateTime: '',
+    })
 }
 
 const dataSource = ref([])
