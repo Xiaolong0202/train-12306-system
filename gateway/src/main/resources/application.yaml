@@ -8,8 +8,13 @@ spring:
           id: member
           predicates:
             - Path=/member/**
+        - uri: http://127.0.0.1:8002
+          id: business
+          predicates:
+            - Path=/business/**
 
 request:
   whiteList:
     - /member/login
     - /member/send-code
+    - /business/**
