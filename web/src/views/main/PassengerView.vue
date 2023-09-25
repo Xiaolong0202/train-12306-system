@@ -6,9 +6,9 @@
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading" style="margin-top: 20px">
             <template #bodyCell="{column , record}">
                 <template v-if="column.dataIndex === 'type'">
-                    <template v-for="item in passenger_type" :key="item.key">
-                        <span v-if="item.key===record.type">
-                            {{item.value}}
+                    <template v-for="item in passenger_type" :key="item.code">
+                        <span v-if="item.code === record.type">
+                            {{item.description}}
                         </span>
                     </template>
                 </template>
@@ -67,7 +67,7 @@
                         name="typeOfPassenger"
                 >
                     <a-select v-model:value="passenger.type">
-                        <a-select-option v-for="item in passenger_type" :value="item.key" :key="item.key">{{item.value}}</a-select-option>
+                        <a-select-option v-for="item in passenger_type" :value="item.code" :key="item.code">{{item.description}}</a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item>
@@ -100,7 +100,7 @@ const passenger = reactive({
 })
 
 
-const passenger_type = window.PASSENGER_TYPE
+const passenger_type = ref([])
 const open = ref(false);
 const loading = ref(false);
 const showModal = () => {
@@ -155,16 +155,28 @@ const pagination = reactive({
 const queryPassengerList = () => {
     loading.value = true
     axios.get("/member/passenger/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize)
-        .then(req => {
+        .then(res => {
             loading.value = false
-            if (req) {
-                if (req.data.success) {
-                    dataSource.value = req.data.content.list
-                    pagination.total = req.data.content.total
+            if (res) {
+                if (res.data.success) {
+                    dataSource.value = res.data.content.list
+                    pagination.total = res.data.content.total
                 }
             }
         })
 }
+
+const queryPassengerType = ()=>{
+    loading.value = true
+    axios.get('/member/get-enum/Passenger')
+        .then(res =>{
+            loading.value = false
+            if (res) {
+                passenger_type.value = res.data
+            }
+        })
+}
+
 const handleEdit = (record) => {
     Object.assign(passenger,record)//该方法相当于BeanUtil.copyProperties
     open.value = true
@@ -188,6 +200,7 @@ const handleDelete = (record)=>{
 
 onMounted(() => {
     queryPassengerList()
+    queryPassengerType()
 })
 
 

@@ -1,6 +1,6 @@
 package com.lxl.member.service;
 
-import com.lxl.member.req.MemberLoginReq;
+import com.lxl.member.req.member.MemberLoginReq;
 import com.lxl.resp.MemberLoginResp;
 
 /**

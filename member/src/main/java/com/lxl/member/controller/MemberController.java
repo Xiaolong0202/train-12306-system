@@ -1,8 +1,8 @@
 package com.lxl.member.controller;
 
-import com.lxl.member.req.MemberLoginReq;
-import com.lxl.member.req.MemberRegisterReq;
-import com.lxl.member.req.MemberSendCodeReq;
+import com.lxl.member.req.member.MemberLoginReq;
+import com.lxl.member.req.member.MemberRegisterReq;
+import com.lxl.member.req.member.MemberSendCodeReq;
 import com.lxl.resp.MemberLoginResp;
 import com.lxl.member.service.MemberService;
 import com.lxl.resp.CommonResp;

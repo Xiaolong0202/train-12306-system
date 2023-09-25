@@ -1,11 +1,9 @@
 package com.lxl.member.service;
 
-import com.lxl.member.req.PassengerQueryReq;
-import com.lxl.member.req.PassengerSaveOrEditReq;
-import com.lxl.member.resp.PassengerQueryResp;
+import com.lxl.member.req.passenger.PassengerQueryReq;
+import com.lxl.member.req.passenger.PassengerSaveOrEditReq;
+import com.lxl.member.resp.passenger.PassengerQueryResp;
 import com.lxl.resp.PageResp;
-
-import java.util.List;
 
 /**
  * @Author LiuXiaolong

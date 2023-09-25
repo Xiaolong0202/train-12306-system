@@ -7,7 +7,7 @@ import com.lxl.exception.BusinessException;
 import com.lxl.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.member.domain.Member;
 import com.lxl.member.mapper.MemberMapper;
-import com.lxl.member.req.MemberLoginReq;
+import com.lxl.member.req.member.MemberLoginReq;
 import com.lxl.resp.MemberLoginResp;
 import com.lxl.member.service.MemberService;
 import com.lxl.utils.MemberTokenUtils;

@@ -18,3 +18,9 @@ token: {{token}}
 
 ###
 
+GET http://localhost/member/get-enum/Passenger
+token: {{token}}
+Accept: application/json
+
+###
+

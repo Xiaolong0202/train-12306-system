@@ -1,4 +1,4 @@
-package com.lxl.member.req;
+package com.lxl.member.req.member;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

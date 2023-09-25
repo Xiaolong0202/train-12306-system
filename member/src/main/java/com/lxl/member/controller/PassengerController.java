@@ -1,9 +1,8 @@
 package com.lxl.member.controller;
 
 import com.lxl.context.MemberInfoContext;
-import com.lxl.member.req.PassengerQueryReq;
-import com.lxl.member.req.PassengerSaveOrEditReq;
-import com.lxl.member.resp.PassengerQueryResp;
+import com.lxl.member.req.passenger.PassengerQueryReq;
+import com.lxl.member.req.passenger.PassengerSaveOrEditReq;
 import com.lxl.member.service.PassengerService;
 import com.lxl.resp.CommonResp;
 import jakarta.validation.Valid;

@@ -1,4 +1,11 @@
-package com.lxl.member.enums;
+package com.lxl.enums;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lxl.utils.ClazzUtil;
+
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @Author LiuXiaolong
@@ -34,4 +41,6 @@ public enum PassengerTypeEnum {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }

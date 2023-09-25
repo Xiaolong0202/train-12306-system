@@ -1,4 +1,4 @@
-package com.lxl.member.req;
+package com.lxl.member.req.passenger;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lxl.req.PageReq;
