@@ -52,23 +52,36 @@ public class TrainStationServiceImpl implements TrainStationService{
         trainStation.setUpdateTime(now);
         trainStation.setStopTime(new Date(trainStation.getOutTime().getTime()-trainStation.getInTime().getTime()));
 
-        boolean isNameUpdate = true;
 
-//        if (!ObjectUtils.isEmpty(trainStation.getId())){
-//            //如果有id
-//            isNameUpdate = !trainStation.getCode().equals(trainStationMapper.selectCodeById(trainStation.getId()));
-//        }
-//
-//        if (isNameUpdate){
-//            //如果name被更改了,实现unique约束
-//            LambdaQueryWrapper<TrainStation> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-//            lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getCode()),TrainStation::getCode,trainStation.getCode());
-//            List<TrainStation> trainStations = trainStationMapper.selectList(lambdaQueryWrapper);
-//            if (CollUtil.isNotEmpty(trainStations)){
-//                //不为空表示已经存在,则抛出异常
-//                throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);
-//            }
-//        }
+            //检查unique(code,stationName)
+            LambdaQueryWrapper<TrainStation> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getStationName()),TrainStation::getStationName,trainStation.getStationName());
+            lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getTrainCode()),TrainStation::getTrainCode,trainStation.getTrainCode());
+            List<TrainStation> trainStations = trainStationMapper.selectList(lambdaQueryWrapper);
+            if (CollUtil.isNotEmpty(trainStations)){
+                TrainStation station = trainStations.get(0);
+                if ((station.getStationName().equals(trainStation.getStationName())&&station.getTrainCode().equals(station.getTrainCode()))) {
+                    if (!station.getId().equals(trainStation.getId())){
+                        //不为空表示已经存在,则抛出异常
+                        throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);
+                    }
+                }
+            }
+
+        lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getTrainIndex()),TrainStation::getTrainIndex,trainStation.getTrainIndex());
+        lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getTrainCode()),TrainStation::getTrainCode,trainStation.getTrainCode());
+        trainStations = trainStationMapper.selectList(lambdaQueryWrapper);
+        if (CollUtil.isNotEmpty(trainStations)){
+            TrainStation station = trainStations.get(0);
+            if ((station.getTrainIndex().equals(trainStation.getTrainIndex())&&station.getTrainCode().equals(station.getTrainCode()))) {
+                if (!station.getId().equals(trainStation.getId())){
+                    //不为空表示已经存在,则抛出异常
+                    throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);
+                }
+            }
+        }
+
         long milliseconds = trainStation.getOutTime().getTime() - trainStation.getInTime().getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT+8"));
