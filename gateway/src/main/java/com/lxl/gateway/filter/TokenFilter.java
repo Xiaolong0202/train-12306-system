@@ -37,7 +37,10 @@ public class TokenFilter implements GlobalFilter {
         String requestPath = exchange.getRequest().getURI().getPath();
         log.info("requestPath = " + requestPath);
         //先判断请求路径是否在白名单当中
-
+        if (requestPath.contains("/admin")){
+            log.info("{} 在请求白名单中，不需要验证token",requestPath);
+            return chain.filter(exchange);
+        }
         for (String s : requestWhiteList.getWhiteList()) {
             String afterReplace = s.replace("/**", "");
             if (s.equals(requestPath)||requestPath.startsWith(afterReplace)){

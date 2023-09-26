@@ -17,4 +17,4 @@ request:
   whiteList:
     - /member/login
     - /member/send-code
-    - /business/station/admin/**
+    - /business/get-enum/**
