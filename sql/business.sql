@@ -25,7 +25,7 @@ create table `train` (
     `interval_day` int not null comment '出发和到站之间间隔的天数',
     `create_time` datetime(3) comment '创建时间',
     `update_time` datetime(3) comment '修改时间'
-)comment = '车次'
+)comment = '车次';
 
 DROP TABLE IF EXISTS `train_station`;
 CREATE TABLE `train_station` (
@@ -44,3 +44,17 @@ CREATE TABLE `train_station` (
                                  UNIQUE KEY `train_code` (`train_code`,`train_index`),
                                  UNIQUE KEY `train_code_2` (`train_code`,`station_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='火车车站';
+
+DROP TABLE  IF EXISTS `train_carriage`;
+
+create table `train_carriage` (
+    `id` bigint not null  comment 'id',
+    `train_code` varchar(20) primary key not null comment '火车编号',
+    `train_index` int not null comment '火车箱号',
+    `seat_type` char not null comment '座位类型|枚举',
+    `seat_count` int not null comment '排数',
+    `row_count` int not null comment '列数',
+    `create_time` datetime(3) DEFAULT NULL COMMENT '新增时间',
+    `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间',
+    unique (`train_code`,`train_index`)
+)COMMENT='车厢';
