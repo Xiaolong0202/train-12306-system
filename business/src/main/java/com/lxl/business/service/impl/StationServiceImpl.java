@@ -58,7 +58,7 @@ public class StationServiceImpl implements StationService{
             List<Station> stations = stationMapper.selectList(lambdaQueryWrapper);
             if (CollUtil.isNotEmpty(stations)){
                 //不为空表示已经存在,则抛出异常
-                throw new BusinessException(BussinessExceptionEnum.PASSENGER_ALREADY_EXIST);
+                throw new BusinessException(BussinessExceptionEnum.STATION_ALREADY_EXIST);
             }
         }
 

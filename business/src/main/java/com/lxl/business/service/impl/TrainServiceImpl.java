@@ -63,7 +63,7 @@ public class TrainServiceImpl implements TrainService{
             List<Train> trains = trainMapper.selectList(lambdaQueryWrapper);
             if (CollUtil.isNotEmpty(trains)){
                 //不为空表示已经存在,则抛出异常
-                throw new BusinessException(BussinessExceptionEnum.PASSENGER_ALREADY_EXIST);
+                throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);
             }
         }
 

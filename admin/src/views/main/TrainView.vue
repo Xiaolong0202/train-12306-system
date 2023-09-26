@@ -80,7 +80,7 @@
                     label="出发时间"
                     name="startTime"
                 >
-                    <a-input v-model:value="train.startTime"/>
+                    <a-time-picker v-model:value="train.startTime" value-format="HH:mm:ss" format="HH:mm:ss" />
                 </a-form-item>
                 <a-form-item
                     label="终点站"
@@ -98,7 +98,7 @@
                     label="到终点站时间"
                     name="endTime"
                 >
-                    <a-input v-model:value="train.endTime"/>
+                    <a-time-picker v-model:value="train.endTime" value-format="HH:mm:ss" format="HH:mm:ss" />
                 </a-form-item>
                 <a-form-item
                     label="出发和到站之间间隔的天数"
