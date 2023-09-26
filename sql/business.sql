@@ -53,7 +53,8 @@ create table `train_carriage` (
     `train_index` int not null comment '火车箱号',
     `seat_type` char not null comment '座位类型|枚举',
     `seat_count` int not null comment '排数',
-    `row_count` int not null comment '列数',
+    `row_count` int not null comment '排数',
+    `column_count` int not null comment '列数',
     `create_time` datetime(3) DEFAULT NULL COMMENT '新增时间',
     `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间',
     unique (`train_code`,`train_index`)

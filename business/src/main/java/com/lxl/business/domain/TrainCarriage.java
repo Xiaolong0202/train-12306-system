@@ -42,9 +42,14 @@ public class TrainCarriage implements Serializable {
     private Integer seatCount;
 
     /**
-     * 列数
+     * 排数
      */
     private Integer rowCount;
+
+    /**
+     * 列数
+     */
+    private Integer columnCount;
 
     /**
      * 新增时间
@@ -77,6 +82,7 @@ public class TrainCarriage implements Serializable {
             && (this.getSeatType() == null ? other.getSeatType() == null : this.getSeatType().equals(other.getSeatType()))
             && (this.getSeatCount() == null ? other.getSeatCount() == null : this.getSeatCount().equals(other.getSeatCount()))
             && (this.getRowCount() == null ? other.getRowCount() == null : this.getRowCount().equals(other.getRowCount()))
+            && (this.getColumnCount() == null ? other.getColumnCount() == null : this.getColumnCount().equals(other.getColumnCount()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
@@ -91,6 +97,7 @@ public class TrainCarriage implements Serializable {
         result = prime * result + ((getSeatType() == null) ? 0 : getSeatType().hashCode());
         result = prime * result + ((getSeatCount() == null) ? 0 : getSeatCount().hashCode());
         result = prime * result + ((getRowCount() == null) ? 0 : getRowCount().hashCode());
+        result = prime * result + ((getColumnCount() == null) ? 0 : getColumnCount().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         return result;
@@ -108,6 +115,7 @@ public class TrainCarriage implements Serializable {
         sb.append(", seatType=").append(seatType);
         sb.append(", seatCount=").append(seatCount);
         sb.append(", rowCount=").append(rowCount);
+        sb.append(", columnCount=").append(columnCount);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);

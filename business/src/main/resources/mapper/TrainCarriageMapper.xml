@@ -11,6 +11,7 @@
             <result property="seatType" column="seat_type" jdbcType="CHAR"/>
             <result property="seatCount" column="seat_count" jdbcType="INTEGER"/>
             <result property="rowCount" column="row_count" jdbcType="INTEGER"/>
+            <result property="columnCount" column="column_count" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -18,6 +19,6 @@
     <sql id="Base_Column_List">
         train_code,id,train_index,
         seat_type,seat_count,row_count,
-        create_time,update_time
+        column_count,create_time,update_time
     </sql>
 </mapper>
