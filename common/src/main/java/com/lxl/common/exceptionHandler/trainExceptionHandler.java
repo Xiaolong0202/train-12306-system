@@ -44,4 +44,10 @@ public class trainExceptionHandler {
         return commonResp;
     }
 
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public CommonResp<?> handleException(Exception e){
+      return CommonResp.buildFailure(e,"本次响应失败，请联系网站管理员");
+    }
+
 }

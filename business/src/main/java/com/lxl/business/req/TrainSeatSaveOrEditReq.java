@@ -3,7 +3,7 @@ package com.lxl.business.req;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,23 +11,22 @@ import java.util.Date;
 /**
  * @Author LiuXiaolong
  * @Description train-12306-system
- * @DateTime 2023/9/27  14:42
+ * @DateTime 2023/9/27  16:11
  **/
 @Data
-public class TrainCarriageSaveOrEditReq {
-
-    private String trainCode;
-
-    /**
-     * id
-     */
+public class TrainSeatSaveOrEditReq {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
+     * 火车编号
+     */
+    private String trainCode;
+
+    /**
      * 火车箱号
      */
-    private Integer trainIndex;
+    private Integer carriageIndex;
 
     /**
      * 座位类型|枚举
@@ -35,20 +34,20 @@ public class TrainCarriageSaveOrEditReq {
     private String seatType;
 
     /**
-     * 排数
+     * 排
      */
-    private Integer seatCount;
+    @Pattern(regexp = "[0-9]{1,2}",message = "请输入一个两位数")
+    private String seatRow;
 
     /**
-     * 排数
+     * 列
      */
-    @Max(value = 99,message = "行数不要超过99")
-    private Integer rowCount;
+    private String seatCol;
 
     /**
-     * 列数
+     * 同车厢座序
      */
-    private Integer columnCount;
+    private Integer carriageSeatIndex;
 
     /**
      * 新增时间

@@ -5,7 +5,7 @@ package com.lxl.business.enums;
  * @Description train-12306-system
  * @DateTime 2023/9/27  15:39
  **/
-public enum SeatColEnum {
+public enum SeatColTypeEnum {
     YDZ_A("A","A","1"),
     YDZ_C("C","C","1"),
     YDZ_D("D","D","1"),
@@ -22,7 +22,7 @@ public enum SeatColEnum {
     //关联seatType Code
     private String type;
 
-    SeatColEnum(String code, String description, String type) {
+    SeatColTypeEnum(String code, String description, String type) {
         this.code = code;
         this.description = description;
         this.type = type;
