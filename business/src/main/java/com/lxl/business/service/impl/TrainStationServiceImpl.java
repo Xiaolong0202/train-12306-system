@@ -4,20 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.domain.TrainStation;
-import com.lxl.business.domain.TrainStation;
 import com.lxl.business.mapper.TrainStationMapper;
 import com.lxl.business.req.TrainStationQueryReq;
 import com.lxl.business.req.TrainStationSaveOrEditReq;
-import com.lxl.business.req.TrainStationQueryReq;
-import com.lxl.business.req.TrainStationSaveOrEditReq;
-import com.lxl.business.resp.TrainStationQueryResp;
 import com.lxl.business.resp.TrainStationQueryResp;
 import com.lxl.business.service.TrainStationService;
-import com.lxl.business.mapper.TrainStationMapper;
 import com.lxl.common.exception.BusinessException;
 import com.lxl.common.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.common.resp.PageResp;
@@ -50,7 +44,6 @@ public class TrainStationServiceImpl implements TrainStationService{
         TrainStation trainStation = BeanUtil.copyProperties(req, TrainStation.class);
         Date now = DateTime.now();
         trainStation.setUpdateTime(now);
-        trainStation.setStopTime(new Date(trainStation.getOutTime().getTime()-trainStation.getInTime().getTime()));
 
 
             //检查unique(code,stationName)

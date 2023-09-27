@@ -48,8 +48,8 @@ CREATE TABLE `train_station` (
 DROP TABLE  IF EXISTS `train_carriage`;
 
 create table `train_carriage` (
-    `id` bigint not null  comment 'id',
-    `train_code` varchar(20) primary key not null comment '火车编号',
+    `id` bigint not null   primary key comment 'id',
+    `train_code` varchar(20) not null comment '火车编号',
     `train_index` int not null comment '火车箱号',
     `seat_type` char not null comment '座位类型|枚举',
     `seat_count` int not null comment '排数',

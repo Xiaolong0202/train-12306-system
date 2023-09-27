@@ -15,16 +15,18 @@ import lombok.Data;
 @TableName(value ="train_carriage")
 @Data
 public class TrainCarriage implements Serializable {
-    /**
-     * 火车编号
-     */
-    @TableId
-    private String trainCode;
 
     /**
      * id
      */
+    @TableId
     private Long id;
+
+    /**
+     * 火车编号
+     */
+
+    private String trainCode;
 
     /**
      * 火车箱号
@@ -37,7 +39,7 @@ public class TrainCarriage implements Serializable {
     private String seatType;
 
     /**
-     * 排数
+     * 座位数
      */
     private Integer seatCount;
 
