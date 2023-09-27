@@ -59,3 +59,16 @@ create table `train_carriage` (
     `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间',
     unique (`train_code`,`train_index`)
 )COMMENT='车厢';
+
+DROP TABLE IF EXISTS `train_seat`;
+create table `train_seat`(
+    `id` bigint not null comment 'id',
+    `train_code` varchar(20) not null comment '火车编号',
+    `carriage_index` int not null comment '火车箱号',
+    `seat_type` char not null comment '座位类型|枚举',
+    `row_count` char(2) not null comment '排',
+    `column_count` char(1) not null comment '列|枚举',
+    `carriage_seat_index` int not null comment '同车厢座序',
+    `create_time` datetime(3) DEFAULT NULL COMMENT '新增时间',
+    `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间'
+)COMMENT='座位';
