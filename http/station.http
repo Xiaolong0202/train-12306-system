@@ -1,0 +1,4 @@
+GET http://localhost/business/station/admin/query-list
+Accept: application/json
+
+###

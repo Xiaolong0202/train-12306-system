@@ -1,3 +1,13 @@
+GET http://localhost/business/station/admin/query-list
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-27T220654.200.json
+
+###
+
 GET http://localhost/member/get-enum/Passenger
 token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk1NjI1MjIxMTY1LCJtZW1iZXJJZCI6MTcwNTU1MjgyNDA1MTU2ODY0MH0.XfhytY1aT1o_nZSGiHxGYf7XDiv5mHxY-iFJQXnpLGc
 Accept: application/json
@@ -715,25 +725,6 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 }
 
 <> 2023-09-22T235004.200.json
-
-###
-
-POST http://localhost/member/passenger/save
-Content-Type: application/json
-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxNTExNjc3ODI5NiIsImV4cGlyZV90aW1lIjoxNjk1Mzk1ODM1NDA0fQ.XEQWuUOq6yqNFnjNbm0eaLRqiSGVOn8E8HFUcXaNUyU
-Content-Length: 91
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "memberId" : 13213,
-  "name" : "liuxiaolong",
-  "idCard" : "13132332",
-  "type" : "1"
-}
-
-<> 2023-09-22T230720.200.json
 
 ###
 

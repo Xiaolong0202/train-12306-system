@@ -68,7 +68,8 @@
                     label="始发站"
                     name="start"
                 >
-                    <a-input v-model:value="train.start"/>
+                    <station-selector v-model:station-name="train.start"/>
+<!--                    <a-input v-model:value="train.start"/>-->
                 </a-form-item>
                 <a-form-item
                     label="始发站拼音"
@@ -86,7 +87,8 @@
                     label="终点站"
                     name="end"
                 >
-                    <a-input v-model:value="train.end"/>
+                    <station-selector v-model:station-name="train.end"/>
+<!--                    <a-input v-model:value="train.end"/>-->
                 </a-form-item>
                 <a-form-item
                     label="终点站拼音"
@@ -125,6 +127,7 @@ import {doPost} from "@/util/axiosUtil";
 import axios from "axios";
 import {info} from "@/util/info";
 import {pinyin} from "pinyin-pro";
+import StationSelector from "@/components/StationSelector.vue";
 
 const train = reactive({
     id:'',
