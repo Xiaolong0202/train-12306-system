@@ -53,13 +53,13 @@
                         label="车站拼音"
                         name="namePinyin"
                 >
-                    <a-input v-model:value="station.namePinyin"/>
+                    <a-input v-model:value="station.namePinyin" disabled/>
                 </a-form-item>
                 <a-form-item
                         label="车站拼音首字母缩写"
                         name="namePy"
                 >
-                    <a-input v-model:value="station.namePy"/>
+                    <a-input v-model:value="station.namePy" disabled/>
                 </a-form-item>
                 <a-form-item>
                     <a-popconfirm placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="confirm">
@@ -75,10 +75,11 @@
     </div>
 </template>
 <script setup>
-import {onMounted, reactive, ref} from 'vue';
+import {onMounted, reactive, ref, watch} from 'vue';
 import {doPost} from "@/util/axiosUtil";
 import axios from "axios";
 import {info} from "@/util/info";
+import {pinyin} from "pinyin-pro";
 
 const station = reactive({
     id: '',
@@ -181,6 +182,11 @@ const handleDelete = (record)=>{
             }
         })
 }
+
+watch(()=>station.name,()=>{
+    station.namePinyin = pinyin(station.name,{toneType: 'none'}).replace(" ",'')
+    station.namePy = pinyin(station.name,{pattern:'first',toneType: 'none'}).replace(" ",'')
+})
 
 onMounted(() => {
     queryStationList()

@@ -74,7 +74,7 @@
                     label="始发站拼音"
                     name="startPinyin"
                 >
-                    <a-input v-model:value="train.startPinyin"/>
+                    <a-input v-model:value="train.startPinyin" disabled/>
                 </a-form-item>
                 <a-form-item
                     label="出发时间"
@@ -92,7 +92,7 @@
                     label="终点站拼音"
                     name="code"
                 >
-                    <a-input v-model:value="train.endPinyin"/>
+                    <a-input v-model:value="train.endPinyin" disabled/>
                 </a-form-item>
                 <a-form-item
                     label="到终点站时间"
@@ -120,10 +120,11 @@
     </div>
 </template>
 <script setup>
-import {onMounted, reactive, ref} from 'vue';
+import {onMounted, reactive, ref, watch} from 'vue';
 import {doPost} from "@/util/axiosUtil";
 import axios from "axios";
 import {info} from "@/util/info";
+import {pinyin} from "pinyin-pro";
 
 const train = reactive({
     id:'',
@@ -278,6 +279,14 @@ const handleDelete = (record)=>{
 onMounted(() => {
     queryTrainList()
     queryTrainType()
+})
+
+watch(()=>train.start,()=>{
+    train.startPinyin = pinyin(train.start,{toneType: 'none'}).replace(" ",'')
+})
+
+watch(()=>train.end,()=>{
+    train.endPinyin = pinyin(train.end,{toneType: 'none'}).replace(" ",'')
 })
 
 
