@@ -9,8 +9,8 @@
             <result property="trainCode" column="train_code" jdbcType="VARCHAR"/>
             <result property="carriageIndex" column="carriage_index" jdbcType="INTEGER"/>
             <result property="seatType" column="seat_type" jdbcType="CHAR"/>
-            <result property="row" column="row_count" jdbcType="CHAR"/>
-            <result property="col" column="column_count" jdbcType="CHAR"/>
+            <result property="seatRow" column="row_count" jdbcType="CHAR"/>
+            <result property="seatCol" column="column_count" jdbcType="CHAR"/>
             <result property="carriageSeatIndex" column="carriage_seat_index" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
