@@ -1,6 +1,5 @@
 package com.lxl.business.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -26,7 +25,7 @@ public class TrainCarriage implements Serializable {
      * 火车编号
      */
 
-    private String trainCode;
+    private Long trainId;
 
     /**
      * 火车箱号
@@ -78,7 +77,7 @@ public class TrainCarriage implements Serializable {
             return false;
         }
         TrainCarriage other = (TrainCarriage) that;
-        return (this.getTrainCode() == null ? other.getTrainCode() == null : this.getTrainCode().equals(other.getTrainCode()))
+        return (this.getTrainId() == null ? other.getTrainId() == null : this.getTrainId().equals(other.getTrainId()))
             && (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getTrainIndex() == null ? other.getTrainIndex() == null : this.getTrainIndex().equals(other.getTrainIndex()))
             && (this.getSeatType() == null ? other.getSeatType() == null : this.getSeatType().equals(other.getSeatType()))
@@ -93,7 +92,7 @@ public class TrainCarriage implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getTrainCode() == null) ? 0 : getTrainCode().hashCode());
+        result = prime * result + ((getTrainId() == null) ? 0 : getTrainId().hashCode());
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getTrainIndex() == null) ? 0 : getTrainIndex().hashCode());
         result = prime * result + ((getSeatType() == null) ? 0 : getSeatType().hashCode());
@@ -111,7 +110,7 @@ public class TrainCarriage implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", trainCode=").append(trainCode);
+        sb.append(", trainCode=").append(trainId);
         sb.append(", id=").append(id);
         sb.append(", trainIndex=").append(trainIndex);
         sb.append(", seatType=").append(seatType);

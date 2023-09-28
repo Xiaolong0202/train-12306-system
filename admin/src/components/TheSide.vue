@@ -12,8 +12,8 @@
     </a-layout-sider>
 </template>
 <script setup>
-import { h, reactive, ref, watch} from "vue";
-import {SmileOutlined, TeamOutlined} from "@ant-design/icons-vue";
+import { h, reactive, ref} from "vue";
+import {TeamOutlined} from "@ant-design/icons-vue";
 import router from "@/router";
 const openKeys = ref(['sub1']);
 
@@ -31,8 +31,9 @@ function getItem(label, key, icon, children, type) {
     };
 }
 const items = reactive([
-    getItem('welcome', '/main/welcome', h(SmileOutlined),null, null),
-    getItem('about', '/main/about', h(TeamOutlined),null, null),
+    getItem('trainStation', '/main/trainStation', h(TeamOutlined),null, null),
+    getItem('trainCarriage', '/main/trainCarriage', h(TeamOutlined),null, null),
+    getItem('seat', '/main/trainSeat', h(TeamOutlined),null, null),
 ])
 const toPage = ({key,keyPath}) => {
     let finalPath = '';
@@ -43,12 +44,7 @@ const toPage = ({key,keyPath}) => {
     router.push(finalPath)
 }
 const selectedKeys = ref(['/main/welcome'])
-watch(()=>router.currentRoute.value.path,( ) => {
-    let item = sessionStorage.getItem('12306_selectedKey');
-    if (item && typeof(item)!== 'undefined' && item!=='undefined'){
-        selectedKeys.value =  JSON.parse(item)
-    }
-})
+
 
 
 </script>

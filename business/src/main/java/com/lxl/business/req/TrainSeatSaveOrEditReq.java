@@ -21,7 +21,8 @@ public class TrainSeatSaveOrEditReq {
     /**
      * 火车编号
      */
-    private String trainCode;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long trainId;
 
     /**
      * 火车箱号

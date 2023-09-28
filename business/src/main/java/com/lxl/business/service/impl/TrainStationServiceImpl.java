@@ -46,14 +46,14 @@ public class TrainStationServiceImpl implements TrainStationService{
         trainStation.setUpdateTime(now);
 
 
-            //检查unique(code,stationName)
+            //检查unique(trainId,stationName)
             LambdaQueryWrapper<TrainStation> lambdaQueryWrapper = new LambdaQueryWrapper<>();
             lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getStationName()),TrainStation::getStationName,trainStation.getStationName());
-            lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getTrainCode()),TrainStation::getTrainCode,trainStation.getTrainCode());
+            lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getTrainId()),TrainStation::getTrainId,trainStation.getTrainId());
             List<TrainStation> trainStations = trainStationMapper.selectList(lambdaQueryWrapper);
             if (CollUtil.isNotEmpty(trainStations)){
                 TrainStation station = trainStations.get(0);
-                if ((station.getStationName().equals(trainStation.getStationName())&&station.getTrainCode().equals(station.getTrainCode()))) {
+                if ((station.getStationName().equals(trainStation.getStationName())&&station.getTrainId().equals(station.getTrainId()))) {
                     if (!station.getId().equals(trainStation.getId())){
                         //不为空表示已经存在,则抛出异常
                         throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);
@@ -63,11 +63,11 @@ public class TrainStationServiceImpl implements TrainStationService{
 
         lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getTrainIndex()),TrainStation::getTrainIndex,trainStation.getTrainIndex());
-        lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getTrainCode()),TrainStation::getTrainCode,trainStation.getTrainCode());
+        lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainStation.getTrainId()),TrainStation::getTrainId,trainStation.getTrainId());
         trainStations = trainStationMapper.selectList(lambdaQueryWrapper);
         if (CollUtil.isNotEmpty(trainStations)){
             TrainStation station = trainStations.get(0);
-            if ((station.getTrainIndex().equals(trainStation.getTrainIndex())&&station.getTrainCode().equals(station.getTrainCode()))) {
+            if ((station.getTrainIndex().equals(trainStation.getTrainIndex())&&station.getTrainId().equals(station.getTrainId()))) {
                 if (!station.getId().equals(trainStation.getId())){
                     //不为空表示已经存在,则抛出异常
                     throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);

@@ -15,8 +15,8 @@ import java.util.Date;
 @Data
 public class TrainCarriageQueryResp {
 
-
-    private String trainCode;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long trainId;
 
     /**
      * id

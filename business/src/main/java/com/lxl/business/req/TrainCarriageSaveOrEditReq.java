@@ -16,13 +16,14 @@ import java.util.Date;
 @Data
 public class TrainCarriageSaveOrEditReq {
 
-    private String trainCode;
-
     /**
      * id
      */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
+
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long trainId;
 
     /**
      * 火车箱号

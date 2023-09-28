@@ -22,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,17 +43,17 @@ public class TrainCarriageServiceImpl implements TrainCarriageService{
         Date now = DateTime.now();
         trainCarriage.setUpdateTime(now);
 
-        //检查unique(code,stationName)
+        //检查unique(trainId,stationName)
         LambdaQueryWrapper<TrainCarriage> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 
 
         lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainCarriage.getTrainIndex()),TrainCarriage::getTrainIndex,trainCarriage.getTrainIndex());
-        lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainCarriage.getTrainCode()),TrainCarriage::getTrainCode,trainCarriage.getTrainCode());
+        lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainCarriage.getTrainId()),TrainCarriage::getTrainId,trainCarriage.getTrainId());
         List<TrainCarriage> trainCarriages = trainCarriageMapper.selectList(lambdaQueryWrapper);
         if (CollUtil.isNotEmpty(trainCarriages)){
             TrainCarriage station = trainCarriages.get(0);
-            if ((station.getTrainIndex().equals(trainCarriage.getTrainIndex())&&station.getTrainCode().equals(station.getTrainCode()))) {
+            if ((station.getTrainIndex().equals(trainCarriage.getTrainIndex())&&station.getTrainId().equals(station.getTrainId()))) {
                 if (!station.getId().equals(trainCarriage.getId())){
                     //不为空表示已经存在,则抛出异常
                     throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);

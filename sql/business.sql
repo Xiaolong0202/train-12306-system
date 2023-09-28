@@ -30,7 +30,7 @@ create table `train` (
 DROP TABLE IF EXISTS `train_station`;
 CREATE TABLE `train_station` (
                                  `id` bigint NOT NULL COMMENT 'id',
-                                 `train_code` varchar(20) NOT NULL COMMENT '车次编号',
+                                 `train_id` bigint NOT NULL COMMENT '车次id',
                                  `train_index` int NOT NULL COMMENT '车站序号',
                                  `station_name` varchar(20) NOT NULL COMMENT '站名',
                                  `name_pinyin` varchar(50) NOT NULL COMMENT '站名拼音',
@@ -41,15 +41,15 @@ CREATE TABLE `train_station` (
                                  `create_time` datetime(3) DEFAULT NULL COMMENT '新增时间',
                                  `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间',
                                  PRIMARY KEY (`id`),
-                                 UNIQUE KEY `train_code` (`train_code`,`train_index`),
-                                 UNIQUE KEY `train_code_2` (`train_code`,`station_name`)
+                                 UNIQUE KEY `train_code` (`train_id`,`train_index`),
+                                 UNIQUE KEY `train_code_2` (`train_id`,`station_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='火车车站';
 
 DROP TABLE  IF EXISTS `train_carriage`;
 
 create table `train_carriage` (
     `id` bigint not null   primary key comment 'id',
-    `train_code` varchar(20) not null comment '火车编号',
+    `train_id` bigint NOT NULL COMMENT '车次id',
     `train_index` int not null comment '火车箱号',
     `seat_type` char not null comment '座位类型|枚举',
     `seat_count` int not null comment '排数',
@@ -57,13 +57,13 @@ create table `train_carriage` (
     `column_count` int not null comment '列数',
     `create_time` datetime(3) DEFAULT NULL COMMENT '新增时间',
     `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间',
-    unique (`train_code`,`train_index`)
+    unique (`train_id`,`train_index`)
 )COMMENT='车厢';
 
 DROP TABLE IF EXISTS `train_seat`;
 create table `train_seat`(
     `id` bigint not null comment 'id',
-    `train_code` varchar(20) not null comment '火车编号',
+    `train_id` bigint NOT NULL COMMENT '车次id',
     `carriage_index` int not null comment '火车箱号',
     `seat_type` char not null comment '座位类型|枚举',
     `seat_row` char(2) not null comment '排',

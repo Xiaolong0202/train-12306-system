@@ -18,8 +18,8 @@
 
 
 <script setup>
-import { h, reactive, ref, watch} from "vue";
-import {SmileOutlined, TeamOutlined} from "@ant-design/icons-vue";
+import { h, reactive, ref} from "vue";
+import {HomeOutlined, SmileOutlined, TeamOutlined, UserOutlined} from "@ant-design/icons-vue";
 import router from "@/router";
 
 //该方法只能用于setUp当中
@@ -38,6 +38,8 @@ function getItem(label, key, icon, children, type) {
 const items = reactive([
     getItem('welcome', '/main/welcome', h(SmileOutlined),null, null),
     getItem('about', '/main/about', h(TeamOutlined),null, null),
+    getItem('station', '/main/station', h(HomeOutlined),null, null),
+    getItem('train', '/main/train', h(UserOutlined),null, null),
 ])
 const toPage = ({key,keyPath}) => {
     let finalPath = '';
@@ -48,12 +50,6 @@ const toPage = ({key,keyPath}) => {
     router.push(finalPath)
 }
 const selectedKeys = ref(['/main/welcome'])
-watch(()=>router.currentRoute.value.path,( ) => {
-    let item = sessionStorage.getItem('12306_selectedKey');
-    if (item && typeof(item)!== 'undefined' && item!=='undefined'){
-        selectedKeys.value =  JSON.parse(item)
-    }
-})
 
 
 </script>

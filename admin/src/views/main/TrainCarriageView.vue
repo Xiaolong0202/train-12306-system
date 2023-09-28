@@ -52,9 +52,9 @@
             >
                 <a-form-item
                         label="车次编号"
-                        name="trainCode"
+                        name="trainId"
                 >
-                    <a-input v-model:value="trainCarriage.trainCode"/>
+                    <a-input v-model:value="trainCarriage.trainId"/>
                 </a-form-item>
                 <a-form-item
                         label="火车箱号"
@@ -108,7 +108,7 @@ import axios from "axios";
 import {info} from "@/util/info";
 
 const trainCarriage = reactive({
-    trainCode:  ``,
+    trainId:  ``,
     id:  ``,
     trainIndex:  ``,
     seatType:  ``,
@@ -141,7 +141,7 @@ const cancel = () => {
 
 function resetTrainCarriage() {
     Object.assign(trainCarriage,{
-        trainCode:  ``,
+        trainId:  ``,
         id:  ``,
         trainIndex:  ``,
         seatType:  `1`,
@@ -157,8 +157,8 @@ const dataSource = ref([])
 const columns = [
     {
         title: '编号',
-        dataIndex: 'trainCode',
-        key: 'trainCode',
+        dataIndex: 'trainId',
+        key: 'trainId',
     },
     {
         title: '火车箱号',

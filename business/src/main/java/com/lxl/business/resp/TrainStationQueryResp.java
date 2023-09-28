@@ -22,7 +22,8 @@ public class TrainStationQueryResp {
     /**
      * 车次编号
      */
-    private String trainCode;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long trainId;
 
     /**
      * 车站序号

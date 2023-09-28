@@ -59,9 +59,9 @@
             >
                 <a-form-item
                         label="车次编号"
-                        name="trainCode"
+                        name="trainId"
                 >
-                    <a-input v-model:value="trainSeat.trainCode"/>
+                    <a-input v-model:value="trainSeat.trainId"/>
                 </a-form-item>
                 <a-form-item
                         label="火车箱号"
@@ -118,7 +118,7 @@ import {info} from "@/util/info";
 
 const trainSeat = reactive({
     id:  ``,
-    trainCode:  ``,
+    trainId:  ``,
     carriageIndex:  ``,
     seatType:  ``,
     seatRow:  ``,
@@ -152,7 +152,7 @@ const cancel = () => {
 function resetTrainSeat() {
     Object.assign(trainSeat,{
         id:  ``,
-        trainCode:  ``,
+        trainId:  ``,
         carriageIndex:  ``,
         seatType:  ``,
         seatRow:  ``,
@@ -166,9 +166,9 @@ function resetTrainSeat() {
 const dataSource = ref([])
 const columns = [
     {
-        title: '编号',
-        dataIndex: 'trainCode',
-        key: 'trainCode',
+        title: '火车id',
+        dataIndex: 'trainId',
+        key: 'trainId',
     },
     {
         title: '火车箱号',

@@ -52,9 +52,9 @@
             >
                 <a-form-item
                         label="车次编号"
-                        name="trainCode"
+                        name="trainId"
                 >
-                    <a-input v-model:value="trainStation.trainCode"/>
+                    <a-input v-model:value="trainStation.trainId"/>
                 </a-form-item>
                 <a-form-item
                         label="车站序号"
@@ -114,7 +114,7 @@ import {pinyin} from "pinyin-pro";
 
 const trainStation = reactive({
     id: '',
-    trainCode: '',
+    trainId: '',
     trainIndex: '',
     stationName: '',
     namePinyin: '',
@@ -148,7 +148,7 @@ const cancel = () => {
 function resetTrainStation() {
     Object.assign(trainStation,{
         id: '',
-        trainCode: '',
+        trainId: '',
         trainIndex: '',
         stationName: '',
         namePinyin: '',
@@ -165,8 +165,8 @@ const dataSource = ref([])
 const columns = [
     {
         title: '车次编号',
-        dataIndex: 'trainCode',
-        key: 'trainCode',
+        dataIndex: 'trainId',
+        key: 'trainId',
     },
     {
         title: '车站序号',

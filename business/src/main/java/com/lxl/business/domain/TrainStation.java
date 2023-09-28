@@ -1,6 +1,5 @@
 package com.lxl.business.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -25,7 +24,7 @@ public class TrainStation implements Serializable {
     /**
      * 车次编号
      */
-    private String trainCode;
+    private Long trainId;
 
     /**
      * 车站序号
@@ -88,7 +87,7 @@ public class TrainStation implements Serializable {
         }
         TrainStation other = (TrainStation) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getTrainCode() == null ? other.getTrainCode() == null : this.getTrainCode().equals(other.getTrainCode()))
+            && (this.getTrainId() == null ? other.getTrainId() == null : this.getTrainId().equals(other.getTrainId()))
             && (this.getTrainIndex() == null ? other.getTrainIndex() == null : this.getTrainIndex().equals(other.getTrainIndex()))
             && (this.getStationName() == null ? other.getStationName() == null : this.getStationName().equals(other.getStationName()))
             && (this.getNamePinyin() == null ? other.getNamePinyin() == null : this.getNamePinyin().equals(other.getNamePinyin()))
@@ -105,7 +104,7 @@ public class TrainStation implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getTrainCode() == null) ? 0 : getTrainCode().hashCode());
+        result = prime * result + ((getTrainId() == null) ? 0 : getTrainId().hashCode());
         result = prime * result + ((getTrainIndex() == null) ? 0 : getTrainIndex().hashCode());
         result = prime * result + ((getStationName() == null) ? 0 : getStationName().hashCode());
         result = prime * result + ((getNamePinyin() == null) ? 0 : getNamePinyin().hashCode());
@@ -125,7 +124,7 @@ public class TrainStation implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", trainCode=").append(trainCode);
+        sb.append(", trainCode=").append(trainId);
         sb.append(", trainIndex=").append(trainIndex);
         sb.append(", stationName=").append(stationName);
         sb.append(", namePinyin=").append(namePinyin);
