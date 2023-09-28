@@ -54,7 +54,7 @@
                         label="车次编号"
                         name="trainId"
                 >
-                    <a-input v-model:value="trainStation.trainId"/>
+                    <a-input v-model:value="trainStation.trainId" disabled/>
                 </a-form-item>
                 <a-form-item
                         label="车站序号"
@@ -111,10 +111,17 @@ import {doPost} from "@/util/axiosUtil";
 import axios from "axios";
 import {info} from "@/util/info";
 import {pinyin} from "pinyin-pro";
+import {useRoute} from "vue-router";
 
+
+
+const route = useRoute()
+const routeParams = ref(route.params)
+const open = ref(false);
+const loading = ref(false);
 const trainStation = reactive({
     id: '',
-    trainId: '',
+    trainId:  routeParams.value.trainId,
     trainIndex: '',
     stationName: '',
     namePinyin: '',
@@ -125,10 +132,6 @@ const trainStation = reactive({
     createTime: '',
     updateTime:''
 })
-
-
-const open = ref(false);
-const loading = ref(false);
 const showModal = () => {
     open.value = true
 };
@@ -148,7 +151,7 @@ const cancel = () => {
 function resetTrainStation() {
     Object.assign(trainStation,{
         id: '',
-        trainId: '',
+        trainId:  routeParams.value.trainId,
         trainIndex: '',
         stationName: '',
         namePinyin: '',

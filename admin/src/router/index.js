@@ -27,24 +27,30 @@ const routes = [
                 path: 'train',
                 component: () => import('../views/main/TrainView.vue')
             },
-            {
-                path: 'trainStation',
-                component: () => import('../views/main/TrainStation.vue')
-            },
-            {
-                path: 'trainCarriage',
-                component: () => import('../views/main/TrainCarriageView.vue')
-            },
-            {
-                path: 'trainSeat',
-                component: () => import('../views/main/TrainSeatView.vue')
-            }
         ]
     },
     {
         path: '',
         alias: '/',
         redirect: '/main/welcome'
+    },
+    {
+        path: '/trainEdit/:trainId',
+        component: () => import('../views/TrainEditView.vue'),
+        children: [
+            {
+                path: 'trainCarriage/:trainId',
+                component: ()=> import('../views/trainEdit/TrainCarriageView.vue')
+            },
+            {
+                path: 'trainSeat/:trainId',
+                component: ()=> import('../views/trainEdit/TrainSeatView.vue')
+            },
+            {
+                path: 'trainStation/:trainId',
+                component: ()=> import('../views/trainEdit/TrainStation.vue')
+            },
+        ]
     }
 ]
 

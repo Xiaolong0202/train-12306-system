@@ -6,7 +6,14 @@
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading" style="margin-top: 20px">
             <template #bodyCell="{column , record}">
                 <template v-if="column.dataIndex === 'seatType'">
-                    <template v-for="item in trainCarriage_type" :key="item.code">
+                    <template v-for="item in trainSeat_type" :key="item.code">
+                        <span v-if="item.code === record.seatType">
+                            {{item.description}}
+                        </span>
+                    </template>
+                </template>
+                <template v-if="column.dataIndex === 'seatCol'">
+                    <template v-for="item in trainSeatCol_type" :key="item.code">
                         <span v-if="item.code === record.seatType">
                             {{item.description}}
                         </span>
@@ -36,62 +43,64 @@
                       v-model:total="pagination.total"
                       :pageSizeOptions="['2','5','10','15']"
                       :showSizeChanger="true"
-                      @change="queryTrainCarriageList"
+                      @change="queryTrainSeatList"
         />
         <a-modal v-model:open="open"
-                 title="enter trainCarriage info"
+                 title="enter trainSeat info"
                  :closable="false"
                  :mask="true"
                  :maskClosable="false"
                  :footer="[]"
         >
             <a-form
-                    :model="trainCarriage"
-                    name="trainCarriage"
+                    :model="trainSeat"
+                    name="trainSeat"
                     autocomplete="off"
             >
                 <a-form-item
                         label="车次编号"
                         name="trainId"
                 >
-                    <a-input v-model:value="trainCarriage.trainId"/>
+                    <a-input v-model:value="trainSeat.trainId" disabled/>
                 </a-form-item>
                 <a-form-item
                         label="火车箱号"
-                        name="trainIndex"
+                        name="carriageIndex"
                 >
-                    <a-input v-model:value="trainCarriage.trainIndex"/>
+                    <a-input v-model:value="trainSeat.carriageIndex"/>
                 </a-form-item>
                 <a-form-item
                         label="座位类型"
                         name="seatType"
                 >
-                    <a-select v-model:value="trainCarriage.seatType">
-                        <a-select-option v-for="item in trainCarriage_type" :value="item.code" :key="item.code">{{item.description}}</a-select-option>
+                    <a-select v-model:value="trainSeat.seatType">
+                        <a-select-option v-for="item in trainSeat_type" :value="item.code" :key="item.code">{{item.description}}</a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item
-                        label="座位数"
-                        name="seatCount"
+                        label="排"
+                        name="seatRow"
                 >
-                    <a-input v-model:value="trainCarriage.seatCount"/>
+                    <a-input v-model:value="trainSeat.seatRow"/>
                 </a-form-item>
                 <a-form-item
-                        label="排数"
-                        name="rowCount"
+                        label="列"
+                        name="seatCol"
                 >
-                    <a-input v-model:value="trainCarriage.rowCount"/>
+                    <a-select v-model:value="trainSeat.seatCol">
+                        <a-select-option v-for="item in trainSeatCol_type" :value="item.code" :key="item.code">{{item.description}}</a-select-option>
+                    </a-select>
                 </a-form-item>
                 <a-form-item
-                        label="列数"
+                        label="同车厢座序"
                         name="columnCount"
                 >
-                    <a-input v-model:value="trainCarriage.columnCount"/>
+                    <a-input v-model:value="trainSeat.carriageSeatIndex"/>
                 </a-form-item>
                 <a-form-item>
                     <a-popconfirm placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="confirm">
                         <template #title>
-                            are you sure to add this trainCarriage?
+                            are you sure to add this trainSeat?
                         </template>
                         <a-button>save</a-button>
                     </a-popconfirm>
@@ -106,49 +115,52 @@ import {onMounted, reactive, ref} from 'vue';
 import {doPost} from "@/util/axiosUtil";
 import axios from "axios";
 import {info} from "@/util/info";
-
-const trainCarriage = reactive({
-    trainId:  ``,
-    id:  ``,
-    trainIndex:  ``,
-    seatType:  ``,
-    seatCount:  ``,
-    rowCount:  ``,
-    columnCount:  ``,
-    createTime:   ``,
-    updateTime:  ``
-})
+import {useRoute} from "vue-router";
 
 
-const trainCarriage_type = ref([])
+const route = useRoute()
+const routeParams = ref(route.params)
+const trainSeat_type = ref([])
+const trainSeatCol_type = ref([])
 const open = ref(false);
 const loading = ref(false);
+const trainSeat = reactive({
+    id:  ``,
+    trainId:  routeParams.value.trainId,
+    carriageIndex:  ``,
+    seatType:  ``,
+    seatRow:  ``,
+    seatCol:  `C`,
+    carriageSeatIndex:  ``,
+    createTime:  ``,
+    updateTime:  ``
+})
 const showModal = () => {
     open.value = true
 };
 const confirm = async () => {
-    let res = await doPost('/business/trainCarriage/admin/save', trainCarriage);
+    let res = await doPost('/business/trainSeat/admin/save', trainSeat);
     if (res) {
-        resetTrainCarriage()
-        queryTrainCarriageList()
+        resetTrainSeat()
+        queryTrainSeatList()
         open.value = false;
     }
 };
 const cancel = () => {
-    resetTrainCarriage()
+    resetTrainSeat()
     open.value = false;
 }
 
-function resetTrainCarriage() {
-    Object.assign(trainCarriage,{
-        trainId:  ``,
+function resetTrainSeat() {
+    Object.assign(trainSeat,{
         id:  ``,
-        trainIndex:  ``,
-        seatType:  `1`,
-        seatCount:  ``,
-        rowCount:  ``,
-        columnCount:  ``,
-        createTime:   ``,
+        trainId:  routeParams.value.trainId,
+        carriageIndex:  ``,
+        seatType:  ``,
+        seatRow:  ``,
+        seatCol:  `C`,
+        carriageSeatIndex:  ``,
+        createTime:  ``,
         updateTime:  ``
     })
 }
@@ -156,14 +168,14 @@ function resetTrainCarriage() {
 const dataSource = ref([])
 const columns = [
     {
-        title: '编号',
+        title: '火车id',
         dataIndex: 'trainId',
         key: 'trainId',
     },
     {
         title: '火车箱号',
-        dataIndex: 'trainIndex',
-        key: 'trainIndex',
+        dataIndex: 'carriageIndex',
+        key: 'carriageIndex',
     },
     {
         title: '座位类型',
@@ -171,19 +183,19 @@ const columns = [
         key: 'seatType',
     },
     {
-        title: '座位数',
-        dataIndex: 'seatCount',
-        key: 'seatCount',
+        title: '排',
+        dataIndex: 'seatRow',
+        key: 'seatRow',
     },
     {
-        title: '排数',
-        dataIndex: 'rowCount',
-        key: 'rowCount',
+        title: '列',
+        dataIndex: 'seatCol',
+        key: 'seatCol',
     },
     {
-        title: '列数',
-        dataIndex: 'columnCount',
-        key: 'columnCount',
+        title: '同车厢座序',
+        dataIndex: 'carriageSeatIndex',
+        key: 'carriageSeatIndex',
     },
     {
         title: 'action',
@@ -195,9 +207,9 @@ const pagination = reactive({
     current: 1,
     pageSize: 2,
 })
-const queryTrainCarriageList = () => {
+const queryTrainSeatList = () => {
     loading.value = true
-    axios.get("/business/trainCarriage/admin/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize)
+    axios.get("/business/trainSeat/admin/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize)
         .then(res => {
             loading.value = false
             if (res) {
@@ -209,30 +221,38 @@ const queryTrainCarriageList = () => {
         })
 }
 
-const queryTrainCarriageType = ()=>{
+const queryTrainSeatAndColType = ()=>{
     loading.value = true
     axios.get('/business/get-enum/business.enums.Seat')
         .then(res =>{
             loading.value = false
             if (res) {
-                trainCarriage_type.value = res.data
+                trainSeat_type.value = res.data
+            }
+        })
+    loading.value = true
+    axios.get('/business/get-enum/business.enums.SeatCol')
+        .then(res =>{
+            loading.value = false
+            if (res) {
+                trainSeatCol_type.value = res.data
             }
         })
 }
 
 const handleEdit = (record) => {
-    Object.assign(trainCarriage,record)//该方法相当于BeanUtil.copyProperties
+    Object.assign(trainSeat,record)//该方法相当于BeanUtil.copyProperties
     open.value = true
 }
 
 const handleDelete = (record)=>{
-    axios.delete('/business/trainCarriage/admin/delete/'+record.id)
+    axios.delete('/business/trainSeat/admin/delete/'+record.id)
         .then(resp => {
             if (resp) {
                 const data = resp.data
                 if (data.success) {
                     info('success', data.message)
-                    queryTrainCarriageList()
+                    queryTrainSeatList()
                 }
                 if (data.success === false) {
                     info('error', data.message)
@@ -242,8 +262,8 @@ const handleDelete = (record)=>{
 }
 
 onMounted(() => {
-    queryTrainCarriageList()
-    queryTrainCarriageType()
+    queryTrainSeatList()
+    queryTrainSeatAndColType()
 })
 
 
