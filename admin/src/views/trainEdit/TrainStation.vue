@@ -5,13 +5,6 @@
         </div>
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading" style="margin-top: 20px">
             <template #bodyCell="{column , record}">
-                <template v-if="column.dataIndex === 'type'">
-                    <template v-for="item in trainStation_type" :key="item.code">
-                        <span v-if="item.code === record.type">
-                            {{item.description}}
-                        </span>
-                    </template>
-                </template>
                 <template v-if="column.dataIndex === 'action'">
                     <a-popconfirm
                             v-if="dataSource.length"
@@ -66,7 +59,7 @@
                         label="站名"
                         name="stationName"
                 >
-                    <a-input v-model:value="trainStation.stationName"/>
+                    <station-selector v-model:station-name="trainStation.stationName"/>
                 </a-form-item>
                 <a-form-item
                         label="站名拼音"
@@ -112,6 +105,7 @@ import axios from "axios";
 import {info} from "@/util/info";
 import {pinyin} from "pinyin-pro";
 import {useRoute} from "vue-router";
+import StationSelector from "@/components/StationSelector.vue";
 
 
 
@@ -218,7 +212,7 @@ const pagination = reactive({
 })
 const queryTrainStationList = () => {
     loading.value = true
-    axios.get("/business/trainStation/admin/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize)
+    axios.get("/business/trainStation/admin/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize+"&trainId="+routeParams.value.trainId)
         .then(res => {
             loading.value = false
             if (res) {

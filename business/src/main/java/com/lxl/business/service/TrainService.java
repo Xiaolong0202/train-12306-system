@@ -14,4 +14,6 @@ public interface TrainService {
     PageResp<TrainQueryResp> queryList(TrainQueryReq req);
 
     void delete(Long id);
+
+    TrainQueryResp queryOne(Long trainId);
 }

@@ -14,11 +14,18 @@
                 </template>
                 <template v-if="column.dataIndex === 'action'">
                     <a-popconfirm
+                        v-if="dataSource.length"
+                        title="确认编辑子表?"
+                        @confirm="handleEditOtherInfo(record)"
+                    >
+                        <a style="margin-left:  10px">编辑子表</a>
+                    </a-popconfirm>
+                    <a-popconfirm
                             v-if="dataSource.length"
                             title="Sure to edit?"
                             @confirm="handleEdit(record)"
                     >
-                        <a>Edit</a>
+                        <a style="margin-left:  10px">Edit</a>
                     </a-popconfirm>
                     <a-popconfirm
                             v-if="dataSource.length"
@@ -128,7 +135,10 @@ import axios from "axios";
 import {info} from "@/util/info";
 import {pinyin} from "pinyin-pro";
 import StationSelector from "@/components/StationSelector.vue";
+import {useRouter} from "vue-router";
 
+
+const router = useRouter()
 const train = reactive({
     id:'',
     code:'',
@@ -277,6 +287,10 @@ const handleDelete = (record)=>{
                 }
             }
         })
+}
+
+const handleEditOtherInfo = (record) =>{
+    router.push('/trainEdit/'+record.id)
 }
 
 onMounted(() => {

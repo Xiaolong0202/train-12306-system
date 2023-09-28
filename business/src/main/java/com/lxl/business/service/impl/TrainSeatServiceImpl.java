@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.domain.TrainSeat;
+import com.lxl.business.domain.TrainStation;
 import com.lxl.business.mapper.TrainSeatMapper;
 import com.lxl.business.req.TrainSeatQueryReq;
 import com.lxl.business.req.TrainSeatSaveOrEditReq;
@@ -66,6 +67,7 @@ public class TrainSeatServiceImpl implements TrainSeatService{
     public PageResp<TrainSeatQueryResp> queryList(TrainSeatQueryReq req) {
         LambdaQueryWrapper<TrainSeat> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByDesc(TrainSeat::getId);
+        wrapper.eq(!ObjectUtils.isEmpty(req.getTrainId()), TrainSeat::getTrainId,req.getTrainId());
 
         if (!ObjectUtils.isEmpty(req.getPageSize())&&!ObjectUtils.isEmpty(req.getCurrentPage())){
             log.info("当前页码：{}",req.getCurrentPage());

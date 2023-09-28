@@ -2,7 +2,7 @@
     <a-layout id="components-layout-demo-top-side-2" style="min-height: 100vh">
         <a-layout-header class="header">
             <div class="logo">
-              火车ID {{routeParams.trainId}}
+            {{trainDB.type}}{{trainDB.code}}&nbsp;&nbsp;{{trainDB.start}}-{{trainDB.end}}
             </div>
         </a-layout-header>
         <a-layout>
@@ -27,13 +27,15 @@
     </a-layout>
 </template>
 <script setup>
-import {h, reactive, ref} from "vue";
+import {h, onMounted, reactive, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {TeamOutlined} from "@ant-design/icons-vue";
+import axios from "axios";
 const route = useRoute();
 const router = useRouter()
-
+const selectedKeys = ref([sessionStorage.getItem('TrainEditView')])
 const routeParams = ref(route.params)
+const trainDB = ref({})
 
 
 
@@ -54,7 +56,8 @@ const items = reactive([
     getItem('trainCarriage', '/trainEdit/'+routeParams.value.trainId+'/trainCarriage', h(TeamOutlined),null, null),
     getItem('seat', '/trainEdit/'+routeParams.value.trainId+'/trainSeat', h(TeamOutlined),null, null),
 ])
-const toPage = ({keyPath}) => {
+const toPage = ({key,keyPath}) => {
+    sessionStorage.setItem('TrainEditView',key)
     let finalPath = '';
     for (let i = 0; i < keyPath.length; i++) {
         finalPath += keyPath[i]
@@ -62,12 +65,27 @@ const toPage = ({keyPath}) => {
     finalPath+='/'+routeParams.value.trainId
     router.push(finalPath)
 }
-const selectedKeys = ref(['/main/welcome'])
+const getTrainInfo = ()=>{
+    axios.get('/business/train/admin/query-one/'+routeParams.value.trainId)
+        .then(res=>{
+            if (res){
+                const data = res.data
+                if (data.success){
+                    trainDB.value = data.content
+                }
+            }
+        })
+}
+
+onMounted(()=>{
+    getTrainInfo()
+})
+
 </script>
 <style scoped>
 .logo {
     float: left;
-    width: 150px;
+    width: 250px;
     height: 31px;
     color: white;
     font-size: 20px;

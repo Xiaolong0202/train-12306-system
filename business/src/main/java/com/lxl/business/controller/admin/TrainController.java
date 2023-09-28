@@ -29,10 +29,17 @@ public class TrainController {
         return CommonResp.buildSuccess(passengerService.queryList(req),"查询成功");
     }
 
+
+    @GetMapping("/query-one/{trainId}")
+    public CommonResp<?> queryOne(@PathVariable("trainId") Long trainId){
+        return CommonResp.buildSuccess(passengerService.queryOne(trainId),"查询成功");
+    }
+
     @DeleteMapping("/delete/{id}")
     public CommonResp<?> delete(@PathVariable("id") Long id){
         passengerService.delete(id);
         return CommonResp.buildSuccess("删除成功");
     }
+
 
 }

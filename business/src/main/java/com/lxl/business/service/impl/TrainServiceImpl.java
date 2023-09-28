@@ -116,6 +116,14 @@ public class TrainServiceImpl implements TrainService{
     public void delete(Long id) {
         trainMapper.deleteById(id);
     }
+
+    @Override
+    public TrainQueryResp queryOne(Long trainId) {
+        LambdaQueryWrapper<Train> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainId),Train::getId,trainId);
+        Train train = trainMapper.selectOne(lambdaQueryWrapper);
+        return BeanUtil.copyProperties(train,TrainQueryResp.class);
+    }
 }
 
 

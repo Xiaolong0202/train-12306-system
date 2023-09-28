@@ -3,6 +3,7 @@ package com.lxl.business.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -105,6 +106,7 @@ public class TrainStationServiceImpl implements TrainStationService{
     public PageResp<TrainStationQueryResp> queryList(TrainStationQueryReq req) {
         LambdaQueryWrapper<TrainStation> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByDesc(TrainStation::getId);
+        wrapper.eq(!ObjectUtils.isEmpty(req.getTrainId()),TrainStation::getTrainId,req.getTrainId());
 
         if (!ObjectUtils.isEmpty(req.getPageSize())&&!ObjectUtils.isEmpty(req.getCurrentPage())){
             log.info("当前页码：{}",req.getCurrentPage());

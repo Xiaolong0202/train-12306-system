@@ -200,7 +200,7 @@ const pagination = reactive({
 })
 const queryTrainCarriageList = () => {
     loading.value = true
-    axios.get("/business/trainCarriage/admin/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize)
+    axios.get("/business/trainCarriage/admin/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize+"&trainId="+routeParams.value.trainId)
         .then(res => {
             loading.value = false
             if (res) {
