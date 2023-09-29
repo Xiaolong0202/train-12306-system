@@ -155,12 +155,13 @@ public class TrainServiceImpl implements TrainService{
             int count = 1;
             Integer rowCount = carriage.getRowCount();
             List<SeatColTypeEnum> seatCols = SeatColTypeEnum.getSeatCols(carriage.getSeatType());
+            log.info("当前车次所有的车厢数目为：{}",seatCols.size());
             for (int i = 1; i <= rowCount; i++) {
                 for (SeatColTypeEnum seatCol : seatCols) {
                     TrainSeat trainSeat = new TrainSeat();
                     trainSeat.setTrainId(trainId);
                     trainSeat.setCarriageId(carriage.getId());
-                    trainSeat.setSeatRow(String.valueOf(i));
+                    trainSeat.setSeatRow(String.format("%02d",i));
                     trainSeat.setSeatCol(seatCol.code);
                     trainSeat.setId(SnowUtils.nextSnowId());
                     trainSeat.setCarriageSeatIndex(count++);
@@ -175,8 +176,6 @@ public class TrainServiceImpl implements TrainService{
             }
         }
     }
-
-
 }
 
 
