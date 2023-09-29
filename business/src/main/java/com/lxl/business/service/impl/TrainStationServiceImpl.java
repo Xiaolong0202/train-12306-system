@@ -57,7 +57,7 @@ public class TrainStationServiceImpl implements TrainStationService{
                 if ((station.getStationName().equals(trainStation.getStationName())&&station.getTrainId().equals(station.getTrainId()))) {
                     if (!station.getId().equals(trainStation.getId())){
                         //不为空表示已经存在,则抛出异常
-                        throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);
+                        throw new BusinessException(BussinessExceptionEnum.TRAIN_STATION_STATION_NAME_ALREADY_EXIST);
                     }
                 }
             }
@@ -71,7 +71,7 @@ public class TrainStationServiceImpl implements TrainStationService{
             if ((station.getTrainIndex().equals(trainStation.getTrainIndex())&&station.getTrainId().equals(station.getTrainId()))) {
                 if (!station.getId().equals(trainStation.getId())){
                     //不为空表示已经存在,则抛出异常
-                    throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);
+                    throw new BusinessException(BussinessExceptionEnum.TRAIN_STATION_INDEX_ALREADY_EXIST);
                 }
             }
         }

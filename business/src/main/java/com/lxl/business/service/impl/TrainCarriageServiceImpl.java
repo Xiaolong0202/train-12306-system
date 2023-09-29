@@ -61,7 +61,7 @@ public class TrainCarriageServiceImpl implements TrainCarriageService{
             if ((station.getTrainIndex().equals(trainCarriage.getTrainIndex())&&station.getTrainId().equals(station.getTrainId()))) {
                 if (!station.getId().equals(trainCarriage.getId())){
                     //不为空表示已经存在,则抛出异常
-                    throw new BusinessException(BussinessExceptionEnum.TRAIN_ALREADY_EXIST);
+                    throw new BusinessException(BussinessExceptionEnum.TRAIN_CARRIAGE_ALREADY_EXIST);
                 }
             }
         }
