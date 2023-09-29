@@ -27,7 +27,8 @@ public class TrainSeatSaveOrEditReq {
     /**
      * 火车箱号
      */
-    private Integer carriageIndex;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long carriageId;
 
     /**
      * 座位类型|枚举

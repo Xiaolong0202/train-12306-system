@@ -26,7 +26,7 @@ public class TrainSeat implements Serializable {
     /**
      * 火车箱号
      */
-    private Integer carriageIndex;
+    private Long carriageId;
 
     /**
      * 座位类型|枚举
@@ -75,7 +75,7 @@ public class TrainSeat implements Serializable {
         TrainSeat other = (TrainSeat) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getTrainId() == null ? other.getTrainId() == null : this.getTrainId().equals(other.getTrainId()))
-            && (this.getCarriageIndex() == null ? other.getCarriageIndex() == null : this.getCarriageIndex().equals(other.getCarriageIndex()))
+            && (this.getCarriageId() == null ? other.getCarriageId() == null : this.getCarriageId().equals(other.getCarriageId()))
             && (this.getSeatType() == null ? other.getSeatType() == null : this.getSeatType().equals(other.getSeatType()))
             && (this.getSeatRow() == null ? other.getSeatRow() == null : this.getSeatRow().equals(other.getSeatRow()))
             && (this.getSeatCol() == null ? other.getSeatCol() == null : this.getSeatCol().equals(other.getSeatCol()))
@@ -90,7 +90,7 @@ public class TrainSeat implements Serializable {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getTrainId() == null) ? 0 : getTrainId().hashCode());
-        result = prime * result + ((getCarriageIndex() == null) ? 0 : getCarriageIndex().hashCode());
+        result = prime * result + ((getCarriageId() == null) ? 0 : getCarriageId().hashCode());
         result = prime * result + ((getSeatType() == null) ? 0 : getSeatType().hashCode());
         result = prime * result + ((getSeatRow() == null) ? 0 : getSeatRow().hashCode());
         result = prime * result + ((getSeatCol() == null) ? 0 : getSeatCol().hashCode());
@@ -108,7 +108,7 @@ public class TrainSeat implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", trainCode=").append(trainId);
-        sb.append(", carriageIndex=").append(carriageIndex);
+        sb.append(", carriageId=").append(carriageId);
         sb.append(", seatType=").append(seatType);
         sb.append(", rowCount=").append(seatRow);
         sb.append(", columnCount=").append(seatCol);

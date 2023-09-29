@@ -81,7 +81,7 @@ public class TrainCarriageServiceImpl implements TrainCarriageService{
     @Override
     public PageResp<TrainCarriageQueryResp> queryList(TrainCarriageQueryReq req) {
         LambdaQueryWrapper<TrainCarriage> wrapper = new LambdaQueryWrapper<>();
-        wrapper.orderByDesc(TrainCarriage::getId);
+        wrapper.orderByDesc(TrainCarriage::getTrainIndex);
         wrapper.eq(!ObjectUtils.isEmpty(req.getTrainId()), TrainCarriage::getTrainId,req.getTrainId());
 
         if (!ObjectUtils.isEmpty(req.getPageSize())&&!ObjectUtils.isEmpty(req.getCurrentPage())){
