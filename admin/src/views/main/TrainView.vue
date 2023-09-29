@@ -15,6 +15,13 @@
                 <template v-if="column.dataIndex === 'action'">
                     <a-popconfirm
                         v-if="dataSource.length"
+                        title="确认自动生成座位?"
+                        @confirm="handleGenSeats(record)"
+                    >
+                        <a style="margin-left:  10px">生成座位</a>
+                    </a-popconfirm>
+                    <a-popconfirm
+                        v-if="dataSource.length"
                         title="确认编辑子表?"
                         @confirm="handleEditOtherInfo(record)"
                     >
@@ -291,6 +298,19 @@ const handleDelete = (record)=>{
 
 const handleEditOtherInfo = (record) =>{
     router.push('/trainEdit/'+record.id)
+}
+
+const handleGenSeats = (record) =>{
+    axios.post('/business/train/admin/gen-seats/'+record.id)
+        .then(res=>{
+            if (res){
+                if (res.data.success){
+                    info('success',res.data.message)
+                }else {
+                    info('error',res.data.message)
+                }
+            }
+        })
 }
 
 onMounted(() => {

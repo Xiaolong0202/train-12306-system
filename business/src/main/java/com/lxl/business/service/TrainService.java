@@ -1,7 +1,5 @@
 package com.lxl.business.service;
 
-import com.lxl.business.domain.Train;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.lxl.business.req.TrainQueryReq;
 import com.lxl.business.req.TrainSaveOrEditReq;
 import com.lxl.business.resp.TrainQueryResp;
@@ -16,4 +14,6 @@ public interface TrainService {
     void delete(Long id);
 
     TrainQueryResp queryOne(Long trainId);
+
+    void genTrainSeat(Long trainId);
 }

@@ -18,27 +18,27 @@ import java.util.List;
 @ControllerAdvice
 public class trainExceptionHandler {
 
-        @ResponseBody
-        @ExceptionHandler(BusinessException.class)
-        public CommonResp<?> handler(BusinessException e){
-            CommonResp<String> commonResp = new CommonResp<>();
-            commonResp.setSuccess(false);
-            commonResp.setMessage(e.getExceptionEnum().desc);
-            return commonResp;
-        }
+    @ResponseBody
+    @ExceptionHandler(BusinessException.class)
+    public CommonResp<?> handler(BusinessException e) {
+        CommonResp<String> commonResp = new CommonResp<>();
+        commonResp.setSuccess(false);
+        commonResp.setMessage(e.getExceptionEnum().desc);
+        return commonResp;
+    }
 
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public CommonResp<?> handleValid(MethodArgumentNotValidException e){
+    public CommonResp<?> handleValid(MethodArgumentNotValidException e) {
         CommonResp<String> commonResp = new CommonResp<>();
         commonResp.setSuccess(false);
         List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
         StringBuilder builder = new StringBuilder("[");
-        allErrors.forEach( error->{
+        allErrors.forEach(error -> {
             builder.append(error.getDefaultMessage());
             builder.append('、');
         });
-        builder.delete(builder.length()-1,builder.length());
+        builder.delete(builder.length() - 1, builder.length());
         builder.append(']');
         commonResp.setMessage(builder.toString());
         return commonResp;
@@ -46,8 +46,9 @@ public class trainExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    public CommonResp<?> handleException(Exception e){
-      return CommonResp.buildFailure(e,"本次响应失败，请联系网站管理员");
+    public CommonResp<?> handleException(Exception e) {
+        e.printStackTrace();
+        return CommonResp.buildFailure(e, "本次响应失败，请联系网站管理员");
     }
 
 }

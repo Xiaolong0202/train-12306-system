@@ -67,7 +67,7 @@ create table `train_seat`(
     `carriage_id` bigint not null comment '火车箱号',
     `seat_type` char not null comment '座位类型|枚举',
     `seat_row` char(2) not null comment '排',
-    `seat_col` char(1) not null comment '列|枚举',
+    `seat_col` VARCHAR(10) not null comment '列|枚举',
     `carriage_seat_index` int not null comment '同车厢座序',
     `create_time` datetime(3) DEFAULT NULL COMMENT '新增时间',
     `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间'

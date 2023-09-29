@@ -14,7 +14,7 @@
                 </template>
                 <template v-if="column.dataIndex === 'seatCol'">
                     <template v-for="item in trainSeatCol_type" :key="item.code">
-                        <span v-if="item.code === record.seatType">
+                        <span v-if="item.code === record.seatCol">
                             {{item.description}}
                         </span>
                     </template>
