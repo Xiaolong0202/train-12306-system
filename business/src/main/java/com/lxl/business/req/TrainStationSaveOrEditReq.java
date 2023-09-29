@@ -3,6 +3,8 @@ package com.lxl.business.req;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -22,33 +24,39 @@ public class TrainStationSaveOrEditReq {
     /**
      * 车次编号
      */
+    @NotNull
     @JsonSerialize(using = ToStringSerializer.class)
     private Long trainId;
 
     /**
      * 车站序号
      */
+    @NotNull
     private Integer trainIndex;
 
     /**
      * 站名
      */
+    @NotBlank
     private String stationName;
 
     /**
      * 站名拼音
      */
+    @NotBlank
     private String namePinyin;
 
     /**
      * 进站时间
      */
+    @NotNull
     @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
     private Date inTime;
 
     /**
      * 出站时间
      */
+    @NotNull
     @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
     private Date outTime;
 
@@ -61,17 +69,20 @@ public class TrainStationSaveOrEditReq {
     /**
      * 里程（公里）| 从上一站到本站的距离
      */
+    @NotNull
     private BigDecimal km;
 
     /**
      * 新增时间
      */
+    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
     /**
      * 修改时间
      */
+    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
 }

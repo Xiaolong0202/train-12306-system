@@ -3,6 +3,8 @@ package com.lxl.business.req;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -21,18 +23,21 @@ public class TrainSeatSaveOrEditReq {
     /**
      * 火车编号
      */
+    @NotNull
     @JsonSerialize(using = ToStringSerializer.class)
     private Long trainId;
 
     /**
      * 火车箱号
      */
+    @NotNull
     @JsonSerialize(using = ToStringSerializer.class)
     private Long carriageId;
 
     /**
      * 座位类型|枚举
      */
+    @NotBlank
     private String seatType;
 
     /**
@@ -44,6 +49,7 @@ public class TrainSeatSaveOrEditReq {
     /**
      * 列
      */
+    @NotBlank
     private String seatCol;
 
     /**

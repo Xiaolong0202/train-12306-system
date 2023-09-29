@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Date;
@@ -22,17 +23,20 @@ public class TrainCarriageSaveOrEditReq {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
+    @NotNull
     @JsonSerialize(using = ToStringSerializer.class)
     private Long trainId;
 
     /**
      * 火车箱号
      */
+    @NotNull
     private Integer trainIndex;
 
     /**
      * 座位类型|枚举
      */
+    @NotNull
     private String seatType;
 
     /**
@@ -54,12 +58,14 @@ public class TrainCarriageSaveOrEditReq {
     /**
      * 新增时间
      */
+    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
     /**
      * 修改时间
      */
+    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
 }
