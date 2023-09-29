@@ -8,6 +8,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.domain.TrainCarriage;
 import com.lxl.business.domain.TrainStation;
+import com.lxl.business.enums.SeatColTypeEnum;
 import com.lxl.business.mapper.TrainCarriageMapper;
 import com.lxl.business.req.TrainCarriageQueryReq;
 import com.lxl.business.req.TrainCarriageSaveOrEditReq;
@@ -43,6 +44,9 @@ public class TrainCarriageServiceImpl implements TrainCarriageService{
         TrainCarriage trainCarriage = BeanUtil.copyProperties(req, TrainCarriage.class);
         Date now = DateTime.now();
         trainCarriage.setUpdateTime(now);
+        //根据车厢的类型与排数计算列数与座位总数
+        trainCarriage.setColumnCount(SeatColTypeEnum.getSeatCols(trainCarriage.getSeatType()).size());
+        trainCarriage.setSeatCount(trainCarriage.getRowCount()*trainCarriage.getColumnCount());
 
         //检查unique(trainId,stationName)
         LambdaQueryWrapper<TrainCarriage> lambdaQueryWrapper = new LambdaQueryWrapper<>();

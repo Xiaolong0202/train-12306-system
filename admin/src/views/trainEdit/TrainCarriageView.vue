@@ -71,22 +71,10 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item
-                        label="座位数"
-                        name="seatCount"
-                >
-                    <a-input v-model:value="trainCarriage.seatCount"/>
-                </a-form-item>
-                <a-form-item
                         label="排数"
                         name="rowCount"
                 >
                     <a-input v-model:value="trainCarriage.rowCount"/>
-                </a-form-item>
-                <a-form-item
-                        label="列数"
-                        name="columnCount"
-                >
-                    <a-input v-model:value="trainCarriage.columnCount"/>
                 </a-form-item>
                 <a-form-item>
                     <a-popconfirm placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="confirm">
