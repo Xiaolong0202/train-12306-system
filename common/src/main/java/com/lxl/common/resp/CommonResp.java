@@ -43,4 +43,8 @@ public class CommonResp<T>{
         commonResp.setSuccess(false);
         return commonResp;
     }
+
+    public static <E> CommonResp<E> buildFailure(String message){
+       return CommonResp.buildFailure(null,message);
+    }
 }

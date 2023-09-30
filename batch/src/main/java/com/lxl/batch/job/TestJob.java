@@ -11,8 +11,6 @@ import org.quartz.*;
 public class TestJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
-        System.out.print("jobDataMap.get(\"key1\") = " + jobDataMap.get("key1"));
-        System.out.println("   TestJob");
+        System.out.println("TestJob");
     }
 }
