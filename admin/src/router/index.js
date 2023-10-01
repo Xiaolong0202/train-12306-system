@@ -41,6 +41,15 @@ const routes = [
                     }
                 ]
             },
+            {
+                path: 'daily',
+                children:[
+                    {
+                        path:'Dtrain',
+                        component: () => import('@/views/daily/DailyTrainView.vue')
+                    }
+                ]
+            }
 
         ]
     },

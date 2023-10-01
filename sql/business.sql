@@ -76,7 +76,7 @@ create table `train_seat`(
 drop table if exists `daily_train`;
 create table `daily_train` (
                          `id` bigint not null primary key comment 'id' ,
-                         `date` date not null comment '日期',
+                         `start_date` date not null comment '发车日期',
                          `code` varchar(20)  not null  comment '车次编号',
                          `type` char(1) not null comment '车次类型|枚举',
                          `start` varchar(20) not null comment '始发站',
@@ -88,5 +88,5 @@ create table `daily_train` (
                          `interval_day` int not null comment '出发和到站之间间隔的天数',
                          `create_time` datetime(3) comment '创建时间',
                          `update_time` datetime(3) comment '修改时间',
-                         unique (`code`,`date`)
+                         unique (`code`,`start_date`)
 )comment = '每日车次';

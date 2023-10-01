@@ -2,6 +2,10 @@ package com.lxl.business.service;
 
 import com.lxl.business.domain.DailyTrain;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lxl.business.req.DailyTrainQueryReq;
+import com.lxl.business.req.DailyTrainSaveOrEditReq;
+import com.lxl.business.resp.DailyTrainQueryResp;
+import com.lxl.common.resp.PageResp;
 
 /**
 * @author 13430
@@ -9,5 +13,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2023-10-01 13:49:18
 */
 public interface DailyTrainService{
+
+    void save(DailyTrainSaveOrEditReq req);
+
+    PageResp<DailyTrainQueryResp> queryList(DailyTrainQueryReq req);
+
+    void delete(Long id);
+
+    DailyTrainQueryResp queryOne(Long trainId);
 
 }

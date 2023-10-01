@@ -58,14 +58,12 @@ public class TrainCarriageSaveOrEditReq {
     /**
      * 新增时间
      */
-    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
     /**
      * 修改时间
      */
-    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
 }

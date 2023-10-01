@@ -1,79 +1,87 @@
 package com.lxl.business.req;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * @Author LiuXiaolong
  * @Description train-12306-system
- * @DateTime 2023/9/26  20:55
+ * @DateTime 2023/9/26  15:52
  **/
 @Data
-public class TrainStationSaveOrEditReq {
-
-    @JsonSerialize(using = ToStringSerializer.class)
+public class DailyTrainSaveOrEditReq {
     private Long id;
+
+
+    /**
+     * 日期
+     */
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private Date startDate;
 
     /**
      * 车次编号
      */
-    @NotNull
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long trainId;
+    @NotBlank
+    private String code;
 
     /**
-     * 车站序号
-     */
-    @NotNull
-    private Integer trainIndex;
-
-    /**
-     * 站名
+     * 车次类型|枚举
      */
     @NotBlank
-    private String stationName;
+    private String type;
 
     /**
-     * 站名拼音
+     * 始发站
      */
     @NotBlank
-    private String namePinyin;
+    private String start;
 
     /**
-     * 进站时间
+     * 始发站拼音
+     */
+    @NotBlank
+    private String startPinyin;
+
+    /**
+     * 出发时间
      */
     @NotNull
     @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
-    private Date inTime;
+    private Date startTime;
 
     /**
-     * 出站时间
+     * 终点站
+     */
+    @NotBlank
+    private String end;
+
+    /**
+     * 终点站拼音
+     */
+    @NotBlank
+    private String endPinyin;
+
+    /**
+     * 到终点站时间
      */
     @NotNull
     @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
-    private Date outTime;
+    private Date endTime;
 
     /**
-     * 停站时间
-     */
-    @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
-    private Date stopTime;
-
-    /**
-     * 里程（公里）| 从上一站到本站的距离
+     * 出发和到站之间间隔的天数
      */
     @NotNull
-    private BigDecimal km;
+    private Integer intervalDay;
 
     /**
-     * 新增时间
+     * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;

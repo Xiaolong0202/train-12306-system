@@ -2,6 +2,7 @@ package com.lxl.business.mapper;
 
 import com.lxl.business.domain.DailyTrain;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author 13430
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2023-10-01 13:49:18
 * @Entity com.lxl.business.domain.DailyTrain
 */
+@Mapper
 public interface DailyTrainMapper extends BaseMapper<DailyTrain> {
 
 }

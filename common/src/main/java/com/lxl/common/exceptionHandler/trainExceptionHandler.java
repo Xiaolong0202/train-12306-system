@@ -30,6 +30,7 @@ public class trainExceptionHandler {
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public CommonResp<?> handleValid(MethodArgumentNotValidException e) {
+        e.printStackTrace();
         CommonResp<String> commonResp = new CommonResp<>();
         commonResp.setSuccess(false);
         List<ObjectError> allErrors = e.getBindingResult().getAllErrors();

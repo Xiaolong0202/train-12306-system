@@ -15,7 +15,7 @@
 <script setup>
 import {h, reactive, ref} from "vue";
 import router from "@/router";
-import {FormOutlined, HomeOutlined, UserOutlined} from "@ant-design/icons-vue";
+import {FormOutlined, HomeOutlined, HourglassOutlined, UserOutlined} from "@ant-design/icons-vue";
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -34,6 +34,9 @@ const items = reactive([
     getItem('跑批', '/main/batch', h(FormOutlined),[
         getItem('JOB', '/job', h(UserOutlined),null, null),
     ], null),
+    getItem('每日','/main/daily',h(HourglassOutlined),[
+        getItem('车次','/Dtrain',h(UserOutlined),null,null)
+    ],null)
 ])
 const toPage = ({key,keyPath}) => {
     let finalPath = '';
