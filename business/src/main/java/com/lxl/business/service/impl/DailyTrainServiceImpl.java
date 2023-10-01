@@ -79,7 +79,11 @@ public class DailyTrainServiceImpl implements DailyTrainService {
     @Override
     public PageResp<DailyTrainQueryResp> queryList(DailyTrainQueryReq req) {
         LambdaQueryWrapper<DailyTrain> wrapper = new LambdaQueryWrapper<>();
-        wrapper.orderByDesc(DailyTrain::getId);
+        wrapper.orderByDesc(DailyTrain::getStartDate).orderByDesc(DailyTrain::getId);
+
+        wrapper.eq(!ObjectUtils.isEmpty(req.getStartDate()),DailyTrain::getStartDate,req.getStartDate());
+
+        wrapper.eq(!ObjectUtils.isEmpty(req.getCode()),DailyTrain::getCode,req.getCode());
 
         if (!ObjectUtils.isEmpty(req.getPageSize()) && !ObjectUtils.isEmpty(req.getCurrentPage())) {
             log.info("当前页码：{}", req.getCurrentPage());

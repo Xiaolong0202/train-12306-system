@@ -1,7 +1,10 @@
 <template>
     <div>
-        <div>
-            <a-button type="primary" @click="showModal" style="float: left">add</a-button>
+        <div class="view-header">
+            <train-selector v-model:train-code="params.code"/>
+            <input type="date" v-model = "params.startDate">
+            <a-button type="primary" @click="showModal">add</a-button>
+            <a-button type="dashed" @click="queryDailyTrainList">刷新</a-button>
         </div>
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading"
                  style="margin-top: 20px">
@@ -155,7 +158,10 @@ const dailyTrain = reactive({
     createTime: '',
     updateTime: '',
 })
-
+const params = reactive({
+    startDate: null,
+    code: null,
+})
 
 const dailyTrain_type = ref([])
 const open = ref(false);
@@ -253,8 +259,14 @@ const pagination = reactive({
 })
 const queryDailyTrainList = () => {
     loading.value = true
-    axios.get("/business/dailyTrain/admin/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize)
-        .then(res => {
+    axios.get("/business/dailyTrain/admin/query-list",{
+        params:{
+            currentPage: pagination.current,
+            pageSize: pagination.pageSize,
+            code: params.code,
+            startDate: params.startDate
+        }
+    }).then(res => {
             loading.value = false
             if (res) {
                 if (res.data.success) {
@@ -321,5 +333,10 @@ watch(() => dailyTrain.end, () => {
 
 </script>
 <style scoped>
-
+    .view-header{
+        float: left;
+    }
+    .view-header > *{
+        margin-right: 15px;
+    }
 </style>

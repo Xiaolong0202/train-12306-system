@@ -4,7 +4,7 @@
     <a-select
             v-model:value="code"
             show-search
-            placeholder="Select a person"
+            placeholder="Select a train"
             style="width: 200px"
             :options="options"
             :filter-option="filterOption"
