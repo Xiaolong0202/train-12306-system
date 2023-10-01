@@ -55,7 +55,7 @@
                         label="车次编号"
                         name="code"
                 >
-                    <a-input v-model:value="dailyTrain.code"/>
+                    <train-selector v-model:train-code="dailyTrain.code" @onChange="trainSelectorChange"/>
                 </a-form-item>
                 <a-form-item
                         label="typeOfDailyTrain"
@@ -137,6 +137,7 @@ import axios from "axios";
 import {info} from "@/util/info";
 import {pinyin} from "pinyin-pro";
 import StationSelector from "@/components/StationSelector.vue";
+import TrainSelector from "@/components/TrainSelector.vue";
 
 
 const dailyTrain = reactive({
@@ -296,6 +297,13 @@ const handleDelete = (record) => {
         })
 }
 
+const trainSelectorChange = (train) =>{
+    let preId = dailyTrain.id;
+    Object.assign(dailyTrain,train)
+    dailyTrain.id = preId
+    console.log('dailyTrain ->'+dailyTrain)
+    console.log('dailyTrainID ->'+dailyTrain.id)
+}
 
 onMounted(() => {
     queryDailyTrainList()
