@@ -39,7 +39,8 @@ const items = reactive([
     getItem('welcome', '/main/welcome', h(SmileOutlined),null, null),
     getItem('about', '/main/about', h(TeamOutlined),null, null),
     getItem('station', '/main/station', h(HomeOutlined),null, null),
-    getItem('train', '/main/train', h(UserOutlined),null, null),
+    getItem('车次', '/main/train', h(UserOutlined),null, null),
+    getItem('跑批', '/main/batch', h(UserOutlined),null, null),
 ])
 const toPage = ({key,keyPath}) => {
     let finalPath = '';

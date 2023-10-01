@@ -12,9 +12,13 @@ spring:
           id: business
           predicates:
             - Path=/business/**
-
+        - uri: http://127.0.0.1:8003
+          id: batch
+          predicates:
+            - Path=/batch/**
 request:
   whiteList:
     - /member/login
     - /member/send-code
     - /business/get-enum/**
+    - /batch/**

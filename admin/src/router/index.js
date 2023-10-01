@@ -27,6 +27,10 @@ const routes = [
                 path: 'train',
                 component: () => import('../views/main/TrainView.vue')
             },
+            {
+                path: 'batch',
+                component: () => import('../views/batch/batchView.vue')
+            }
         ]
     },
     {
