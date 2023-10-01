@@ -30,6 +30,22 @@ public class JobController {
     @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
 
+
+    @RequestMapping("/run")
+    public CommonResp<?> run(@RequestBody CronJobReq cronJobReq){
+        String name = cronJobReq.getName();
+        String group = cronJobReq.getGroup();
+        log.info("开始执行手动任务");
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        try {
+            scheduler.triggerJob(JobKey.jobKey(name,group));
+        } catch (SchedulerException e) {
+            log.error("执行手动任务失败");
+            return CommonResp.buildFailure(String.format("执行手动任务%s,失败",name));
+        }
+        return CommonResp.buildSuccess(String.format("执行手动任务%s,失败",name));
+    }
+
     @RequestMapping("/add")
     public CommonResp<?> add(@RequestBody CronJobReq cronJobReq) {
         String name = cronJobReq.getName();

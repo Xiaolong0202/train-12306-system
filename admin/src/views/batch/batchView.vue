@@ -15,6 +15,17 @@
                 <template v-if="column.dataIndex === 'operation'">
                     <a-space>
                         <a-popconfirm
+                            title="确定运行一次该功能？"
+                            ok-text="是"
+                            cancel-text="否"
+                            @confirm="handleRun(record)"
+                        >
+                            <a-button v-show="record.state === 'PAUSED' || record.state === 'ERROR'" type="primary"
+                                      size="small">
+                                运行
+                            </a-button>
+                        </a-popconfirm>
+                        <a-popconfirm
                                 title="确定重启？"
                                 ok-text="是"
                                 cancel-text="否"
@@ -226,6 +237,20 @@ const handleResume = (record) => {
     });
 };
 
+
+const handleRun = (record)=>{
+    axios.post('/batch/admin/job/run', record).then((response) => {
+        modalLoading.value = false;
+        const data = response.data;
+        if (data.success) {
+            modalVisible.value = false;
+            notification.success({description: "运行成功成功！"});
+            handleQuery();
+        } else {
+            notification.error({description: data.message});
+        }
+    });
+}
 
 onMounted(() => {
     console.log('index mounted!');
