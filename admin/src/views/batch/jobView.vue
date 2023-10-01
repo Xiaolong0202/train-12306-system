@@ -22,7 +22,7 @@
                         >
                             <a-button v-show="record.state === 'PAUSED' || record.state === 'ERROR'" type="primary"
                                       size="small">
-                                运行
+                                手动执行
                             </a-button>
                         </a-popconfirm>
                         <a-popconfirm

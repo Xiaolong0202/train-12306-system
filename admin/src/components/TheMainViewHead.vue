@@ -19,7 +19,7 @@
 
 <script setup>
 import { h, reactive, ref} from "vue";
-import {HomeOutlined, SmileOutlined, TeamOutlined, UserOutlined} from "@ant-design/icons-vue";
+import {SmileOutlined, TeamOutlined} from "@ant-design/icons-vue";
 import router from "@/router";
 
 //该方法只能用于setUp当中
@@ -38,19 +38,16 @@ function getItem(label, key, icon, children, type) {
 const items = reactive([
     getItem('welcome', '/main/welcome', h(SmileOutlined),null, null),
     getItem('about', '/main/about', h(TeamOutlined),null, null),
-    getItem('station', '/main/station', h(HomeOutlined),null, null),
-    getItem('车次', '/main/train', h(UserOutlined),null, null),
-    getItem('跑批', '/main/batch', h(UserOutlined),null, null),
 ])
 const toPage = ({key,keyPath}) => {
     let finalPath = '';
-    sessionStorage.setItem('12306_selectedKey',JSON.stringify([key]))
+    sessionStorage.setItem('adminMainKey',key)
     for (let i = 0; i < keyPath.length; i++) {
         finalPath += keyPath[i]
     }
     router.push(finalPath)
 }
-const selectedKeys = ref(['/main/welcome'])
+const selectedKeys = ref([sessionStorage.getItem('adminMainKey')])
 
 
 </script>

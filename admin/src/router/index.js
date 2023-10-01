@@ -20,17 +20,28 @@ const routes = [
                 component: () => import('../views/main/AboutView.vue')
             },
             {
-                path: 'station',
-                component: ()=> import('../views/main/StationView.vue')
-            },
-            {
-                path: 'train',
-                component: () => import('../views/main/TrainView.vue')
+                path: 'base',
+                children:[
+                    {
+                        path: 'station',
+                        component: ()=> import('../views/main/StationView.vue')
+                    },
+                    {
+                        path: 'train',
+                        component: () => import('../views/main/TrainView.vue')
+                    },
+                ]
             },
             {
                 path: 'batch',
-                component: () => import('../views/batch/batchView.vue')
-            }
+                children :[
+                    {
+                        path: 'job',
+                        component: () => import('../views/batch/jobView.vue')
+                    }
+                ]
+            },
+
         ]
     },
     {

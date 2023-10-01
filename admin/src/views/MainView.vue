@@ -1,8 +1,9 @@
 <template>
     <a-layout id="components-layout-demo-top-side-2" style="min-height: 100vh">
-        <the-head/>
         <a-layout>
-            <a-layout style="padding: 0 24px 24px">
+            <the-main-view-head/>
+            <a-layout>
+                <the-main-view-sider/>
                 <a-layout-content
                         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
                 >
@@ -13,7 +14,9 @@
     </a-layout>
 </template>
 <script setup>
-import TheHead from "@/components/TheHead.vue";
+
+import TheMainViewSider from "@/components/TheMainViewSider.vue";
+import TheMainViewHead from "@/components/TheMainViewHead.vue";
 
 
 </script>
