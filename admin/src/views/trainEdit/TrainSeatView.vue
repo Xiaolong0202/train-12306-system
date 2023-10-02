@@ -47,7 +47,7 @@ const loading = ref(false);
 const dataSource = ref([])
 const columns = [
     {
-        title: '火车id',
+        title: '车次ID',
         dataIndex: 'trainId',
         key: 'trainId',
     },

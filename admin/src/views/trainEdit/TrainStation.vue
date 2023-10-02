@@ -44,7 +44,7 @@
                     autocomplete="off"
             >
                 <a-form-item
-                        label="车次编号"
+                        label="车次ID"
                         name="trainId"
                 >
                     <a-input v-model:value="trainStation.trainId" disabled/>
