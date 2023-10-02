@@ -17,8 +17,25 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,daily_train_id,train_index,
-        seat_type,seat_count,row_count,
-        column_count,create_time,update_time
+        `id`,`daily_train_id`,`train_index`,
+        `seat_type`,`seat_count`,`row_count`,
+        `column_count`,`create_time`,`update_time`
     </sql>
+    <insert id="insertBatch">
+        INSERT INTO `daily_train_carriage`
+        (<include refid="Base_Column_List"/>) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+             #{item.id},
+             #{item.dailyTrainId},
+             #{item.trainIndex},
+             #{item.seatType},
+             #{item.seatCount},
+             #{item.rowCount},
+             #{item.columnCount},
+             #{item.createTime},
+             #{item.updateTime}
+            )
+        </foreach>
+    </insert>
 </mapper>
