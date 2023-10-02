@@ -71,7 +71,11 @@ public class JobController {
         } catch (SchedulerException | ClassNotFoundException e) {
 //            throw new RuntimeException(e);
             log.error("创建定时任务的时候失败"+e);
-            return CommonResp.buildFailure(String.format("创建定时任务%s,失败",name));
+            String errorInfo = String.format("创建定时任务%s,失败",name);
+            if (e instanceof ClassNotFoundException exception){
+                errorInfo = "请给定一个正确的权限定类名！";
+            }
+            return CommonResp.buildFailure(errorInfo);
         }
         return CommonResp.buildSuccess(String.format("创建定时任务%s,成功",name));
     }
