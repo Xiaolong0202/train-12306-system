@@ -3,6 +3,9 @@ package com.lxl.business.mapper;
 import com.lxl.business.domain.DailyTrainStation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 13430
@@ -13,6 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DailyTrainStationMapper extends BaseMapper<DailyTrainStation> {
 
+    void insertBatch(@Param("list") List<DailyTrainStation> dailyTrainStations);
 }
 
 

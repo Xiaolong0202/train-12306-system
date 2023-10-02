@@ -8,9 +8,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.domain.DailyTrain;
 
+import com.lxl.business.domain.DailyTrainStation;
 import com.lxl.business.domain.Train;
+import com.lxl.business.domain.TrainStation;
 import com.lxl.business.mapper.DailyTrainMapper;
+import com.lxl.business.mapper.DailyTrainStationMapper;
 import com.lxl.business.mapper.TrainMapper;
+import com.lxl.business.mapper.TrainStationMapper;
 import com.lxl.business.req.DailyTrainQueryReq;
 import com.lxl.business.req.DailyTrainSaveOrEditReq;
 import com.lxl.business.resp.DailyTrainQueryResp;
@@ -30,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author 13430
@@ -46,6 +51,12 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
     @Autowired
     TrainMapper trainMapper;
+
+    @Autowired
+    DailyTrainStationMapper dailyTrainStationMapper;
+
+    @Autowired
+    TrainStationMapper trainStationMapper;
 
 
     @Override
@@ -139,9 +150,13 @@ public class DailyTrainServiceImpl implements DailyTrainService {
     public void genDaily(Date date) {
         //先删除目标日期所有的车次
         dailyTrainMapper.deleteByMap(Map.of("start_date",date));
+        //先删除目标日期所有的车站
+        dailyTrainMapper.deleteByMap(Map.of("start_date",date));
         //
         Date now = new Date(System.currentTimeMillis());
         List<Train> trains = trainMapper.selectList(null);
+
+        List<DailyTrainStation> dailyTrainStations = new ArrayList<>();
 
         //将所有的train转换为批量的dailyTrains
         List<DailyTrain> dailyTrains = trains.stream().map(train -> {
@@ -151,10 +166,29 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             dailyTrain.setUpdateTime(now);
             dailyTrain.setCreateTime(now);
 
+            //将所有的trainStation转换为批量的dailyTrainStaion
+            LambdaQueryWrapper<TrainStation> trainStationLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            trainStationLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(train.getId()),TrainStation::getTrainId,train.getId());
+            List<TrainStation> trainStations = trainStationMapper.selectList(trainStationLambdaQueryWrapper);
+
+            List<DailyTrainStation> tempDailyTrainStations = trainStations.stream().map(trainStation -> {
+                DailyTrainStation dailyTrainStation = BeanUtil.copyProperties(trainStation, DailyTrainStation.class);
+                dailyTrainStation.setId(SnowUtils.nextSnowId());
+                dailyTrainStation.setDailyTrainId(dailyTrain.getId());
+                dailyTrainStation.setUpdateTime(now);
+                dailyTrainStation.setUpdateTime(now);
+
+                return dailyTrainStation;
+            }).toList();
+            dailyTrainStations.addAll(tempDailyTrainStations);
             return dailyTrain;
         }).toList();
 
+        //批量生成 每日车站
+
+
         dailyTrainMapper.insertBatch(dailyTrains);
+        dailyTrainStationMapper.insertBatch(dailyTrainStations);
     }
 
 }

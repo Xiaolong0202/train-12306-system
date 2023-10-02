@@ -6,8 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.lxl.business.domain.DailyTrainStation">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="trainId" column="train_id" jdbcType="BIGINT"/>
-            <result property="startDate" column="start_date" jdbcType="DATE"/>
+            <result property="dailyTrainId" column="train_id" jdbcType="BIGINT"/>
             <result property="trainIndex" column="train_index" jdbcType="INTEGER"/>
             <result property="stationName" column="station_name" jdbcType="VARCHAR"/>
             <result property="namePinyin" column="name_pinyin" jdbcType="VARCHAR"/>
@@ -20,9 +19,27 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,train_id,start_date,
+        id,daily_train_id,
         train_index,station_name,name_pinyin,
         in_time,out_time,stop_time,
         km,create_time,update_time
     </sql>
+    <insert id="insertBatch">
+        INSERT INTO daily_train_station
+        (<include refid="Base_Column_List"/>)
+        VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},
+            #{item.dailyTrainId},
+            #{item.trainIndex},
+            #{item.stationName},
+            #{item.namePinyin},
+            #{item.inTime},
+            #{item.outTime},
+            #{item.stopTime},
+            #{item.km},
+            #{item.createTime},
+            #{item.updateTime})
+        </foreach>
+    </insert>
 </mapper>
