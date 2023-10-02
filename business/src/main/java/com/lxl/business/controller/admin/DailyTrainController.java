@@ -30,8 +30,8 @@ public class DailyTrainController {
     }
 
 
-    @GetMapping("/query-one/{dailyDailyTrainId}")
-    public CommonResp<?> queryOne(@PathVariable("dailyDailyTrainId") Long dailyDailyTrainId){
+    @GetMapping("/query-one/{dailyTrainId}")
+    public CommonResp<?> queryOne(@PathVariable("dailyTrainId") Long dailyDailyTrainId){
         return CommonResp.buildSuccess(dailyDailyTrainService.queryOne(dailyDailyTrainId),"查询成功");
     }
 

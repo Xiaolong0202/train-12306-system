@@ -31,6 +31,13 @@
                     >
                         <a style="margin-left:  10px">delete</a>
                     </a-popconfirm>
+                    <a-popconfirm
+                        v-if="dataSource.length"
+                        title="Sure to delete?"
+                        @confirm="router.push('/dailyTrainEdit/'+record.id)"
+                    >
+                        <a style="margin-left:  10px">编辑子表</a>
+                    </a-popconfirm>
                 </template>
             </template>
 
@@ -141,6 +148,7 @@ import {info} from "@/util/info";
 import {pinyin} from "pinyin-pro";
 import StationSelector from "@/components/StationSelector.vue";
 import TrainSelector from "@/components/TrainSelector.vue";
+import {useRouter} from "vue-router";
 
 
 const dailyTrain = reactive({
@@ -162,7 +170,7 @@ const params = reactive({
     startDate: null,
     code: null,
 })
-
+const router = reactive(useRouter())
 const dailyTrain_type = ref([])
 const open = ref(false);
 const loading = ref(false);

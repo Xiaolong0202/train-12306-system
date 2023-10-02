@@ -49,8 +49,7 @@ const routes = [
                         component: () => import('@/views/daily/DailyTrainView.vue')
                     }
                 ]
-            }
-
+            },
         ]
     },
     {
@@ -74,6 +73,16 @@ const routes = [
                 path: 'trainStation/:trainId',
                 component: ()=> import('../views/trainEdit/TrainStation.vue')
             },
+        ]
+    },
+    {
+        path: '/dailyTrainEdit/:dailyTrainId',
+        component: ()=>import('@/views/DailyTrainEditView.vue'),
+        children: [
+            {
+                path: 'dailyTrainStation/:dailyTrainId',
+                component: ()=> import('@/views/dailyTrainEdit/DailyTrainStation.vue')
+            }
         ]
     }
 ]
