@@ -1,8 +1,13 @@
 package com.lxl.batch.feign;
 
+import com.lxl.common.resp.CommonResp;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Date;
 
 /**
  * @Author LiuXiaolong
@@ -15,4 +20,10 @@ public interface BusinessFeign {
 
     @RequestMapping("hello")
     public String hello();
+
+    @RequestMapping("/dailyTrain/admin/gen-daily/{date}")
+    public CommonResp<?> genDaily(
+            @PathVariable("date")
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date date);
+
 }

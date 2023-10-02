@@ -7,6 +7,8 @@ import com.lxl.business.req.DailyTrainSaveOrEditReq;
 import com.lxl.business.resp.DailyTrainQueryResp;
 import com.lxl.common.resp.PageResp;
 
+import java.util.Date;
+
 /**
 * @author 13430
 * @description 针对表【daily_train(每日车次)】的数据库操作Service
@@ -22,4 +24,5 @@ public interface DailyTrainService{
 
     DailyTrainQueryResp queryOne(Long trainId);
 
+    void genDaily(Date date);
 }

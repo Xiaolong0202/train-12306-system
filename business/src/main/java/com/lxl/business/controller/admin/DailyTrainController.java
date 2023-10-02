@@ -6,7 +6,10 @@ import com.lxl.business.service.DailyTrainService;
 import com.lxl.common.resp.CommonResp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * @Author LiuXiaolong
@@ -41,6 +44,12 @@ public class DailyTrainController {
         return CommonResp.buildSuccess("删除成功");
     }
 
-
+    @RequestMapping("/gen-daily/{date}")
+    public CommonResp<?> genDaily(
+            @PathVariable("date")
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date date){
+        dailyDailyTrainService.genDaily(date);
+        return CommonResp.buildSuccess("生成指定日期数据成功");
+    }
 
 }

@@ -8,7 +8,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.domain.DailyTrain;
 
+import com.lxl.business.domain.Train;
 import com.lxl.business.mapper.DailyTrainMapper;
+import com.lxl.business.mapper.TrainMapper;
 import com.lxl.business.req.DailyTrainQueryReq;
 import com.lxl.business.req.DailyTrainSaveOrEditReq;
 import com.lxl.business.resp.DailyTrainQueryResp;
@@ -21,11 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 13430
@@ -39,6 +43,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
     @Autowired
     DailyTrainMapper dailyTrainMapper;
+
+    @Autowired
+    TrainMapper trainMapper;
 
 
     @Override
@@ -120,6 +127,34 @@ public class DailyTrainServiceImpl implements DailyTrainService {
         lambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyTrainId), DailyTrain::getId, dailyTrainId);
         DailyTrain dailyTrain = dailyTrainMapper.selectOne(lambdaQueryWrapper);
         return BeanUtil.copyProperties(dailyTrain, DailyTrainQueryResp.class);
+    }
+
+
+    /**
+     *
+     * @param date 目标日期
+     */
+    @Transactional
+    @Override
+    public void genDaily(Date date) {
+        //先删除目标日期所有的车次
+        dailyTrainMapper.deleteByMap(Map.of("start_date",date));
+        //
+        Date now = new Date(System.currentTimeMillis());
+        List<Train> trains = trainMapper.selectList(null);
+
+        //将所有的train转换为批量的dailyTrains
+        List<DailyTrain> dailyTrains = trains.stream().map(train -> {
+            DailyTrain dailyTrain = BeanUtil.copyProperties(train, DailyTrain.class);
+            dailyTrain.setId(SnowUtils.nextSnowId());
+            dailyTrain.setStartDate(date);
+            dailyTrain.setUpdateTime(now);
+            dailyTrain.setCreateTime(now);
+
+            return dailyTrain;
+        }).toList();
+
+        dailyTrainMapper.insertBatch(dailyTrains);
     }
 
 }

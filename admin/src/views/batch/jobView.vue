@@ -20,8 +20,7 @@
                             cancel-text="否"
                             @confirm="handleRun(record)"
                         >
-                            <a-button v-show="record.state === 'PAUSED' || record.state === 'ERROR'" type="primary"
-                                      size="small">
+                            <a-button size="small">
                                 手动执行
                             </a-button>
                         </a-popconfirm>

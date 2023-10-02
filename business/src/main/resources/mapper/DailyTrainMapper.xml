@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.lxl.business.domain.DailyTrain">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="date" column="date" jdbcType="DATE"/>
+            <result property="startDate" column="date" jdbcType="DATE"/>
             <result property="code" column="code" jdbcType="VARCHAR"/>
             <result property="type" column="type" jdbcType="CHAR"/>
             <result property="start" column="start" jdbcType="VARCHAR"/>
@@ -21,10 +21,30 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,date,code,
-        type,start,start_pinyin,
-        start_time,end,end_pinyin,
-        end_time,interval_day,create_time,
-        update_time
+        `id`,`start_date`,`code`,
+        `type`,`start`,`start_pinyin`,
+        `start_time`,`end`,`end_pinyin`,
+        `end_time`,`interval_day`,`create_time`,
+        `update_time`
     </sql>
+    <insert id="insertBatch">
+        INSERT INTO `daily_train`
+        (<include refid="Base_Column_List"/>) VALUES
+        <foreach collection="list" separator=","  item="dailyTrain">
+            (
+            #{dailyTrain.id},
+            #{dailyTrain.startDate},
+            #{dailyTrain.code},
+            #{dailyTrain.type},
+            #{dailyTrain.start},
+            #{dailyTrain.startPinyin},
+            #{dailyTrain.startTime},
+            #{dailyTrain.end},
+            #{dailyTrain.endPinyin},
+            #{dailyTrain.endTime},
+            #{dailyTrain.intervalDay},
+            #{dailyTrain.createTime},
+            #{dailyTrain.updateTime})
+        </foreach>
+    </insert>
 </mapper>
