@@ -33,8 +33,8 @@
                     </a-popconfirm>
                     <a-popconfirm
                         v-if="dataSource.length"
-                        title="Sure to delete?"
-                        @confirm="router.push('/dailyTrainEdit/'+record.id)"
+                        title="确认编辑详情?"
+                        @confirm="handleEditOtherInfo(record)"
                     >
                         <a style="margin-left:  10px">编辑子表</a>
                     </a-popconfirm>
@@ -315,6 +315,10 @@ const handleDelete = (record) => {
                 }
             }
         })
+}
+
+const handleEditOtherInfo = (record)=>{
+    router.push('/dailyTrainEdit/'+record.id)
 }
 
 const trainSelectorChange = (train) =>{

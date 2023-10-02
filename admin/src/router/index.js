@@ -82,6 +82,10 @@ const routes = [
             {
                 path: 'dailyTrainStation/:dailyTrainId',
                 component: ()=> import('@/views/dailyTrainEdit/DailyTrainStation.vue')
+            },
+            {
+                path: 'dailyTrainCarriage/:dailyTrainId',
+                component: ()=> import('@/views/dailyTrainEdit/DailyTrainCarriageView.vue')
             }
         ]
     }

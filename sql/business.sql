@@ -46,7 +46,6 @@ CREATE TABLE `train_station` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='火车车站';
 
 DROP TABLE  IF EXISTS `train_carriage`;
-
 create table `train_carriage` (
     `id` bigint not null   primary key comment 'id',
     `train_id` bigint NOT NULL COMMENT '车次id',
@@ -110,3 +109,16 @@ CREATE TABLE `daily_train_station` (
                                  UNIQUE KEY `train_code_2` (`daily_train_id`,`station_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='每日车站';
 
+DROP TABLE  IF EXISTS `daily_train_carriage`;
+create table `daily_train_carriage` (
+                                  `id` bigint not null   primary key comment 'id',
+                                  `daily_train_id` bigint NOT NULL COMMENT '车次id',
+                                  `train_index` int not null comment '火车箱号',
+                                  `seat_type` char not null comment '座位类型|枚举',
+                                  `seat_count` int not null comment '排数',
+                                  `row_count` int not null comment '排数',
+                                  `column_count` int not null comment '列数',
+                                  `create_time` datetime(3) DEFAULT NULL COMMENT '新增时间',
+                                  `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间',
+                                  unique (`daily_train_id`,`train_index`)
+)COMMENT='每日车厢';
