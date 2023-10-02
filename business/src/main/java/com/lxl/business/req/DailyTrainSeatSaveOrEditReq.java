@@ -1,0 +1,77 @@
+package com.lxl.business.req;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.Data;
+
+import java.util.Date;
+
+/**
+ * @Author LiuXiaolong
+ * @Description train-12306-system
+ * @DateTime 2023/9/27  16:11
+ **/
+@Data
+public class DailyTrainSeatSaveOrEditReq {
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
+
+    /**
+     * 火车编号
+     */
+    @NotNull
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long dailyTrainId;
+
+    /**
+     * 火车箱号
+     */
+    @NotNull
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long carriageId;
+
+    /**
+     * 座位类型|枚举
+     */
+    @NotBlank
+    private String seatType;
+
+    /**
+     * 排
+     */
+    @Pattern(regexp = "[0-9]{1,2}",message = "请输入一个两位数")
+    private String seatRow;
+
+    /**
+     * 列
+     */
+    @NotBlank
+    private String seatCol;
+
+
+    /**
+     * 同车厢座序
+     */
+    private Integer carriageSeatIndex;
+
+    /**
+     * 售卖情况|比如100100就是表示第一站与第四站被卖出去了
+     */
+    private String sell;
+
+    /**
+     * 新增时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateTime;
+}

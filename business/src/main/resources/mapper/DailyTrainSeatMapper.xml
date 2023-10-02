@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lxl.business.mapper.DailyTrainSeatMapper">
+
+    <resultMap id="BaseResultMap" type="com.lxl.business.domain.DailyTrainSeat">
+            <result property="id" column="id" jdbcType="BIGINT"/>
+            <result property="dailyTrainId" column="daily_train_id" jdbcType="BIGINT"/>
+            <result property="carriageId" column="carriage_id" jdbcType="BIGINT"/>
+            <result property="seatType" column="seat_type" jdbcType="CHAR"/>
+            <result property="seatRow" column="seat_row" jdbcType="CHAR"/>
+            <result property="seatCol" column="seat_col" jdbcType="VARCHAR"/>
+            <result property="carriageSeatIndex" column="carriage_seat_index" jdbcType="INTEGER"/>
+            <result property="sell" column="sell" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,daily_train_id,carriage_id,
+        seat_type,seat_row,seat_col,
+        carriage_seat_index,sell,create_time,
+        update_time
+    </sql>
+</mapper>

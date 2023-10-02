@@ -17,21 +17,21 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class TrainStationController {
     @Autowired
-    TrainStationService passengerService;
+    TrainStationService trainStationService;
     @PostMapping("/save")
     public CommonResp<?> saveTrainStation(@RequestBody @Valid TrainStationSaveOrEditReq req){
-        passengerService.save(req);
+        trainStationService.save(req);
         return CommonResp.buildSuccess("保存成功");
     }
 
     @GetMapping("/query-list")
     public CommonResp<?> queryList(TrainStationQueryReq req){
-        return CommonResp.buildSuccess(passengerService.queryList(req),"查询成功");
+        return CommonResp.buildSuccess(trainStationService.queryList(req),"查询成功");
     }
 
     @DeleteMapping("/delete/{id}")
     public CommonResp<?> delete(@PathVariable("id") Long id){
-        passengerService.delete(id);
+        trainStationService.delete(id);
         return CommonResp.buildSuccess("删除成功");
     }
 
