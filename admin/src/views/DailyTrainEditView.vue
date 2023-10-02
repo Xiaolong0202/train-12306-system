@@ -2,8 +2,7 @@
     <a-layout id="components-layout-demo-top-side-2" style="min-height: 100vh">
         <a-layout-header class="header">
             <div class="logo">
-                {{ dailyTrainDB.type }}{{ dailyTrainDB.code }}&nbsp;&nbsp;{{ dailyTrainDB.start }}-{{ dailyTrainDB.end }}
-                &nbsp;&nbsp;发车日期&nbsp;{{dailyTrainDB.startDate}}
+                {{menuInfo}}
             </div>
         </a-layout-header>
         <a-layout>
@@ -37,7 +36,7 @@ const router = useRouter()
 const selectedKeys = ref([sessionStorage.getItem('dailyTrainEditView')])
 const routeParams = ref(route.params)
 const dailyTrainDB = ref({})
-
+const menuInfo = ref('')
 
 
 /**
@@ -73,10 +72,12 @@ const getTrainInfo = ()=>{
                 const data = res.data
                 if (data.success){
                     dailyTrainDB.value = data.content
+                    menuInfo.value =  dailyTrainDB.value.type+dailyTrainDB.value.code+'  '+dailyTrainDB.value.start+'-'+dailyTrainDB.value.end+'\xa0\xa0\xa0\xa0\xa0\xa0发车日期 '+dailyTrainDB.value.startDate
                 }
             }
         })
 }
+
 
 onMounted(()=>{
     getTrainInfo()
