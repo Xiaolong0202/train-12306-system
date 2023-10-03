@@ -214,8 +214,8 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             trainSaetLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(train.getId()), TrainSeat::getTrainId, train.getId());
             List<TrainSeat> trainSeats = trainSeatMapper.selectList(trainSaetLambdaQueryWrapper);
 
-            //构建sell,字符串的长度，为该列车次经过的站数的长度
-            char[] sellChars = new char[tempDailyTrainStations.size()];
+            //构建sell,字符串的长度应该为该列车次经过的站数的长度-1
+            char[] sellChars = new char[Math.max(0,tempDailyTrainStations.size()-1)];
             Arrays.fill(sellChars,'0');
             String sell = String.valueOf(sellChars);
 
