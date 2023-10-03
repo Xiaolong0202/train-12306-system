@@ -17,7 +17,7 @@
                     终：{{record.endTime}}
                 </template>
                 <template v-if="column.dataIndex === 'intervalTime' ">
-                    {{computedTimeInterval(record)}}
+                    {{computedTimeInterval(record.startTime,record.endTime,record.train.intervalDay)}}
                 </template>
                 <template v-if="column.dataIndex === 'station' ">
                     始：{{record.start}}<br/>
@@ -196,10 +196,46 @@ const getDailyTrain =  async (id) => {
     return train
 }
 
+<<<<<<< HEAD
 const  computedTimeInterval = (record)=>{
 
 }
 
+=======
+
+function computedTimeInterval(startTime, endTime, intervalDays) {
+    // 将时间字符串解析为 day.js 对象
+    const startDate = dayjs(startTime,'HH:mm:ss');
+    const endDate = dayjs(endTime,'HH:mm:ss');
+
+    // 计算时间差值
+    let timeDifference = endDate.diff(startDate);
+
+
+    // 加上间隔天数
+    timeDifference += intervalDays * 24 * 60 * 60 * 1000;
+
+
+    // 返回结果
+    return formatTimeDifference(timeDifference) // 返回hh:mm:ss格式的时间字符串
+}
+
+function formatTimeDifference(timeDifference) {
+    // 将毫秒数转换为秒
+    const totalSeconds = Math.floor(timeDifference / 1000);
+
+    // 计算小时、分钟和剩余秒数
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    // 格式化为 HH:mm:ss
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+
+
+>>>>>>> 66229f0 (实现了会员界面的查找余票信息的界面,并且在车票表当中添加了startDate字段)
 
 onMounted(() => {
 
