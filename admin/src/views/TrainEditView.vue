@@ -4,6 +4,9 @@
             <div class="logo">
             {{trainDB.type}}{{trainDB.code}}&nbsp;&nbsp;{{trainDB.start}}-{{trainDB.end}}
             </div>
+            <div style="float: right">
+                <router-link to="/">返回主页</router-link>
+            </div>
         </a-layout-header>
         <a-layout>
             <a-layout-sider width="200" style="background: #fff">
