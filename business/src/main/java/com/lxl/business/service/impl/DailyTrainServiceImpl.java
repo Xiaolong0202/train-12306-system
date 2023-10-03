@@ -295,6 +295,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                     DailyTrainTicket dailyTrainTicket = new DailyTrainTicket();
                     dailyTrainTicket.setId(SnowUtils.nextSnowId());
                     dailyTrainTicket.setDailyTrainId(dailyTrain.getId());
+                    dailyTrainTicket.setStartDate(dailyTrain.getStartDate());
                     dailyTrainTicket.setStart(trainStationStart.getStationName());
                     dailyTrainTicket.setStartPinyin(trainStationStart.getNamePinyin());
                     dailyTrainTicket.setStartTime(trainStationStart.getOutTime());

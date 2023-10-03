@@ -27,6 +27,9 @@ public class DailyTrainTicket implements Serializable {
      */
     private Long dailyTrainId;
 
+
+    private Date startDate;
+
     /**
      * 出发站
      */

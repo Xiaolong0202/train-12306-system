@@ -37,6 +37,7 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
         dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getDailyTrainId()),DailyTrainTicket::getDailyTrainId,req.getDailyTrainId());
         dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getStart()),DailyTrainTicket::getStart,req.getStart());
         dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getEnd()),DailyTrainTicket::getEnd,req.getEnd());
+        dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getStartDate()),DailyTrainTicket::getStartDate,req.getStartDate());
 
 
 

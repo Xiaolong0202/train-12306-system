@@ -141,6 +141,7 @@ drop table if exists `daily_train_ticket`;
 create table `daily_train_ticket` (
                                       `id` bigint not null comment 'id',
                                       `daily_train_id` bigint NOT NULL COMMENT '每日车次id',
+                                      `start_date` date NOT NULL COMMENT '出发日期',
                                       `start` varchar(20) not null comment '出发站',
                                       `start_pinyin` varchar(50) not null comment '出发站拼音',
                                       `start_time` time not null comment '出发时间',
