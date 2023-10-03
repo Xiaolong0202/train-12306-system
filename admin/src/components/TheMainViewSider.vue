@@ -47,7 +47,7 @@ const toPage = ({key,keyPath}) => {
     router.push(finalPath)
 }
 const selectedKeys = ref([sessionStorage.getItem('adminMainKey')])
-const openKeys = ref(['/main/base','/main/batch'])
+const openKeys = ref(['/main/base','/main/batch','/main/daily'])
 </script>
 
 <style scoped>
