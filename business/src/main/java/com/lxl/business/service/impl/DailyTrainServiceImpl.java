@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -61,6 +62,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
     @Autowired
     TrainSeatMapper trainSeatMapper;
+
+    @Autowired
+    DailyTrainTicketMapper dailyTrainTicketMapper;
 
 
     @Override
@@ -161,6 +165,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             dailyTrainSeatMapper.deleteByMap(columnMap);
             dailyTrainCarriageMapper.deleteByMap(columnMap);
             dailyTrainStationMapper.deleteByMap(columnMap);
+            dailyTrainTicketMapper.deleteByMap(columnMap);
         });
 
 
@@ -181,6 +186,8 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
             //将所有的trainStation转换为批量的dailyTrainStaion
             LambdaQueryWrapper<TrainStation> trainStationLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            //按照车站序号读取
+            trainStationLambdaQueryWrapper.orderByAsc(TrainStation::getTrainIndex);
             trainStationLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(train.getId()), TrainStation::getTrainId, train.getId());
             List<TrainStation> trainStations = trainStationMapper.selectList(trainStationLambdaQueryWrapper);
 
@@ -242,6 +249,39 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                 dailyTrainSeatMapper.insertBatch(tempDailyTrainSeatList);
             }
 //            dailyTrainSeatList.addAll(tempDailyTrainSeatList);
+
+            //生成车次售票的信息
+            for (int i = 0; i < trainStations.size(); i++) {
+                TrainStation trainStationStart = trainStations.get(i);
+                for (int j = i+1; j < trainStations.size(); j++) {
+                    TrainStation trainStationEnd = trainStations.get(j);
+
+                    DailyTrainTicket dailyTrainTicket = new DailyTrainTicket();
+                    dailyTrainTicket.setId(SnowUtils.nextSnowId());
+                    dailyTrainTicket.setDailyTrainId(dailyTrain.getId());
+                    dailyTrainTicket.setStart(trainStationStart.getStationName());
+                    dailyTrainTicket.setStartPinyin(trainStationStart.getNamePinyin());
+                    dailyTrainTicket.setStartTime(trainStationStart.getOutTime());
+                    dailyTrainTicket.setStartIndex(trainStationStart.getTrainIndex());
+                    dailyTrainTicket.setEnd(trainStationEnd.getStationName());
+                    dailyTrainTicket.setEndPinyin(trainStationEnd.getNamePinyin());
+                    dailyTrainTicket.setEndTime(trainStationEnd.getInTime());
+                    dailyTrainTicket.setEndIndex(trainStationEnd.getTrainIndex());
+                    dailyTrainTicket.setYdz(0);
+                    dailyTrainTicket.setYdzPrice(BigDecimal.valueOf(0));
+                    dailyTrainTicket.setEdz(0);
+                    dailyTrainTicket.setEdzPrice(BigDecimal.valueOf(0));
+                    dailyTrainTicket.setRw(0);
+                    dailyTrainTicket.setRwPrice(BigDecimal.valueOf(0));
+                    dailyTrainTicket.setYw(0);
+                    dailyTrainTicket.setYwPrice(BigDecimal.valueOf(0));
+                    dailyTrainTicket.setCreateTime(now);
+                    dailyTrainTicket.setUpdateTime(now);
+
+                    dailyTrainTicketMapper.insert(dailyTrainTicket);
+                }
+            }
+
 
             return dailyTrain;
         }).toList();
