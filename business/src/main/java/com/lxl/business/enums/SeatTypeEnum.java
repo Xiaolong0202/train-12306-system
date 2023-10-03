@@ -16,18 +16,18 @@ public enum SeatTypeEnum {
     YW("3","硬卧",new BigDecimal("0.6")),
     RW("4","软卧",new BigDecimal("0.5"));
 
-    private String code;
-    private String description;
+    public String code;
+    public String description;
 
     /**
      * 用于票价计算，表示每公里的价格
      */
-    private BigDecimal bigDecimal;
+    public BigDecimal priceRate;
 
-    SeatTypeEnum(String code, String description, BigDecimal bigDecimal) {
+    SeatTypeEnum(String code, String description, BigDecimal priceRate) {
         this.code = code;
         this.description = description;
-        this.bigDecimal = bigDecimal;
+        this.priceRate = priceRate;
     }
 
 

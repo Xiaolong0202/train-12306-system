@@ -14,10 +14,10 @@ public enum TrainTypeEnum {
     K("K","快速",new BigDecimal("0.8"));
 
 
-    private String code;
-    private String description;
+    public String code;
+    public String description;
     //票价比例
-    private BigDecimal priceRate;
+    public BigDecimal priceRate;
 
     TrainTypeEnum(String code, String description, BigDecimal priceRate) {
         this.code = code;
