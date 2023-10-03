@@ -2,9 +2,10 @@
     <div>
         <div class="view-header">
             <train-selector v-model:train-code="params.code"/>
-            <input type="date" v-model = "params.startDate">
+            <input type="date" v-model="params.startDate">
             <a-button type="primary" @click="showModal">add</a-button>
             <a-button type="dashed" @click="queryDailyTrainList">刷新</a-button>
+            <a-button type="dashed" @click="geneTrainV=!geneTrainV">选择生成指定日期的车次</a-button>
         </div>
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading"
                  style="margin-top: 20px">
@@ -32,9 +33,9 @@
                         <a style="margin-left:  10px">delete</a>
                     </a-popconfirm>
                     <a-popconfirm
-                        v-if="dataSource.length"
-                        title="确认编辑详情?"
-                        @confirm="handleEditOtherInfo(record)"
+                            v-if="dataSource.length"
+                            title="确认编辑详情?"
+                            @confirm="handleEditOtherInfo(record)"
                     >
                         <a style="margin-left:  10px">编辑子表</a>
                     </a-popconfirm>
@@ -78,11 +79,11 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item
-                    label="出发日期"
-                    name="startDate"
+                        label="出发日期"
+                        name="startDate"
                 >
-                    <input v-model ="dailyTrain.startDate" type="date">
-<!--                    {{dailyTrain.startDate}}-->
+                    <input v-model="dailyTrain.startDate" type="date">
+                    <!--                    {{dailyTrain.startDate}}-->
                 </a-form-item>
                 <a-form-item
                         label="始发站"
@@ -138,6 +139,17 @@
                 </a-form-item>
             </a-form>
         </a-modal>
+        <a-modal
+                v-model:open="geneTrainV"
+                title="生成指定日期车次的信息"
+                :confirm-loading="geneDailyLoading"
+                :closable="false"
+                :mask="true"
+                :maskClosable="false"
+                @ok="handleGenerateTrain" @cancel="geneDate=null;geneTrainV=false">
+            <p>请输入你想要生成的日期</p>
+            <input type="date" v-model="geneDate">
+        </a-modal>
     </div>
 </template>
 <script setup>
@@ -153,7 +165,7 @@ import {useRouter} from "vue-router";
 
 const dailyTrain = reactive({
     id: '',
-    startDate:'',
+    startDate: '',
     code: '',
     type: 'K',
     start: '',
@@ -174,6 +186,10 @@ const router = reactive(useRouter())
 const dailyTrain_type = ref([])
 const open = ref(false);
 const loading = ref(false);
+const geneTrainV = ref(false)
+const geneDailyLoading = ref(false)
+const geneDate = ref(null)
+
 const showModal = () => {
     open.value = true
 };
@@ -193,7 +209,7 @@ const cancel = () => {
 function resetDailyTrain() {
     Object.assign(dailyTrain, {
         id: '',
-        startDate:'',
+        startDate: '',
         code: '',
         type: 'K',
         start: '',
@@ -267,22 +283,22 @@ const pagination = reactive({
 })
 const queryDailyTrainList = () => {
     loading.value = true
-    axios.get("/business/dailyTrain/admin/query-list",{
-        params:{
+    axios.get("/business/dailyTrain/admin/query-list", {
+        params: {
             currentPage: pagination.current,
             pageSize: pagination.pageSize,
             code: params.code,
             startDate: params.startDate
         }
     }).then(res => {
-            loading.value = false
-            if (res) {
-                if (res.data.success) {
-                    dataSource.value = res.data.content.list
-                    pagination.total = res.data.content.total
-                }
+        loading.value = false
+        if (res) {
+            if (res.data.success) {
+                dataSource.value = res.data.content.list
+                pagination.total = res.data.content.total
             }
-        })
+        }
+    })
 }
 
 const queryDailyTrainType = () => {
@@ -317,16 +333,40 @@ const handleDelete = (record) => {
         })
 }
 
-const handleEditOtherInfo = (record)=>{
-    router.push('/dailyTrainEdit/'+record.id)
+const handleEditOtherInfo = (record) => {
+    router.push('/dailyTrainEdit/' + record.id)
 }
 
-const trainSelectorChange = (train) =>{
+const trainSelectorChange = (train) => {
     let preId = dailyTrain.id;
-    Object.assign(dailyTrain,train)
+    Object.assign(dailyTrain, train)
     dailyTrain.id = preId
-    console.log('dailyTrain ->'+dailyTrain)
-    console.log('dailyTrainID ->'+dailyTrain.id)
+    console.log('dailyTrain ->' + dailyTrain)
+    console.log('dailyTrainID ->' + dailyTrain.id)
+}
+
+const handleGenerateTrain = () => {
+    geneDailyLoading.value = true
+    if (!geneDate.value) {
+        info('error', "请输入日期再点击确定")
+        geneDailyLoading.value = false
+    }else {
+        axios.put('/business/dailyTrain/admin/gen-daily/' + geneDate.value)
+            .then(res => {
+                if (res) {
+                    if (res.data.success) {
+                        info('success', res.data.message)
+                        geneDate.value = null
+                        queryDailyTrainList()
+                        geneTrainV.value = false
+                        geneDailyLoading.value = false
+                    } else {
+                        info('error', res.data.message)
+                        geneDailyLoading.value = false
+                    }
+                }
+            })
+    }
 }
 
 onMounted(() => {
@@ -345,10 +385,11 @@ watch(() => dailyTrain.end, () => {
 
 </script>
 <style scoped>
-    .view-header{
-        float: left;
-    }
-    .view-header > *{
-        margin-right: 15px;
-    }
+.view-header {
+    float: left;
+}
+
+.view-header > * {
+    margin-right: 15px;
+}
 </style>
