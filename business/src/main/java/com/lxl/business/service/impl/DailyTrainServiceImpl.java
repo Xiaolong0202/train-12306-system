@@ -24,10 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -57,6 +54,12 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
     @Autowired
     TrainCarriageMapper trainCarriageMapper;
+
+    @Autowired
+    DailyTrainSeatMapper dailyTrainSeatMapper;
+
+    @Autowired
+    TrainSeatMapper trainSeatMapper;
 
 
     @Override
@@ -157,6 +160,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
         List<DailyTrainStation> dailyTrainStations = new ArrayList<>();
         List<DailyTrainCarriage> dailyTrainCarriages = new ArrayList<>();
+        List<DailyTrainSeat> dailyTrainSeatList = new ArrayList<>();
 
         //将所有的train转换为批量的dailyTrains
         List<DailyTrain> dailyTrains = trains.stream().map(train -> {
@@ -198,6 +202,28 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             }).toList();
             dailyTrainCarriages.addAll(tempDailyTrainCarriages);
 
+            //生成dailySeat
+            LambdaQueryWrapper<TrainSeat> trainSaetLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            trainSaetLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(train.getId()), TrainSeat::getTrainId, train.getId());
+            List<TrainSeat> trainSeats = trainSeatMapper.selectList(trainSaetLambdaQueryWrapper);
+
+            //构建sell
+            char[] sellChars = new char[dailyTrainStations.size()];
+            Arrays.fill(sellChars,'0');
+            String sell = String.valueOf(sellChars);
+
+            List<DailyTrainSeat> tempDailyTrainSeatList = trainSeats.stream().map(trainSeat -> {
+                DailyTrainSeat dailyTrainSeat = BeanUtil.copyProperties(trainSeat, DailyTrainSeat.class);
+                dailyTrainSeat.setId(SnowUtils.nextSnowId());
+                dailyTrainSeat.setDailyTrainId(dailyTrain.getId());
+                dailyTrainSeat.setCreateTime(now);
+                dailyTrainSeat.setUpdateTime(now);
+                dailyTrainSeat.setSell(sell);
+
+                return dailyTrainSeat;
+            }).toList();
+            dailyTrainSeatList.addAll(tempDailyTrainSeatList);
+
             return dailyTrain;
         }).toList();
 
@@ -205,7 +231,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
         dailyTrainMapper.insertBatch(dailyTrains);
         dailyTrainStationMapper.insertBatch(dailyTrainStations);
         dailyTrainCarriageMapper.insertBatch(dailyTrainCarriages);
+        dailyTrainSeatMapper.insertBatch(dailyTrainSeatList);
     }
+
 
 }
 
