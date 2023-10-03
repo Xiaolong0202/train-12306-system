@@ -58,6 +58,7 @@ const items = reactive([
     getItem('trainStation', '/dailyTrainEdit/'+routeParams.value.dailyTrainId+'/dailyTrainStation', h(TeamOutlined),null, null),
     getItem('trainCarriage', '/dailyTrainEdit/'+routeParams.value.dailyTrainId+'/dailyTrainCarriage', h(TeamOutlined),null, null),
     getItem('seat', '/dailyTrainEdit/'+routeParams.value.dailyTrainId+'/dailyTrainSeat', h(TeamOutlined),null, null),
+    getItem('ticket', '/dailyTrainEdit/'+routeParams.value.dailyTrainId+'/dailyTrainTicket', h(TeamOutlined),null, null),
 ])
 const toPage = ({key,keyPath}) => {
     sessionStorage.setItem('TrainEditView',key)

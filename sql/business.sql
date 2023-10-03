@@ -136,3 +136,29 @@ create table `daily_train_seat`(
                              `create_time` datetime(3) DEFAULT NULL COMMENT '新增时间',
                              `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间'
 )COMMENT='每日座位';
+
+drop table if exists `daily_train_ticket`;
+create table `daily_train_ticket` (
+                                      `id` bigint not null comment 'id',
+                                      `daily_train_id` bigint NOT NULL COMMENT '每日车次id',
+                                      `start` varchar(20) not null comment '出发站',
+                                      `start_pinyin` varchar(50) not null comment '出发站拼音',
+                                      `start_time` time not null comment '出发时间',
+                                      `start_index` tinyint not null comment '出发站序|本站是整个车次的第几站',
+                                      `end` varchar(20) not null comment '到达站',
+                                      `end_pinyin` varchar(50) not null comment '到达站拼音',
+                                      `end_time` time not null comment '到站时间',
+                                      `end_index` tinyint not null comment '到站站序|本站是整个车次的第几站',
+                                      `ydz` int not null comment '一等座余票',
+                                      `ydz_price` decimal(8, 2) not null comment '一等座票价',
+                                      `edz` int not null comment '二等座余票',
+                                      `edz_price` decimal(8, 2) not null comment '二等座票价',
+                                      `rw` int not null comment '软卧余票',
+                                      `rw_price` decimal(8, 2) not null comment '软卧票价',
+                                      `yw` int not null comment '硬卧余票',
+                                      `yw_price` decimal(8, 2) not null comment '硬卧票价',
+                                      `create_time` datetime(3) comment '新增时间',
+                                      `update_time` datetime(3) comment '修改时间',
+                                      primary key (`id`),
+                                      unique key `date_train_code_start_end_unique` (`daily_train_id`, `start`, `end`)
+) engine=innodb default charset=utf8mb4 comment='余票信息';

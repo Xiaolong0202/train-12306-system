@@ -90,7 +90,11 @@ const routes = [
             {
                 path: 'dailyTrainSeat/:dailyTrainId',
                 component: ()=> import('@/views/dailyTrainEdit/DailyTrainSeatView.vue')
-            }
+            },
+            {
+                path: 'dailyTrainTicket/:dailyTrainId',
+                component: ()=> import('@/views/dailyTrainEdit/DailyTrainTicketView.vue')
+            },
         ]
     }
 ]
