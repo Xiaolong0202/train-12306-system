@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.*;
@@ -158,9 +159,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
         Date now = new Date(System.currentTimeMillis());
         List<Train> trains = trainMapper.selectList(null);
 
-        List<DailyTrainStation> dailyTrainStations = new ArrayList<>();
-        List<DailyTrainCarriage> dailyTrainCarriages = new ArrayList<>();
-        List<DailyTrainSeat> dailyTrainSeatList = new ArrayList<>();
+//        List<DailyTrainStation> dailyTrainStations = new ArrayList<>();
+//        List<DailyTrainCarriage> dailyTrainCarriages = new ArrayList<>();
+//        List<DailyTrainSeat> dailyTrainSeatList = new ArrayList<>();
 
         //将所有的train转换为批量的dailyTrains
         List<DailyTrain> dailyTrains = trains.stream().map(train -> {
@@ -184,7 +185,10 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
                 return dailyTrainStation;
             }).toList();
-            dailyTrainStations.addAll(tempDailyTrainStations);
+            if (CollUtil.isNotEmpty(tempDailyTrainStations)){
+                dailyTrainStationMapper.insertBatch(tempDailyTrainStations);
+            }
+//            dailyTrainStations.addAll(tempDailyTrainStations);
 
             //生成dailyCarriage
             LambdaQueryWrapper<TrainCarriage> trainCarriageLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -200,15 +204,18 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
                 return dailyTrainCarriage;
             }).toList();
-            dailyTrainCarriages.addAll(tempDailyTrainCarriages);
+            if (CollUtil.isNotEmpty(tempDailyTrainCarriages)){
+                dailyTrainCarriageMapper.insertBatch(tempDailyTrainCarriages);
+            }
+//            dailyTrainCarriages.addAll(tempDailyTrainCarriages);
 
             //生成dailySeat
             LambdaQueryWrapper<TrainSeat> trainSaetLambdaQueryWrapper = new LambdaQueryWrapper<>();
             trainSaetLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(train.getId()), TrainSeat::getTrainId, train.getId());
             List<TrainSeat> trainSeats = trainSeatMapper.selectList(trainSaetLambdaQueryWrapper);
 
-            //构建sell
-            char[] sellChars = new char[dailyTrainStations.size()];
+            //构建sell,字符串的长度，为该列车次经过的站数的长度
+            char[] sellChars = new char[tempDailyTrainStations.size()];
             Arrays.fill(sellChars,'0');
             String sell = String.valueOf(sellChars);
 
@@ -222,16 +229,20 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
                 return dailyTrainSeat;
             }).toList();
-            dailyTrainSeatList.addAll(tempDailyTrainSeatList);
+
+            if (CollUtil.isNotEmpty(tempDailyTrainSeatList)){
+                dailyTrainSeatMapper.insertBatch(tempDailyTrainSeatList);
+            }
+//            dailyTrainSeatList.addAll(tempDailyTrainSeatList);
 
             return dailyTrain;
         }).toList();
 
         //批量生成 每日车站
         dailyTrainMapper.insertBatch(dailyTrains);
-        dailyTrainStationMapper.insertBatch(dailyTrainStations);
-        dailyTrainCarriageMapper.insertBatch(dailyTrainCarriages);
-        dailyTrainSeatMapper.insertBatch(dailyTrainSeatList);
+//        dailyTrainStationMapper.insertBatch(dailyTrainStations);
+//        dailyTrainCarriageMapper.insertBatch(dailyTrainCarriages);
+//        dailyTrainSeatMapper.insertBatch(dailyTrainSeatList);
     }
 
 
