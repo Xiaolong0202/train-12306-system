@@ -151,11 +151,19 @@ public class DailyTrainServiceImpl implements DailyTrainService {
     @Transactional
     @Override
     public void genDaily(Date date) {
-        //先删除目标日期所有的车次
-        dailyTrainMapper.deleteByMap(Map.of("start_date", date));
-        //先删除目标日期所有的车站
-        dailyTrainMapper.deleteByMap(Map.of("start_date", date));
-        //
+        //先删除目标日期所有的车次,以及该车次的详情信息
+        //先找出目标日期的车次的 id
+        List<Long> dailyTrainIds = dailyTrainMapper.selectAimDateTrainIds(date);
+        dailyTrainMapper.deleteBatchIds(dailyTrainIds);
+        //删除目标日期存在的车站
+        dailyTrainIds.forEach(dailyTrainId->{
+            Map<String, Object> columnMap = Map.of("daily_train_id", dailyTrainId);
+            dailyTrainSeatMapper.deleteByMap(columnMap);
+            dailyTrainCarriageMapper.deleteByMap(columnMap);
+            dailyTrainStationMapper.deleteByMap(columnMap);
+        });
+
+
         Date now = new Date(System.currentTimeMillis());
         List<Train> trains = trainMapper.selectList(null);
 
