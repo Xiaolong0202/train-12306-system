@@ -11,4 +11,8 @@ import lombok.Data;
 @Data
 public class DailyTrainTicketQueryReq extends PageReq {
     private Long dailyTrainId;
+
+    private String start;
+
+    private String end;
 }

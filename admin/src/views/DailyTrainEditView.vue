@@ -76,7 +76,7 @@ const getTrainInfo = ()=>{
                 const data = res.data
                 if (data.success){
                     dailyTrainDB.value = data.content
-                    menuInfo.value =  dailyTrainDB.value.type+dailyTrainDB.value.code+'  '+dailyTrainDB.value.start+'-'+dailyTrainDB.value.end+'\xa0\xa0\xa0\xa0\xa0\xa0发车日期 '+dailyTrainDB.value.startDate
+                    menuInfo.value =  dailyTrainDB.value.type+dailyTrainDB.value.code+'  '+dailyTrainDB.value.start+'-'+dailyTrainDB.value.end+'\xa0\xa0\xa0\xa0\xa0\xa0发车日期 '+dailyTrainDB.value.startDate+'\xa0\xa0\xa0\xa0\xa0\xa0间隔天数： '+dailyTrainDB.value.intervalDay
                 }
             }
         })
@@ -91,11 +91,10 @@ onMounted(()=>{
 <style scoped>
 .logo {
     float: left;
-    width: 500px;
+    width: 800px;
     height: 31px;
     color: white;
     font-size: 20px;
-//background: rgba(255, 255, 255, 0.3);
 }
 
 </style>

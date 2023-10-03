@@ -1,9 +1,78 @@
 <template>
     <div>
         <div>
-            <a-button style="float: left" @click="queryDailyTrainSeatList">refresh</a-button>
+            <a-button type="link" style="float: left" @click="queryDailyTrainSeatList">refresh</a-button>
+            <a-select
+                    style="float: left;margin-left: 10px"
+                    v-model:value="start"
+                    placeholder="Select a Start Staiion"
+                    search
+                    :options="options"
+            />
+            <a-select
+                    style="float: left;margin-left: 10px"
+                    v-model:value="end"
+                    placeholder="Select a End Staiion"
+                    search
+                    :options="options"
+            />
         </div>
-        <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading" style="margin-top: 20px">
+        <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading"
+                 style="margin-top: 20px">
+            <template #bodyCell="{column , record}">
+                <template v-if="column.dataIndex === 'time' ">
+                    始：{{ record.startTime }}<br/>
+                    终：{{record.endTime}}
+                </template>
+                <template v-if="column.dataIndex === 'station' ">
+                    始：{{record.start}}<br/>
+                    终：{{record.end}}
+                </template>
+                <template v-if="column.dataIndex === 'ydzInfo' ">
+                    余票：
+                    <template v-if="record.ydz>=0">
+                        {{record.ydz}}
+                        <br/>
+                        {{record.ydzPrice}}&nbsp;元
+                    </template>
+                    <template v-else>
+                        --
+                    </template>
+                </template>
+                <template v-if="column.dataIndex === 'edzInfo' ">
+                    余票：
+                    <template v-if="record.edz>=0">
+                        {{record.edz}}
+                        <br/>
+                        {{record.edzPrice}}&nbsp;元
+                    </template>
+                    <template v-else>
+                        --
+                    </template>
+                </template>
+                <template v-if="column.dataIndex === 'rwInfo' ">
+                    余票：
+                    <template v-if="record.rw>=0">
+                        {{record.rw}}
+                        <br/>
+                        {{record.rwPrice}}&nbsp;元
+                    </template>
+                    <template v-else>
+                        --
+                    </template>
+                </template>
+                <template v-if="column.dataIndex === 'ywInfo' ">
+                    余票：
+                    <template v-if="record.yw>=0">
+                        {{record.yw}}
+                        <br/>
+                        {{record.ywPrice}}&nbsp;元
+                    </template>
+                    <template v-else>
+                        --
+                    </template>
+                </template>
+            </template>
         </a-table>
         <a-pagination v-model:current="pagination.current"
                       v-model:page-size="pagination.pageSize"
@@ -28,74 +97,36 @@ const loading = ref(false);
 const dataSource = ref([])
 const columns = [
     {
-        title: '每日车次ID',
-        dataIndex: 'dailyTrainId',
-        key: 'dailyTrainId',
+        title: '时间',
+        dataIndex: 'time',
+        key: 'time'
     },
     {
-        title: '出发站',
-        dataIndex: 'start',
-        key: 'start',
+        title: '车站',
+        dataIndex: 'station',
+        key: 'station'
     },
     {
-        title: '出发站拼音',
-        dataIndex: 'startPinyin',
-        key: 'startPinyin',
+        title: '一等座',
+        dataIndex: 'ydzInfo',
+        key: 'ydzInfo'
     },
     {
-        title: '出发站序|本站是整个车次的第几站',
-        dataIndex: 'startIndex',
-        key: 'startIndex',
+        title: '二等座',
+        dataIndex: 'edzInfo',
+        key: 'edzInfo'
     },
     {
-        title: '到达站',
-        dataIndex: 'end',
-        key: 'end',
+        title: '软卧',
+        dataIndex: 'rwInfo',
+        key: 'rwInfo'
     },
     {
-        title: '到达站拼音',
-        dataIndex: 'endPinyin',
-        key: 'endPinyin',
+        title: '硬卧',
+        dataIndex: 'ywInfo',
+        key: 'ywInfo'
     },
-    {
-        title: '到站站序|本站是整个车次的第几站',
-        dataIndex: 'endIndex',
-        key: 'endIndex',
-    },
-    {
-        title: '一等座余票',
-        dataIndex: 'ydz',
-        key: 'ydz',
-    },{
-        title: '一等座票价',
-        dataIndex: 'ydzPrice',
-        key: 'ydzPrice',
-    },{
-        title: '二等座余票',
-        dataIndex: 'edz',
-        key: 'edz',
-    },{
-        title: '二等座票价',
-        dataIndex: 'edzPrice',
-        key: 'edzPrice',
-    },{
-        title: '软卧余票',
-        dataIndex: 'rw',
-        key: 'rw',
-    },{
-        title: '软卧票价',
-        dataIndex: 'rwPrice',
-        key: 'rwPrice',
-    },{
-        title: '硬卧余票',
-        dataIndex: 'yw',
-        key: 'yw',
-    },{
-        title: '硬卧票价',
-        dataIndex: 'ywPrice',
-        key: 'ywPrice',
-    }
-    ]
+]
 const pagination = reactive({
     total: 0,
     current: 1,
@@ -103,7 +134,16 @@ const pagination = reactive({
 })
 const queryDailyTrainSeatList = () => {
     loading.value = true
-    axios.get("/business/dailyTrainTicket/admin/query-list?currentPage=" + pagination.current + "&pageSize=" + pagination.pageSize+"&dailyTrainId="+routeParams.value.dailyTrainId)
+    axios.get("/business/dailyTrainTicket/admin/query-list",
+        {
+            params: {
+                currentPage: pagination.current,
+                pageSize: pagination.pageSize,
+                dailyTrainId: routeParams.value.dailyTrainId,
+                start: start.value,
+                end: end.value,
+            }
+        })
         .then(res => {
             loading.value = false
             if (res) {
@@ -115,10 +155,37 @@ const queryDailyTrainSeatList = () => {
         })
 }
 
+const options = ref([])
+const start = ref(null)
+const end = ref(null)
+
+const searchTrainStations = () => {
+    axios.get('/business/dailyTrainStation/admin/query-list?dailyTrainId=' + routeParams.value.dailyTrainId)
+        .then(res => {
+            if (res) {
+                if (res.data.success) {
+                    console.log("res.data.success -->" + res)
+                    console.log(res)
+                    options.value = []
+                    options.value.push({
+                        value: null,
+                        label: '不选择车站'
+                    })
+                    for (let i = 0; i < res.data.content.list.length; i++) {
+                        options.value.push({
+                            value: res.data.content.list[i].stationName,
+                            label: res.data.content.list[i].stationName
+                        })
+                    }
+                }
+            }
+        })
+}
 
 
 onMounted(() => {
     queryDailyTrainSeatList()
+    searchTrainStations()
 })
 
 

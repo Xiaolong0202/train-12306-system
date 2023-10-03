@@ -2,7 +2,7 @@
     <a-select
             v-model:value="stationName"
             show-search
-            placeholder="Select a person"
+            placeholder="Select a Staiion"
             style="width: 200px"
             :options="options"
             :filter-option="filterOption"
