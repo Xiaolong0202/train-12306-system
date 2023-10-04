@@ -9,18 +9,11 @@
         <span class="ticketInfo">({{ ticketInfo.startTime }}到)</span>&nbsp;
         <br><br>
         <div style="float: left">
-            <span v-if="ticketInfo.ydz>=0">
-                一等座: <span class="ticketSell">{{ ticketInfo.ydzPrice }}￥  &nbsp;{{ ticketInfo.ydz }}</span>&nbsp;张票
-            </span>
-            <span v-if="ticketInfo.edz>=0">
-                二等座: <span class="ticketSell">{{ ticketInfo.edzPrice }}￥  &nbsp;{{ ticketInfo.edz }}</span>&nbsp;张票
-            </span>
-            <span v-if="ticketInfo.yw>=0">
-                硬卧: <span class="ticketSell">{{ ticketInfo.ywPrice }}￥  &nbsp;{{ ticketInfo.yw }}</span>&nbsp;张票
-            </span>
-            <span v-if="ticketInfo.rw>=0">
-                软卧: <span class="ticketSell">{{ ticketInfo.rwPrice }}￥ &nbsp;{{ ticketInfo.rw }}</span>&nbsp;张票
-        </span>
+            <template v-for="item in seatType" :key="item.code">
+                <span  v-if="ticketInfo[item.enumName]>=0">
+                {{item.description}}: <span class="ticketSell">{{ ticketInfo[item.enumName+'Price'] }}￥  &nbsp;{{ ticketInfo[item.enumName] }}</span>&nbsp;张票
+                </span>
+            </template>
             <br><br><br>
         </div>
     </div>
@@ -93,12 +86,6 @@
         </a-modal>
 
     </div>
-  <!--    {{passengers}}-->
-<!--      {{ticketInfo}}-->
-  <!--    {{chosePassengers}}-->
-<!--      {{tickets}}-->
-<!--  {{ seatType }}-->
-<!--  {{ passengerType }}-->
 </template>
 
 <script setup>
@@ -144,6 +131,9 @@ const getSeatType = () => {
         .then(res => {
             if (res) {
                 seatType.value = res.data
+                seatType.value.forEach(item=>{
+                    item.enumName = item.enumName.toLowerCase()
+                })
             }
         })
 }
