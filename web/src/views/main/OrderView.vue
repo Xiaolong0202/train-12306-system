@@ -10,8 +10,10 @@
         <br><br>
         <div style="float: left">
             <template v-for="item in seatType" :key="item.code">
-                <span  v-if="ticketInfo[item.enumName]>=0">
-                {{item.description}}: <span class="ticketSell">{{ ticketInfo[item.enumName+'Price'] }}￥  &nbsp;{{ ticketInfo[item.enumName] }}</span>&nbsp;张票
+                <span v-if="ticketInfo[item.enumName]>=0">
+                {{ item.description }}: <span class="ticketSell">{{
+                    ticketInfo[item.enumName + 'Price']
+                    }}￥  &nbsp;{{ ticketInfo[item.enumName] }}</span>&nbsp;张票
                 </span>
             </template>
             <br><br><br>
@@ -36,31 +38,33 @@
             <a-col :span="9">{{ item.idCard }}</a-col>
             <a-col :span="6">
                 <a-select v-model:value="item.type">-->
-                    <a-select-option v-for="p in passengerType" :value="p.code" :key="p.code">{{p.description}}</a-select-option>
+                    <a-select-option v-for="p in passengerType" :value="p.code" :key="p.code">{{ p.description }}
+                    </a-select-option>
                 </a-select>
             </a-col>
             <a-col :span="6">
                 <a-select v-model:value="item.seatType" placeholder="请选择席位类型">
                     <template v-for="s in seatType" :key="s.code">
-                        <a-select-option  v-if="ticketInfo[s.enumName]>=0" :value="s.code" >{{s.description}}</a-select-option>
+                        <a-select-option v-if="ticketInfo[s.enumName]>=0" :value="s.code">{{ s.description }}
+                        </a-select-option>
                     </template>
                 </a-select>
             </a-col>
         </a-row>
         <br><br><br><br><br>
-        <a-button style="float: left" v-if="tickets.length>0" @click="visible=true">提交订单</a-button>
+        <a-button style="float: left" v-if="tickets.length>0" @click="handleSubmit">提交订单</a-button>
 
         <a-modal
-            width="500"
-            title="请确认车票信息如下信息"
-            v-model:open="visible"
-            :closable="false"
-            :mask="true"
-            :maskClosable="false"
-            @ok="handleOk"
-            @cancel="visible=false">
+                width="500"
+                title="请确认车票信息如下信息"
+                v-model:open="visible"
+                :closable="false"
+                :mask="true"
+                :maskClosable="false"
+                @ok="handleOk"
+                @cancel="visible=false">
             <a-row class="tickets-row" style=" background-color: dodgerblue;color: white;" v-show="tickets.length>0">
-                <a-col :span="3" >姓名</a-col>
+                <a-col :span="3">姓名</a-col>
                 <a-col :span="9">身份证</a-col>
                 <a-col :span="6">乘客类型</a-col>
                 <a-col :span="6">座位类型</a-col>
@@ -71,20 +75,23 @@
                 </a-col>
                 <a-col :span="9">{{ item.idCard }}</a-col>
                 <a-col :span="6">
-                    <template v-for="p in passengerType"  :key="p.code">
+                    <template v-for="p in passengerType" :key="p.code">
                         <span v-if="p.code===item.type">
-                            {{p.description}}
+                            {{ p.description }}
                         </span>
                     </template>
                 </a-col>
                 <a-col :span="6">
-                    <template v-for="s in seatType"  :key="s.code">
+                    <template v-for="s in seatType" :key="s.code">
                         <span v-if="s.code===item.seatType">
-                            {{s.description}}
+                            {{ s.description }}
                         </span>
                     </template>
                 </a-col>
             </a-row>
+            {{chooseSeatType}}
+            {{SEAT_COL_ARR}}
+            {{chooseSeatObj}}
         </a-modal>
 
     </div>
@@ -92,7 +99,7 @@
 
 <script setup>
 import {SESSION_ORDER} from "@/constant/SessionStorageKeys";
-import {onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import axios from "axios";
 import {info} from "@/util/info";
 
@@ -105,8 +112,37 @@ const tickets = ref([])
 
 const seatType = ref([])
 const passengerType = ref([])
+const seatColType = ref([])
 
 const visible = ref(false)
+
+//0 不支持选座 1选 一等座 2 选二等座
+const chooseSeatType = ref(0)
+
+//计算选座类型
+const SEAT_COL_ARR = computed(() => {
+   return seatColType.value.filter(col => String(col.type) === String(chooseSeatType.value))
+})
+/**选择的座位:
+ *{
+ *   A1  C1 D1 F1
+ *   A2  C2 D2 D3
+ *}
+ */
+const chooseSeatObj = ref({})
+
+watch(() => SEAT_COL_ARR.value, () => {
+    chooseSeatObj.value = {}
+    for (let i = 1; i <= 2; i++) {
+        SEAT_COL_ARR.value.forEach(item => {
+            chooseSeatObj.value[item.description + i]={}
+            Object.assign(chooseSeatObj.value[item.description + i], item)
+            chooseSeatObj.value[item.description + i].choose = false
+        })
+    }
+    console.log("初始化两排座位")
+}, {immediate: true})
+
 
 const getPassengers = () => {
     axios.get('/member/passenger/query-list')
@@ -133,9 +169,18 @@ const getSeatType = () => {
         .then(res => {
             if (res) {
                 seatType.value = res.data
-                seatType.value.forEach(item=>{
+                seatType.value.forEach(item => {
                     item.enumName = item.enumName.toLowerCase()
                 })
+            }
+        })
+}
+
+const getSeatColType = () => {
+    axios.get('/business/get-enum/business.enums.SeatCol')
+        .then(res => {
+            if (res) {
+                seatColType.value = res.data
             }
         })
 }
@@ -149,30 +194,53 @@ const getPassengerType = () => {
         })
 }
 
-const handleOk = ()=>{
-        if (tickets.value.length>5){
-            info('error','最多只能购买五张票')
-            return
-        }
+const handleOk = () => {
+    if (tickets.value.length > 5) {
+        info('error', '最多只能购买五张票')
+        return
+    }
 
-        //添加校验余票
+    //添加校验余票
     for (let i = 0; i < seatType.value.length; i++) {
         let seatTypeCount = 0;
-        if (ticketInfo[seatType.value[i].enumName]>=0){
-            tickets.value.forEach(ticket =>{
-                if (ticket.seatType === seatType.value[i].code){
+        if (ticketInfo[seatType.value[i].enumName] >= 0) {
+            tickets.value.forEach(ticket => {
+                if (ticket.seatType === seatType.value[i].code) {
                     seatTypeCount++;
                 }
             })
-            if (seatTypeCount>ticketInfo[seatType.value[i].enumName]){
-                info('error',seatType.value[i].description+'已经没有票了')
+            if (seatTypeCount > ticketInfo[seatType.value[i].enumName]) {
+                info('error', seatType.value[i].description + '已经没有票了')
                 return;
             }
         }
     }
 
+    visible.value = false
+}
 
-        visible.value = false
+const handleSubmit = ()=>{
+    //判断是否支持选座，已经是选择一等座还是二等座
+    let ticketsSeatTypeSet = new Set()
+    tickets.value.forEach(item => {
+        ticketsSeatTypeSet.add(String(item.seatType))
+    })
+
+    if (ticketsSeatTypeSet.size !== 1) {
+        console.log('不支持选座')
+        chooseSeatType.value = 0;//不支持选座
+    } else if (ticketsSeatTypeSet.has('1')) {
+        console.log('选 一等座')
+        chooseSeatType.value = 1
+    } else if (ticketsSeatTypeSet.has('2')) {
+        console.log('选二等座')
+        chooseSeatType.value = 2
+    } else {
+        console.log('不支持选座')
+        chooseSeatType.value = 0
+    }
+
+    visible.value = true
 }
 
 watch(() => chosePassengers.value, () => {
@@ -191,6 +259,7 @@ watch(() => chosePassengers.value, () => {
 onMounted(() => {
     getPassengers()
     getPassengerType()
+    getSeatColType()
     getSeatType()
 })
 
@@ -214,7 +283,7 @@ onMounted(() => {
     text-align: center;
 }
 
-.tickets-row > *{
+.tickets-row > * {
     line-height: 4vh;
 }
 
