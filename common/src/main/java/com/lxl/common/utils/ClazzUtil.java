@@ -13,6 +13,7 @@ import java.util.Map;
  **/
 public class ClazzUtil {
 
+    public static final String ENUM_NAME = "enumName";
 
     //通过一个枚举类的全限定名,获取一个枚举的所有枚举常量以及属性值
     public static List<Map<String,Object>> clazzEnumFields(String fullClazzName){
@@ -27,6 +28,12 @@ public class ClazzUtil {
                 Class<?> clazz = enumConstant.getClass();
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field field : fields) {
+                    //将该枚举常量的变量名也放入map中
+                    if (field.isEnumConstant()){
+                        if (enumConstant.equals(field.get(enumConstant))){
+                            map.put(ENUM_NAME,field.getName());
+                        }
+                    }
                     field.setAccessible(true);
                     // 忽略编译器生成的合成字段和特殊字段还有枚举常量字段,排除$VALUES（该枚举类型的所有枚举常量的数组）
                     if (!field.isEnumConstant()&&!field.isSynthetic() && !field.getName().contains("$VALUES")){
