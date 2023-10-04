@@ -24,18 +24,66 @@
         </div>
     </div>
     <br>
-    <div>
 
-    </div>
+    <a-divider/>
+    <a-checkbox-group v-model:value="chosePassengers" name="checkboxgroup" :options="passengerOptions" />
+<!--    {{passengers}}-->
   <!--    {{ticketInfo}}-->
+    {{chosePassengers}}
+    {{tickets}}
 
 
 </template>
 
 <script setup>
 import {SESSION_ORDER} from "@/constant/SessionStorageKeys";
+import {onMounted, ref, watch} from "vue";
+import axios from "axios";
+import {info} from "@/util/info";
 
 const ticketInfo = JSON.parse(sessionStorage.getItem(SESSION_ORDER) || '{}')
+
+const passengers = ref([])
+const passengerOptions = ref([])
+const chosePassengers = ref([])
+const tickets = ref([])
+
+const getPassengers = ()=>{
+    axios.get('/member/passenger/query-list')
+        .then(res=>{
+            if (res){
+                if (res.data.success){
+                    passengerOptions.value = []
+                    passengers.value = res.data.content.list
+                    passengers.value.forEach(passenger=>{
+                        passengerOptions.value.push({
+                            value: passenger,
+                            label: passenger.name
+                        })
+                    })
+                }else {
+                    info('error',res.data.message)
+                }
+            }
+        })
+}
+
+watch(()=>chosePassengers.value,()=>{
+    tickets.value = []
+    chosePassengers.value.forEach(item =>{
+        tickets.value.push({
+            name: item.name,
+            idCard: item.idCard,
+            type: item.type,
+            seatType: '1'
+        })
+    })
+})
+
+onMounted(()=>{
+    getPassengers()
+})
+
 </script>
 
 <style scoped>
