@@ -40,8 +40,10 @@
                 </a-select>
             </a-col>
             <a-col :span="6">
-                <a-select v-model:value="item.seatType">
-                    <a-select-option v-for="s in seatType" :value="s.code" :key="s.code">{{s.description}}</a-select-option>
+                <a-select v-model:value="item.seatType" placeholder="请选择席位类型">
+                    <template v-for="s in seatType" :key="s.code">
+                        <a-select-option  v-if="ticketInfo[s.enumName]>=0" :value="s.code" >{{s.description}}</a-select-option>
+                    </template>
                 </a-select>
             </a-col>
         </a-row>
@@ -152,6 +154,24 @@ const handleOk = ()=>{
             info('error','最多只能购买五张票')
             return
         }
+
+        //添加校验余票
+    for (let i = 0; i < seatType.value.length; i++) {
+        let seatTypeCount = 0;
+        if (ticketInfo[seatType.value[i].enumName]>=0){
+            tickets.value.forEach(ticket =>{
+                if (ticket.seatType === seatType.value[i].code){
+                    seatTypeCount++;
+                }
+            })
+            if (seatTypeCount>ticketInfo[seatType.value[i].enumName]){
+                info('error',seatType.value[i].description+'已经没有票了')
+                return;
+            }
+        }
+    }
+
+
         visible.value = false
 }
 
@@ -163,7 +183,7 @@ watch(() => chosePassengers.value, () => {
             name: item.name,
             idCard: item.idCard,
             type: item.type,
-            seatType: '1'
+            seatType: null
         })
     })
 })
