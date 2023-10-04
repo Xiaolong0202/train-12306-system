@@ -45,6 +45,15 @@ public class trainExceptionHandler {
         return commonResp;
     }
 
+
+
+    @ResponseBody
+    @ExceptionHandler(ClassNotFoundException.class)
+    public CommonResp<?> handleClassNotFoundException(ClassNotFoundException e) {
+        e.printStackTrace();
+        return CommonResp.buildFailure(e, "未找到对应的类");
+    }
+
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public CommonResp<?> handleException(Exception e) {
