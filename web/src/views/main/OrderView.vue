@@ -7,6 +7,7 @@
         ——
         <span class="ticketInfo">{{ ticketInfo.end }}</span>&nbsp;
         <span class="ticketInfo">({{ ticketInfo.startTime }}到)</span>&nbsp;
+        <span style="font-weight: bold">(间隔：{{ticketInfo.train.intervalDay}}天)</span>
         <br><br>
         <div style="float: left">
             <template v-for="item in seatType" :key="item.code">
