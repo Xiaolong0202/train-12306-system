@@ -6,10 +6,14 @@ import java.util.*;
 import cn.hutool.core.collection.CollUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lxl.business.domain.DailyTrainCarriage;
+import com.lxl.business.domain.DailyTrainSeat;
 import com.lxl.business.domain.DailyTrainTicket;
 import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
 import com.lxl.business.enums.SeatColTypeEnum;
 import com.lxl.business.enums.SeatTypeEnum;
+import com.lxl.business.mapper.DailyTrainCarriageMapper;
+import com.lxl.business.mapper.DailyTrainSeatMapper;
 import com.lxl.business.mapper.DailyTrainTicketMapper;
 import com.lxl.business.req.ConfirmOrderTicketReq;
 
@@ -49,6 +53,10 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     DailyTrainTicketMapper dailyTrainTicketMapper;
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    DailyTrainCarriageMapper dailyTrainCarriageMapper;
+    @Autowired
+    DailyTrainSeatMapper dailyTrainSeatMapper;
 
 
     @Override
@@ -115,7 +123,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
         //判断余票的数量
         reduceTickets(req, dailyTrainTicket);
-
+        Long dailyTrainId = dailyTrainTicket.getDailyTrainId();
         //计算ticket选座的偏移值
         List<ConfirmOrderTicketReq> tickets = req.getTickets();
         ConfirmOrderTicketReq ticketReq0 = tickets.get(0);
@@ -136,12 +144,22 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             offsetList = offsetList.stream().map(offset->offset-firstAbsoluteOffset).toList();
             log.info("所有座位相对于第一个座位的偏移量{}",offsetList.toString());
 
+            getSeat(dailyTrainId,
+                    ticketReq0.getSeatType(),
+                    ticketReq0.getSeat().substring(0,ticketReq0.getSeat().length()-1),
+                    offsetList);
+
         } else {
             log.info("会员没有进行选座");
+            getSeat(dailyTrainId,
+                    ticketReq0.getSeatType(),
+                    null,
+                    null);
         }
 
+
+
         //选座
-        //一个车厢一个车厢的查找
         //挑选符合条件的座位,如果该车厢不满足条件则进入下一个车厢(多个选座应该在同一个车厢)
         //选中座位之后的处理
         //修改座位表的情况
@@ -187,6 +205,28 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 //        String seat = confirmOrderTicketReq.getSeat();
 
 //        log.info(req.toString());
+    }
+
+    /**
+     * 一个车厢一个车厢的查找
+     */
+    private void getSeat(Long dailyTrainId,String seatTypeCode,String seatCol,List<Integer> offsetList){
+        //一个车厢一个车厢的查找
+        LambdaQueryWrapper<DailyTrainCarriage> dailyTrainCarriageLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        dailyTrainCarriageLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyTrainId),DailyTrainCarriage::getDailyTrainId,dailyTrainId);
+        List<DailyTrainCarriage> dailyTrainCarriages = dailyTrainCarriageMapper.selectList(dailyTrainCarriageLambdaQueryWrapper);
+        log.info("查找到的车厢数目为"+dailyTrainCarriages.size());
+        //遍历每一节车厢,查找车座
+        for (DailyTrainCarriage carriage : dailyTrainCarriages) {
+            //找出所有的座位
+            Long dailyCarriageId = carriage.getId();
+            LambdaQueryWrapper<DailyTrainSeat> dailyTrainSeatLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            dailyTrainSeatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyCarriageId),DailyTrainSeat::getCarriageId,dailyCarriageId);
+            dailyTrainSeatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyTrainId),DailyTrainSeat::getDailyTrainId,dailyTrainId);
+
+            List<DailyTrainSeat> seatList = dailyTrainSeatMapper.selectList(dailyTrainSeatLambdaQueryWrapper);
+            log.info("查找到的车厢{}的座位数为"+seatList.size(),carriage.getTrainIndex());
+        }
     }
 
     private static void reduceTickets(ConfirmOrderDoReq req, DailyTrainTicket dailyTrainTicket) {
