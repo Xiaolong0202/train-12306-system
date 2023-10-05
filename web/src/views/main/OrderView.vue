@@ -89,9 +89,33 @@
                     </template>
                 </a-col>
             </a-row>
-            {{chooseSeatType}}
-            {{SEAT_COL_ARR}}
-            {{chooseSeatObj}}
+            <br> <br>
+            <div v-if="chooseSeatType === 0" style="color: red">
+                您购买的车票不支持选座<br>
+                <div>只有当所有乘客选择的都是一等座或二等座才可以支持选座</div>
+                <div>选中的座位类型余票数大于20张时才支持选座</div>
+            </div>
+            <div v-else id="chooseSeat" style="text-align: center">
+                <p style="color: red">请选择您的座位</p>
+                <a-switch v-for="item in SEAT_COL_ARR" :key="item.code"
+                          v-model:checked="chooseSeatObj[item.description + 1].choose"
+                          :checked-children="item.description + 1"
+                          :un-checked-children="item.description + 1"/>
+                <!--如果购票的人数大于1则渲染两排-->
+                <template v-if="tickets.length>1">
+                    <br>
+                    <a-switch v-for="item in SEAT_COL_ARR" :key="item.code"
+                              v-model:checked="chooseSeatObj[item.description + 2].choose"
+                              :checked-children="item.description + 2"
+                              :un-checked-children="item.description + 2"/>
+                </template>
+                <br>
+                <span style="color: grey">提示：您可以选择{{ tickets.length }}个座位</span>
+            </div>
+            <!--            {{chooseSeatType}}-->
+            <!--            {{SEAT_COL_ARR}}-->
+            <!--            {{ chooseSeatObj }}-->
+<!--            {{ tickets }}-->
         </a-modal>
 
     </div>
@@ -121,13 +145,24 @@ const chooseSeatType = ref(0)
 
 //计算选座类型
 const SEAT_COL_ARR = computed(() => {
-   return seatColType.value.filter(col => String(col.type) === String(chooseSeatType.value))
+    return seatColType.value.filter(col => String(col.type) === String(chooseSeatType.value))
 })
 /**选择的座位:
  *{
  *   A1  C1 D1 F1
  *   A2  C2 D2 D3
  *}
+ * tickets结构：
+ * 【{
+ *   passengerId: item.id,
+ *   name: item.name,
+ *   idCard: item.idCard,
+ *   type: item.type,
+ *   seatType: null,
+ *   seat: null
+ *}】
+ *
+ *
  */
 const chooseSeatObj = ref({})
 
@@ -135,9 +170,10 @@ watch(() => SEAT_COL_ARR.value, () => {
     chooseSeatObj.value = {}
     for (let i = 1; i <= 2; i++) {
         SEAT_COL_ARR.value.forEach(item => {
-            chooseSeatObj.value[item.description + i]={}
+            chooseSeatObj.value[item.description + i] = {}
             Object.assign(chooseSeatObj.value[item.description + i], item)
             chooseSeatObj.value[item.description + i].choose = false
+            chooseSeatObj.value[item.description + i].code += String(i)
         })
     }
     console.log("初始化两排座位")
@@ -195,6 +231,29 @@ const getPassengerType = () => {
 }
 
 const handleOk = () => {
+
+    //设置每张票的座位
+    //先清空Tickets中的 seat
+    for (let i = 0; i < tickets.value.length; i++) {
+        tickets.value[i].seat = null
+    }
+    let i = -1
+    for (let obj in chooseSeatObj.value) {
+        if (chooseSeatObj.value[obj].choose) {
+            i++
+            if (i > tickets.value.length - 1) {
+                info('error', "所选座位数大于票数！")
+                return;
+            }
+            tickets.value[i].seat = chooseSeatObj.value[obj].code
+        }
+    }
+    if (i > -1 && i < tickets.value.length - 1) {
+        info('error', "所选座位数小于票数！")
+        return;
+    }
+
+
     if (tickets.value.length > 5) {
         info('error', '最多只能购买五张票')
         return
@@ -219,7 +278,15 @@ const handleOk = () => {
     visible.value = false
 }
 
-const handleSubmit = ()=>{
+const handleSubmit = () => {
+
+    for (let valueElement of tickets.value) {
+        if (!valueElement.seatType) {
+            info('error', '请给乘客选座席位类型')
+            return;
+        }
+    }
+
     //判断是否支持选座，已经是选择一等座还是二等座
     let ticketsSeatTypeSet = new Set()
     tickets.value.forEach(item => {
@@ -240,6 +307,19 @@ const handleSubmit = ()=>{
         chooseSeatType.value = 0
     }
 
+    if (chooseSeatType.value !== 0) {
+        for (let valueElement of seatType.value) {
+            if (String(valueElement.code) === String(chooseSeatType.value)) {
+                if (ticketInfo[valueElement.enumName] <= 20) {
+                    console.log("不支持选座")
+                    chooseSeatType.value = 0
+                    break
+                }
+            }
+        }
+    }
+
+
     visible.value = true
 }
 
@@ -251,7 +331,8 @@ watch(() => chosePassengers.value, () => {
             name: item.name,
             idCard: item.idCard,
             type: item.type,
-            seatType: null
+            seatType: null,
+            seat: null
         })
     })
 })
@@ -285,6 +366,11 @@ onMounted(() => {
 
 .tickets-row > * {
     line-height: 4vh;
+}
+
+#chooseSeat > * {
+    text-align: center;
+    margin: 10px;
 }
 
 </style>
