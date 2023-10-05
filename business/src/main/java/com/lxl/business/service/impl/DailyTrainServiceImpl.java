@@ -209,6 +209,11 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             }
 //            dailyTrainStations.addAll(tempDailyTrainStations);
 
+            //构建sell,字符串的长度应该为该列车次经过的站数的长度-1
+            char[] sellChars = new char[Math.max(0, tempDailyTrainStations.size() - 1)];
+            Arrays.fill(sellChars, '0');
+            String sell = String.valueOf(sellChars);
+
             //生成dailyCarriage
             LambdaQueryWrapper<TrainCarriage> trainCarriageLambdaQueryWrapper = new LambdaQueryWrapper<>();
             trainCarriageLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(train.getId()), TrainCarriage::getTrainId, train.getId());
@@ -221,6 +226,27 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                 dailyTrainCarriage.setCreateTime(now);
                 dailyTrainCarriage.setUpdateTime(now);
 
+                //生成dailySeat
+                LambdaQueryWrapper<TrainSeat> seatLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                seatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainCarriage.getId()),TrainSeat::getCarriageId,trainCarriage.getId());
+                List<TrainSeat> trainSeats = trainSeatMapper.selectList(seatLambdaQueryWrapper);
+                List<DailyTrainSeat> tempDailyTrainSeatList = trainSeats.stream().map(trainSeat -> {
+                    DailyTrainSeat dailyTrainSeat = BeanUtil.copyProperties(trainSeat, DailyTrainSeat.class);
+                    dailyTrainSeat.setId(SnowUtils.nextSnowId());
+                    dailyTrainSeat.setDailyTrainId(dailyTrain.getId());
+                    dailyTrainSeat.setCarriageId(dailyTrainCarriage.getId());
+                    dailyTrainSeat.setCreateTime(now);
+                    dailyTrainSeat.setUpdateTime(now);
+                    dailyTrainSeat.setSell(sell);
+
+                    return dailyTrainSeat;
+                }).toList();
+
+                if (CollUtil.isNotEmpty(tempDailyTrainSeatList)) {
+                    dailyTrainSeatMapper.insertBatch(tempDailyTrainSeatList);
+                }
+
+
                 return dailyTrainCarriage;
             }).toList();
             if (CollUtil.isNotEmpty(tempDailyTrainCarriages)) {
@@ -228,30 +254,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             }
 //            dailyTrainCarriages.addAll(tempDailyTrainCarriages);
 
-            //生成dailySeat
-            LambdaQueryWrapper<TrainSeat> trainSaetLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            trainSaetLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(train.getId()), TrainSeat::getTrainId, train.getId());
-            List<TrainSeat> trainSeats = trainSeatMapper.selectList(trainSaetLambdaQueryWrapper);
 
-            //构建sell,字符串的长度应该为该列车次经过的站数的长度-1
-            char[] sellChars = new char[Math.max(0, tempDailyTrainStations.size() - 1)];
-            Arrays.fill(sellChars, '0');
-            String sell = String.valueOf(sellChars);
 
-            List<DailyTrainSeat> tempDailyTrainSeatList = trainSeats.stream().map(trainSeat -> {
-                DailyTrainSeat dailyTrainSeat = BeanUtil.copyProperties(trainSeat, DailyTrainSeat.class);
-                dailyTrainSeat.setId(SnowUtils.nextSnowId());
-                dailyTrainSeat.setDailyTrainId(dailyTrain.getId());
-                dailyTrainSeat.setCreateTime(now);
-                dailyTrainSeat.setUpdateTime(now);
-                dailyTrainSeat.setSell(sell);
 
-                return dailyTrainSeat;
-            }).toList();
-
-            if (CollUtil.isNotEmpty(tempDailyTrainSeatList)) {
-                dailyTrainSeatMapper.insertBatch(tempDailyTrainSeatList);
-            }
 //            dailyTrainSeatList.addAll(tempDailyTrainSeatList);
 
 
