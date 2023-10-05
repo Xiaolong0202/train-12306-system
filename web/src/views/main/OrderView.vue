@@ -37,7 +37,7 @@
             </a-col>
             <a-col :span="9">{{ item.idCard }}</a-col>
             <a-col :span="6">
-                <a-select v-model:value="item.type">-->
+                <a-select v-model:value="item.passengerType">-->
                     <a-select-option v-for="p in passengerType" :value="p.code" :key="p.code">{{ p.description }}
                     </a-select-option>
                 </a-select>
@@ -76,7 +76,7 @@
                 <a-col :span="9">{{ item.idCard }}</a-col>
                 <a-col :span="6">
                     <template v-for="p in passengerType" :key="p.code">
-                        <span v-if="p.code===item.type">
+                        <span v-if="p.code===item.passengerType">
                             {{ p.description }}
                         </span>
                     </template>
@@ -157,7 +157,7 @@ const SEAT_COL_ARR = computed(() => {
  *   passengerId: item.id,
  *   name: item.name,
  *   idCard: item.idCard,
- *   type: item.type,
+ *   passenger: item.type,
  *   seatType: null,
  *   seat: null
  *}】
@@ -330,7 +330,7 @@ watch(() => chosePassengers.value, () => {
             passengerId: item.id,
             name: item.name,
             idCard: item.idCard,
-            type: item.type,
+            passengerType: item.type,
             seatType: null,
             seat: null
         })
