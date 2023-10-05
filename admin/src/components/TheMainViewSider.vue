@@ -30,6 +30,7 @@ const items = reactive([
     getItem('base', '/main/base', h(HomeOutlined),[
         getItem('station', '/station', h(HomeOutlined),null, null),
         getItem('车次', '/train', h(UserOutlined),null, null),
+        getItem('订单', '/confirmOrder', h(UserOutlined),null, null),
     ], null),
     getItem('跑批', '/main/batch', h(FormOutlined),[
         getItem('JOB', '/job', h(UserOutlined),null, null),

@@ -30,6 +30,10 @@ const routes = [
                         path: 'train',
                         component: () => import('../views/main/TrainView.vue')
                     },
+                    {
+                        path: 'confirmOrder',
+                        component: ()=> import('../views/main/ConfirmOrderView.vue')
+                    }
                 ]
             },
             {
