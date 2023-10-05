@@ -1,11 +1,12 @@
 package com.lxl.business.service.impl;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxl.business.domain.DailyTrainTicket;
 import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
+import com.lxl.business.enums.SeatTypeEnum;
 import com.lxl.business.mapper.DailyTrainTicketMapper;
 import com.lxl.business.req.ConfirmOrderTicketReq;
 
@@ -29,10 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
 * @author 13430
@@ -103,14 +100,16 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService{
         confirmOrder.setCreateTime(now);
         confirmOrder.setUpdateTime(now);
 
+        confirmOrderMapper.insert(confirmOrder);
+
         DailyTrainTicket dailyTrainTicket = dailyTrainTicketMapper.selectById(confirmOrder.getDailyTrainTicketId());
         if (ObjectUtils.isEmpty(dailyTrainTicket)){
             throw new BusinessException(BussinessExceptionEnum.NO_DAILY_TRAIN_TICKET_INFO);
         }
         log.info("查出余票记录{}",dailyTrainTicket.toString());
 
-        confirmOrderMapper.insert(confirmOrder);
 
+        reduceTickets(req, dailyTrainTicket);
 
         //查出余票初始化
         //判断余票的数量
@@ -161,6 +160,48 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService{
 //        String seat = confirmOrderTicketReq.getSeat();
 
         log.info(req.toString());
+    }
+
+    private static void reduceTickets(ConfirmOrderDoReq req, DailyTrainTicket dailyTrainTicket) {
+        List<ConfirmOrderTicketReq> tickets = req.getTickets();
+        //预扣减余票数量,并且判断余票是否不足
+        for (ConfirmOrderTicketReq ticket : tickets) {
+            SeatTypeEnum seatTypeEnum = Arrays.stream(SeatTypeEnum.values()).filter(item -> Objects.equals(item.code, ticket.getSeatType())).findFirst().orElse(null);
+            if (seatTypeEnum != null) {
+                switch (seatTypeEnum){
+                    case YDZ -> {
+                        int countLeft = dailyTrainTicket.getYdz() - 1;
+                        if (countLeft<0){
+                            throw new BusinessException(BussinessExceptionEnum.TICKET_INSUFFICIENT_ERROR);
+                        }
+                        dailyTrainTicket.setYdz(countLeft);
+                    }
+                    case EDZ -> {
+                        int countLeft = dailyTrainTicket.getEdz() - 1;
+                        if (countLeft<0){
+                            throw new BusinessException(BussinessExceptionEnum.TICKET_INSUFFICIENT_ERROR);
+                        }
+                        dailyTrainTicket.setEdz(countLeft);
+                    }
+                    case YW -> {
+                        int countLeft = dailyTrainTicket.getYw() - 1;
+                        if (countLeft<0){
+                            throw new BusinessException(BussinessExceptionEnum.TICKET_INSUFFICIENT_ERROR);
+                        }
+                        dailyTrainTicket.setYw(countLeft);
+                    }
+                    case RW -> {
+                        int countLeft = dailyTrainTicket.getRw() - 1;
+                        if (countLeft<0){
+                            throw new BusinessException(BussinessExceptionEnum.TICKET_INSUFFICIENT_ERROR);
+                        }
+                        dailyTrainTicket.setRw(countLeft);
+                    }
+                }
+            }else {
+                throw new BusinessException(BussinessExceptionEnum.WRONG_ENUM_CODE);
+            }
+        }
     }
 
 }
