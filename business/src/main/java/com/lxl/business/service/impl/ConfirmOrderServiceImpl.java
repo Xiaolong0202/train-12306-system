@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.domain.ConfirmOrder;
 import com.lxl.business.mapper.ConfirmOrderMapper;
+import com.lxl.business.req.ConfirmOrderDoReq;
 import com.lxl.business.req.ConfirmOrderQueryReq;
 import com.lxl.business.resp.ConfirmOrderQueryResp;
 import com.lxl.business.service.ConfirmOrderService;
@@ -57,6 +58,13 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService{
         pageResp.setList(list);
         pageResp.setTotal(total);
         return  pageResp;
+    }
+
+
+
+    @Override
+    public void doConfirm(ConfirmOrderDoReq req) {
+        log.info(req.toString());
     }
 
 }

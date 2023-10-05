@@ -157,7 +157,7 @@ const SEAT_COL_ARR = computed(() => {
  *   passengerId: item.id,
  *   name: item.name,
  *   idCard: item.idCard,
- *   passenger: item.type,
+ *   passengerType: item.type,
  *   seatType: null,
  *   seat: null
  *}】
@@ -275,7 +275,23 @@ const handleOk = () => {
         }
     }
 
-    visible.value = false
+    axios.post('/business/confirmOrder/do',{
+        date: ticketInfo.startDate,
+        trainCode: ticketInfo.train.code,
+        start: ticketInfo.start,
+        end: ticketInfo.end,
+        dailyTrainTicketId: ticketInfo.id,
+        tickets: tickets.value
+    }).then(res=>{
+        if(res){
+            if (res.data.success){
+                info('success',res.data.message)
+                visible.value = false
+            }else {
+                info('error',res.data.message)
+            }
+        }
+    })
 }
 
 const handleSubmit = () => {

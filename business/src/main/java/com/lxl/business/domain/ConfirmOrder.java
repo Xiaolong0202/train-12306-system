@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.lxl.business.req.ConfirmOrderTicketReq;
 import lombok.Data;
 
 /**
@@ -54,7 +57,7 @@ public class ConfirmOrder implements Serializable {
     /**
      * 车票
      */
-    private Object tickets;
+    private List<ConfirmOrderTicketReq> tickets;
 
     /**
      * 订单状态|枚举[ConfirmOrderStatusEnum]

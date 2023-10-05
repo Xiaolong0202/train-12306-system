@@ -1,10 +1,8 @@
-package com.lxl.business.resp;
+package com.lxl.business.req;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.lxl.business.req.ConfirmOrderTicketReq;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -15,17 +13,11 @@ import java.util.List;
 /**
  * @Author LiuXiaolong
  * @Description train-12306-system
- * @DateTime 2023/10/5  11:48
+ * @DateTime 2023/10/5  12:43
  **/
 @Data
-public class ConfirmOrderQueryResp {
+public class ConfirmOrderDoReq {
 
-    /**
-     * 会员id
-     */
-    @NotNull
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long memberId;
 
     /**
      * 日期
@@ -62,7 +54,8 @@ public class ConfirmOrderQueryResp {
     /**
      * 车票
      */
-    @NotNull(message = "车票不能为空")
+    @NotNull
     private List<ConfirmOrderTicketReq> tickets;
+
 
 }

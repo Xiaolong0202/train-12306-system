@@ -2,6 +2,7 @@ package com.lxl.business.service;
 
 import com.lxl.business.domain.ConfirmOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lxl.business.req.ConfirmOrderDoReq;
 import com.lxl.business.req.ConfirmOrderQueryReq;
 import com.lxl.business.req.TrainSeatQueryReq;
 import com.lxl.business.resp.ConfirmOrderQueryResp;
@@ -15,4 +16,6 @@ import com.lxl.common.resp.PageResp;
 */
 public interface ConfirmOrderService  {
     PageResp<ConfirmOrderQueryResp> queryList(ConfirmOrderQueryReq req);
+
+    void doConfirm(ConfirmOrderDoReq req);
 }
