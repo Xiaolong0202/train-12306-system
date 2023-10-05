@@ -57,7 +57,7 @@ public class ConfirmOrder implements Serializable {
     /**
      * 车票
      */
-    private List<ConfirmOrderTicketReq> tickets;
+    private String tickets;
 
     /**
      * 订单状态|枚举[ConfirmOrderStatusEnum]

@@ -161,7 +161,7 @@ create table `daily_train_ticket` (
                                       `create_time` datetime(3) comment '新增时间',
                                       `update_time` datetime(3) comment '修改时间',
                                       primary key (`id`),
-                                      unique key `date_train_code_start_end_unique` (`daily_train_id`, `start`, `end`)
+                                      unique key `date_start_end_unique` (`daily_train_id`, `start`, `end`)
 ) engine=innodb default charset=utf8mb4 comment='余票信息';
 
 drop table if exists `confirm_order`;

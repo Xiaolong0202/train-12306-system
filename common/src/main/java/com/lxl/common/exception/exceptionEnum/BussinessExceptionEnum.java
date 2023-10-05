@@ -14,7 +14,8 @@ public enum BussinessExceptionEnum {
     STATION_ALREADY_EXIST("该车站已经存在"),
     TRAIN_CARRIAGE_ALREADY_EXIST("该车厢已经存在"),
     TRAIN_STATION_STATION_NAME_ALREADY_EXIST("同车次站名已经存在"),
-    TRAIN_STATION_INDEX_ALREADY_EXIST("同车次站序已经存在");
+    TRAIN_STATION_INDEX_ALREADY_EXIST("同车次站序已经存在"),
+    NO_DAILY_TRAIN_TICKET_INFO("没有对应的车次信息");
 
     public final String desc ;
 
