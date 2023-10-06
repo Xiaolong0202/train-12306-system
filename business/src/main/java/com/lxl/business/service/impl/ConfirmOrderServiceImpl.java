@@ -57,6 +57,8 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     DailyTrainCarriageMapper dailyTrainCarriageMapper;
     @Autowired
     DailyTrainSeatMapper dailyTrainSeatMapper;
+    @Autowired
+    ConfirmOrderAfterService confirmOrderAfterService;
 
 
     @Override
@@ -88,8 +90,6 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         return pageResp;
     }
 
-
-    @Transactional
     @Override
     public void doConfirm(ConfirmOrderDoReq req) {
         Date now = new Date(System.currentTimeMillis());
@@ -164,8 +164,11 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                         null);
             }
         }
-
         log.info("选座完成，被选择的座位:{}",res);
+
+        if (CollUtil.isNotEmpty(res)) {
+            confirmOrderAfterService.updateSellById(res);
+        }
 
         //选座
         //挑选符合条件的座位,如果该车厢不满足条件则进入下一个车厢(多个选座应该在同一个车厢)

@@ -40,4 +40,10 @@
             #{item.updateTime})
         </foreach>
     </insert>
+    <update id="updateBatchSell">
+        update `daily_train_seat`
+        set `sell` = #{sell},
+            update_time = now()
+        where `id` = #{id}
+    </update>
 </mapper>

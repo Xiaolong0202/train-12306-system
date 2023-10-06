@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <a-button style="float: left" @click="queryDailyTrainSeatList">refresh</a-button>
+            <a-button style="float: left" @click="queryDailyTrainSeatList">查找</a-button>
         </div>
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading" style="margin-top: 20px">
             <template #bodyCell="{column , record}">

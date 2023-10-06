@@ -17,6 +17,8 @@ import java.util.List;
 public interface DailyTrainSeatMapper extends BaseMapper<DailyTrainSeat> {
 
     void insertBatch(@Param("list") List<DailyTrainSeat> dailyTrainSeatList);
+
+    void updateBatchSell(DailyTrainSeat dailyTrainSeat);
 }
 
 
