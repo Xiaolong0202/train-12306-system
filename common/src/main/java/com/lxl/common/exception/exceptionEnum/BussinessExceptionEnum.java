@@ -17,9 +17,15 @@ public enum BussinessExceptionEnum {
     TRAIN_STATION_INDEX_ALREADY_EXIST("同车次站序已经存在"),
     NO_DAILY_TRAIN_TICKET_INFO("没有对应的车次信息"),
     TICKET_INSUFFICIENT_ERROR("余票不足"),
-    WRONG_ENUM_CODE("错误的枚举CODE");
+    WRONG_ENUM_CODE("错误的枚举CODE"),
+    CUSTOM_ERROR("CUSTOM_ERROR");
 
-    public final String desc ;
+    public BussinessExceptionEnum setDesc(String desc) {
+        this.desc = desc;
+        return this;
+    }
+
+    public  String desc ;
 
     BussinessExceptionEnum(String desc) {
         this.desc = desc;

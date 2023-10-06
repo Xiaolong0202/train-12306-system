@@ -225,10 +225,18 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                 dailyTrainCarriage.setDailyTrainId(dailyTrain.getId());
                 dailyTrainCarriage.setCreateTime(now);
                 dailyTrainCarriage.setUpdateTime(now);
+                if (dailyTrainCarriage.getTrainIndex() >= carriages.size()) {
+                    String format = String.format("列车%s的%d号车厢index值大于或等于列车的的车厢数",
+                            dailyTrain.getType() + dailyTrain.getCode(),
+                            dailyTrainCarriage.getTrainIndex());
+                    log.error(format);
+                    throw new BusinessException(BussinessExceptionEnum.CUSTOM_ERROR.
+                            setDesc(format));
+                }
 
                 //生成dailySeat
                 LambdaQueryWrapper<TrainSeat> seatLambdaQueryWrapper = new LambdaQueryWrapper<>();
-                seatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainCarriage.getId()),TrainSeat::getCarriageId,trainCarriage.getId());
+                seatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(trainCarriage.getId()), TrainSeat::getCarriageId, trainCarriage.getId());
                 List<TrainSeat> trainSeats = trainSeatMapper.selectList(seatLambdaQueryWrapper);
                 List<DailyTrainSeat> tempDailyTrainSeatList = trainSeats.stream().map(trainSeat -> {
                     DailyTrainSeat dailyTrainSeat = BeanUtil.copyProperties(trainSeat, DailyTrainSeat.class);
@@ -255,8 +263,6 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 //            dailyTrainCarriages.addAll(tempDailyTrainCarriages);
 
 
-
-
 //            dailyTrainSeatList.addAll(tempDailyTrainSeatList);
 
 
@@ -269,13 +275,13 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             for (TrainCarriage carriage : carriages) {
                 String seatType = carriage.getSeatType();
                 if (SeatTypeEnum.YDZ.code.equals(seatType)) {
-                    ydzCount+=carriage.getSeatCount();
+                    ydzCount += carriage.getSeatCount();
                 } else if (SeatTypeEnum.EDZ.code.equals(seatType)) {
-                    edzCount+=carriage.getSeatCount();
+                    edzCount += carriage.getSeatCount();
                 } else if (SeatTypeEnum.RW.code.equals(seatType)) {
-                    rwCount+=carriage.getSeatCount();
+                    rwCount += carriage.getSeatCount();
                 } else if (SeatTypeEnum.YW.code.equals(seatType)) {
-                    ywCount+=carriage.getSeatCount();
+                    ywCount += carriage.getSeatCount();
                 }
             }
             //来获取当前火车的这个票价计算
@@ -311,13 +317,13 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                     dailyTrainTicket.setEndPinyin(trainStationEnd.getNamePinyin());
                     dailyTrainTicket.setEndTime(trainStationEnd.getInTime());
                     dailyTrainTicket.setEndIndex(trainStationEnd.getTrainIndex());
-                    dailyTrainTicket.setYdz(ydzCount==0?-1:ydzCount);
+                    dailyTrainTicket.setYdz(ydzCount == 0 ? -1 : ydzCount);
                     dailyTrainTicket.setYdzPrice(ydzPrice);
-                    dailyTrainTicket.setEdz(edzCount==0?-1:edzCount);
+                    dailyTrainTicket.setEdz(edzCount == 0 ? -1 : edzCount);
                     dailyTrainTicket.setEdzPrice(edzPrice);
-                    dailyTrainTicket.setRw(rwCount==0?-1:rwCount);
+                    dailyTrainTicket.setRw(rwCount == 0 ? -1 : rwCount);
                     dailyTrainTicket.setRwPrice(rwPrice);
-                    dailyTrainTicket.setYw(ywCount==0?-1:ywCount);
+                    dailyTrainTicket.setYw(ywCount == 0 ? -1 : ywCount);
                     dailyTrainTicket.setYwPrice(ywPrice);
                     dailyTrainTicket.setCreateTime(now);
                     dailyTrainTicket.setUpdateTime(now);
