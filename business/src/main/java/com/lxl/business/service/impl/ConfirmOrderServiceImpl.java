@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxl.business.domain.DailyTrainCarriage;
@@ -141,22 +142,25 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             List<Integer> offsetList = tickets.stream().map(confirmOrderTicketReq -> referSeatList.indexOf(confirmOrderTicketReq.getSeat())).toList();
             //再将所有元素减去第一个座位的绝对偏移量
             Integer firstAbsoluteOffset = offsetList.get(0);
-            offsetList = offsetList.stream().map(offset->offset-firstAbsoluteOffset).toList();
-            log.info("所有座位相对于第一个座位的偏移量{}",offsetList.toString());
+            offsetList = offsetList.stream().map(offset -> offset - firstAbsoluteOffset).toList();
+            log.info("所有座位相对于第一个座位的偏移量{}", offsetList.toString());
 
             getSeat(dailyTrainId,
                     ticketReq0.getSeatType(),
-                    ticketReq0.getSeat().substring(0,ticketReq0.getSeat().length()-1),
+                    dailyTrainTicket.getStartIndex(),
+                    dailyTrainTicket.getEndIndex(),
+                    ticketReq0.getSeat().substring(0, ticketReq0.getSeat().length() - 1),
                     offsetList);
 
         } else {
             log.info("会员没有进行选座");
             getSeat(dailyTrainId,
                     ticketReq0.getSeatType(),
+                    dailyTrainTicket.getStartIndex(),
+                    dailyTrainTicket.getEndIndex(),
                     null,
                     null);
         }
-
 
 
         //选座
@@ -210,22 +214,49 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     /**
      * 一个车厢一个车厢的查找
      */
-    private void getSeat(Long dailyTrainId,String seatTypeCode,String seatCol,List<Integer> offsetList){
+    private void getSeat(Long dailyTrainId, String seatTypeCode, Integer startIndex, Integer endIndex, String seatCol, List<Integer> offsetList) {
         //一个车厢一个车厢的查找
         LambdaQueryWrapper<DailyTrainCarriage> dailyTrainCarriageLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        dailyTrainCarriageLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyTrainId),DailyTrainCarriage::getDailyTrainId,dailyTrainId);
+        dailyTrainCarriageLambdaQueryWrapper.orderByAsc(DailyTrainCarriage::getTrainIndex);
+        dailyTrainCarriageLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyTrainId), DailyTrainCarriage::getDailyTrainId, dailyTrainId);
         List<DailyTrainCarriage> dailyTrainCarriages = dailyTrainCarriageMapper.selectList(dailyTrainCarriageLambdaQueryWrapper);
-        log.info("查找到的车厢数目为"+dailyTrainCarriages.size());
+        log.info("查找到的车厢数目为" + dailyTrainCarriages.size());
         //遍历每一节车厢,查找车座
         for (DailyTrainCarriage carriage : dailyTrainCarriages) {
             //找出所有的座位
             Long dailyCarriageId = carriage.getId();
             LambdaQueryWrapper<DailyTrainSeat> dailyTrainSeatLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            dailyTrainSeatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyCarriageId),DailyTrainSeat::getCarriageId,dailyCarriageId);
-            dailyTrainSeatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyTrainId),DailyTrainSeat::getDailyTrainId,dailyTrainId);
-
+            dailyTrainSeatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyCarriageId), DailyTrainSeat::getCarriageId, dailyCarriageId);
+            dailyTrainSeatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyTrainId), DailyTrainSeat::getDailyTrainId, dailyTrainId);
+            dailyTrainSeatLambdaQueryWrapper.orderByAsc(DailyTrainSeat::getCarriageSeatIndex);//按照座位序号升序排列
             List<DailyTrainSeat> seatList = dailyTrainSeatMapper.selectList(dailyTrainSeatLambdaQueryWrapper);
-            log.info("查找到的车厢{}的座位数为"+seatList.size(),carriage.getTrainIndex());
+            log.info("查找到的车厢{}的座位数为" + seatList.size(), carriage.getTrainIndex());
+
+            for (DailyTrainSeat dailyTrainSeat : seatList) {
+               boolean canSell =  canSell(dailyTrainSeat,startIndex,endIndex);
+               if (canSell){
+                   log.info("选中座位");
+                   log.info(dailyTrainSeat.getSell());
+                   return;
+               }else {
+                   log.info("没有选中座位");
+               }
+            }
+        }
+    }
+
+    private boolean canSell(DailyTrainSeat dailyTrainSeat, Integer startIndex, Integer endIndex) {
+        String sell = dailyTrainSeat.getSell();
+        String part = sell.substring(startIndex, endIndex);
+        if (Integer.parseInt(part)>0){
+            log.info("该座位已经被购买");
+            return false;
+        }else {
+            char[] charArray = sell.toCharArray();
+            Arrays.fill(charArray,startIndex,endIndex,'1');
+            dailyTrainSeat.setSell(String.valueOf(charArray));
+            log.info("该座位可以被购买，并且sell属性已被更新");
+            return true;
         }
     }
 

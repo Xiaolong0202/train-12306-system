@@ -84,8 +84,8 @@ const columns = [
         key: 'createTime',
     }, {
         title: '修改时间',
-        dataIndex: 'createTime',
-        key: 'createTime',
+        dataIndex: 'updateTime',
+        key: 'updateTime',
     },
 ]
 const pagination = reactive({

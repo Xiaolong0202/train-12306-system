@@ -63,6 +63,23 @@ public class ConfirmOrderQueryResp {
      * 车票
      */
     @NotNull(message = "车票不能为空")
-    private List<ConfirmOrderTicketReq> tickets;
+    private String tickets;
+
+    /**
+     * 订单状态|枚举[ConfirmOrderStatusEnum]
+     */
+    private String status;
+
+    /**
+     * 新增时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateTime;
 
 }

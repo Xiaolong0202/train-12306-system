@@ -23,16 +23,17 @@
                         :rules="[{ required: true, message: '请输入验证码!' }]"
                 >
                     <a-input-search
+                            :loading="codeButtonLoading"
                             v-model:value="formState.code"
                             placeholder="请输入验证码"
-                            enter-button="发送验证码"
+                            :enter-button="codeButtonVal"
                             size="large"
                             @search="onMessage"
                     />
                 </a-form-item>
 
                 <a-form-item>
-                    <a-button type="primary" @click="login" size="large">登录</a-button>
+                    <a-button type="primary" @click="login" size="large" :loading="loginButtonLoading">登录</a-button>
                 </a-form-item>
             </a-form>
         </a-col>
@@ -40,13 +41,15 @@
 </template>
 
 <script setup>
-import {onMounted, reactive} from 'vue';
+import {onMounted, reactive, ref} from 'vue';
 import axios from "axios";
 import {info} from "@/util/info";
 import {useRouter} from "vue-router";
 import store from "@/store";
 
-
+const codeButtonVal = ref("发送验证码")
+const codeButtonLoading = ref(false)
+const loginButtonLoading = ref(false)
 const router = useRouter()
 
 const formState = reactive({
@@ -54,23 +57,38 @@ const formState = reactive({
     code: '',
 });
 const login = () => {
+    loginButtonLoading.value = true
     axios.post("/member/login", formState).then(resp => {
-        if (resp){
+        if (resp) {
             let type = 'success'
             if (!resp.data.success) {
                 type = 'error'
             }
             info(type, resp.data.message)
             if (resp.data.success) {
-                store.commit('setMember',resp.data.content)
+                store.commit('setMember', resp.data.content)
                 router.push("/main")
             }
+            loginButtonLoading.value = false
         }
     })
 }
 const onMessage = () => {
+    // codeButtonLoading.value = true
+    // let startTime = new Date().getTime();
+    // setTimeout(()=>{
+    //     codeButtonLoading.value = false
+    //     codeButtonVal.value = "发送验证码"
+    // },60*1000+100)
+    // let interval = setInterval(function(){
+    //     codeButtonVal.value = '请等待'+Math.floor((60-(new Date().getTime() - startTime)/1000))+'秒之后再发送验证码'
+    //     if(new Date().getTime() - startTime > 60000){
+    //         clearInterval(interval);
+    //     }
+//do whatever here..
+//     }, 1000);
     axios.post("/member/send-code", formState).then(resp => {
-        if (resp){
+        if (resp) {
             let type = 'success'
             if (!resp.data.success) {
                 type = 'error'
@@ -80,8 +98,8 @@ const onMessage = () => {
     })
 }
 
-onMounted(()=>{
-    store.commit("setMember",{})
+onMounted(() => {
+    store.commit("setMember", {})
 })
 </script>
 
