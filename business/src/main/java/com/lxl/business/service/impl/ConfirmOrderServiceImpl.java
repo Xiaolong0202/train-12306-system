@@ -1,10 +1,9 @@
 package com.lxl.business.service.impl;
 
-import java.math.BigDecimal;
 import java.util.*;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxl.business.domain.DailyTrainCarriage;
@@ -128,6 +127,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         //计算ticket选座的偏移值
         List<ConfirmOrderTicketReq> tickets = req.getTickets();
         ConfirmOrderTicketReq ticketReq0 = tickets.get(0);
+        List<DailyTrainSeat> res = new ArrayList<>();
         if (CollUtil.isNotEmpty(tickets) && StringUtils.hasText(ticketReq0.getSeat())) {
             log.info("会员有进行选座");
             //构建选座
@@ -145,17 +145,18 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             offsetList = offsetList.stream().map(offset -> offset - firstAbsoluteOffset).toList();
             log.info("所有座位相对于第一个座位的偏移量{}", offsetList.toString());
 
-            getSeat(dailyTrainId,
+            getSeat(res,
+                    dailyTrainId,
                     ticketReq0.getSeatType(),
                     dailyTrainTicket.getStartIndex(),
                     dailyTrainTicket.getEndIndex(),
                     ticketReq0.getSeat().substring(0, ticketReq0.getSeat().length() - 1),
                     offsetList);
-
         } else {
             log.info("会员没有进行选座");
             for (ConfirmOrderTicketReq ticket : tickets) {
-                getSeat(dailyTrainId,
+                getSeat(res,
+                        dailyTrainId,
                         ticket.getSeatType(),
                         dailyTrainTicket.getStartIndex(),
                         dailyTrainTicket.getEndIndex(),
@@ -164,6 +165,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             }
         }
 
+        log.info("选座完成，被选择的座位:{}",res);
 
         //选座
         //挑选符合条件的座位,如果该车厢不满足条件则进入下一个车厢(多个选座应该在同一个车厢)
@@ -171,52 +173,15 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         //修改座位表的情况
         //余票详情表的余票
         //添加会员购买记录
-//     Date date = req.getDate();
-//     String trainCode = req.getTrainCode();
-//     String start = req.getStart();
-//     String end = req.getEnd();
-//     Long dailyTrainTicketId = req.getDailyTrainTicketId();
-//        DailyTrainTicket dailyTrainTicket = new DailyTrainTicket();
-//
-//        Long id = dailyTrainTicket.getId();
-//        Long dailyTrainId = dailyTrainTicket.getDailyTrainId();
-//        Date startDate = dailyTrainTicket.getStartDate();
-//        String start = dailyTrainTicket.getStart();
-//        String startPinyin = dailyTrainTicket.getStartPinyin();
-//        Date startTime = dailyTrainTicket.getStartTime();
-//        Integer startIndex = dailyTrainTicket.getStartIndex();
-//        String end = dailyTrainTicket.getEnd();
-//        String endPinyin = dailyTrainTicket.getEndPinyin();
-//        Date endTime = dailyTrainTicket.getEndTime();
-//        Integer endIndex = dailyTrainTicket.getEndIndex();
-//        Integer ydz = dailyTrainTicket.getYdz();
-//        BigDecimal ydzPrice = dailyTrainTicket.getYdzPrice();
-//        Integer edz = dailyTrainTicket.getEdz();
-//        BigDecimal edzPrice = dailyTrainTicket.getEdzPrice();
-//        Integer rw = dailyTrainTicket.getRw();
-//        BigDecimal rwPrice = dailyTrainTicket.getRwPrice();
-//        Integer yw = dailyTrainTicket.getYw();
-//        BigDecimal ywPrice = dailyTrainTicket.getYwPrice();
-//        Date createTime = dailyTrainTicket.getCreateTime();
-//        Date updateTime = dailyTrainTicket.getUpdateTime();
-//
-//     List<ConfirmOrderTicketReq> tickets = req.getTickets();
-//        ConfirmOrderTicketReq confirmOrderTicketReq = tickets.get(0);
-//
-//        Long passengerId = confirmOrderTicketReq.getPassengerId();
-//        String name = confirmOrderTicketReq.getName();
-//        String idCard = confirmOrderTicketReq.getIdCard();
-//        String passengerType = confirmOrderTicketReq.getPassengerType();
-//        String seatType = confirmOrderTicketReq.getSeatType();
-//        String seat = confirmOrderTicketReq.getSeat();
-
-//        log.info(req.toString());
     }
 
     /**
      * 一个车厢一个车厢的查找
      */
-    private void getSeat(Long dailyTrainId, String seatTypeCode, Integer startIndex, Integer endIndex, String seatCol, List<Integer> offsetList) {
+    private void getSeat(List<DailyTrainSeat> res, Long dailyTrainId, String seatTypeCode, Integer startIndex, Integer endIndex, String seatCol, List<Integer> offsetList) {
+        //避免选择已经选择了的座位
+        HashSet<Long> set = new HashSet<>();
+        res.forEach(seat->set.add(seat.getId()));
         //一个车厢一个车厢的查找
         LambdaQueryWrapper<DailyTrainCarriage> dailyTrainCarriageLambdaQueryWrapper = new LambdaQueryWrapper<>();
         dailyTrainCarriageLambdaQueryWrapper.orderByAsc(DailyTrainCarriage::getTrainIndex);
@@ -225,6 +190,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         log.info("查找到的车厢数目为" + dailyTrainCarriages.size());
         //遍历每一节车厢,查找车座
         for (DailyTrainCarriage carriage : dailyTrainCarriages) {
+            List<DailyTrainSeat> tempList = new ArrayList<>();
             if (!carriage.getSeatType().equals(seatTypeCode)){
                 log.info("座位类型与车位类型不匹配,当前车厢座位类型：{},目标的席位类型：{}",carriage.getSeatType(),seatTypeCode);
                 continue;
@@ -238,7 +204,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             List<DailyTrainSeat> seatList = dailyTrainSeatMapper.selectList(dailyTrainSeatLambdaQueryWrapper);
             log.info("查找到的车厢{}的座位数为" + seatList.size(), carriage.getTrainIndex());
 
-            nextCarriage :
+
             for (int i = 0; i < seatList.size(); i++) {
                 DailyTrainSeat dailyTrainSeat = seatList.get(i);
 
@@ -252,18 +218,19 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                                 , seatCol, dailyTrainSeat.getSeatCol());
                         continue;
                     }
-
                 }
 
 
-                boolean canSell = canSell(dailyTrainSeat, startIndex, endIndex);
-                if (canSell) {
+                DailyTrainSeat checkedSeat = BeanUtil.copyProperties(dailyTrainSeat, DailyTrainSeat.class);
+                if (!set.contains(checkedSeat.getId())&&canSell(checkedSeat, startIndex, endIndex)) {
                     log.info("座位{}被选中",dailyTrainSeat.getCarriageSeatIndex());
+                    tempList.add(checkedSeat);
                 } else {
                     log.info("没有选中座位{}",dailyTrainSeat.getCarriageSeatIndex());
                     continue;
                 }
 
+                boolean isGetAllOffsetSeat = true;
                 if (CollUtil.isNotEmpty(offsetList)) {
                     log.info("偏移值有{}可选",offsetList);
                     for (int j = 1; j < offsetList.size(); j++) {
@@ -271,19 +238,27 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
                         if (nextIndex>=seatList.size()){
                             log.info("下一个偏移量指向了另一节车厢，查找失败");
-                            break nextCarriage;
+                            isGetAllOffsetSeat = false;
+                            break;
                         }
-                        DailyTrainSeat nextDailyTrainSeat = seatList.get(nextIndex);
-                        canSell = canSell(nextDailyTrainSeat,startIndex,endIndex);
-                        if (canSell){
+                        DailyTrainSeat nextDailyTrainSeat = BeanUtil.copyProperties(seatList.get(nextIndex),DailyTrainSeat.class);
+                        if (!set.contains(nextDailyTrainSeat.getId())&&canSell(nextDailyTrainSeat,startIndex,endIndex)){
                             log.info("座位{}被选中",nextDailyTrainSeat.getCarriageSeatIndex());
+                            tempList.add(nextDailyTrainSeat);
                         }else {
                             log.info("没有选中座位{}",nextDailyTrainSeat.getCarriageSeatIndex());
+                            isGetAllOffsetSeat = false;
                           break ;
                         }
                     }
                 }
+                if (!isGetAllOffsetSeat) {
+                    tempList = new ArrayList<>();
+                    continue;
+                }
 
+                res.addAll(tempList);
+                return;
             }
         }
     }
