@@ -167,7 +167,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         log.info("选座完成，被选择的座位:{}",res);
 
         if (CollUtil.isNotEmpty(res)) {
-            confirmOrderAfterService.updateSellById(res);
+            confirmOrderAfterService.updateSellById(dailyTrainTicket,res);
         }
 
         //选座

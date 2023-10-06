@@ -3,6 +3,7 @@ package com.lxl.business.mapper;
 import com.lxl.business.domain.DailyTrainTicket;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author 13430
@@ -13,6 +14,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DailyTrainTicketMapper extends BaseMapper<DailyTrainTicket> {
 
+    void updateBySell(@Param("daily_train_id") Long dailyTrainId, @Param("seatType") String seatType, @Param("minStart") Integer minStart, @Param("maxStart") Integer maxStart, @Param("minEnd") Integer minEnd, @Param("maxEnd") Integer maxEnd);
 }
 
 

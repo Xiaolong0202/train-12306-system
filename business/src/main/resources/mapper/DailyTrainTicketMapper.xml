@@ -4,36 +4,62 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lxl.business.mapper.DailyTrainTicketMapper">
 
-    <resultMap id="BaseResultMap" type="com.lxl.business.domain.DailyTrainTicket">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="dailyTrainId" column="daily_train_id" jdbcType="BIGINT"/>
-            <result property="start" column="start" jdbcType="VARCHAR"/>
-            <result property="startPinyin" column="start_pinyin" jdbcType="VARCHAR"/>
-            <result property="startTime" column="start_time" jdbcType="TIME"/>
-            <result property="startIndex" column="start_index" jdbcType="TINYINT"/>
-            <result property="end" column="end" jdbcType="VARCHAR"/>
-            <result property="endPinyin" column="end_pinyin" jdbcType="VARCHAR"/>
-            <result property="endTime" column="end_time" jdbcType="TIME"/>
-            <result property="endIndex" column="end_index" jdbcType="TINYINT"/>
-            <result property="ydz" column="ydz" jdbcType="INTEGER"/>
-            <result property="ydzPrice" column="ydz_price" jdbcType="DECIMAL"/>
-            <result property="edz" column="edz" jdbcType="INTEGER"/>
-            <result property="edzPrice" column="edz_price" jdbcType="DECIMAL"/>
-            <result property="rw" column="rw" jdbcType="INTEGER"/>
-            <result property="rwPrice" column="rw_price" jdbcType="DECIMAL"/>
-            <result property="yw" column="yw" jdbcType="INTEGER"/>
-            <result property="ywPrice" column="yw_price" jdbcType="DECIMAL"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-    </resultMap>
+<!--    <resultMap id="BaseResultMap" type="com.lxl.business.domain.DailyTrainTicket">-->
+<!--            <id property="id" column="id" jdbcType="BIGINT"/>-->
+<!--            <result property="dailyTrainId" column="daily_train_id" jdbcType="BIGINT"/>-->
+<!--            <result property="start" column="start" jdbcType="VARCHAR"/>-->
+<!--            <result property="startPinyin" column="start_pinyin" jdbcType="VARCHAR"/>-->
+<!--            <result property="startTime" column="start_time" jdbcType="TIME"/>-->
+<!--            <result property="startIndex" column="start_index" jdbcType="TINYINT"/>-->
+<!--            <result property="end" column="end" jdbcType="VARCHAR"/>-->
+<!--            <result property="endPinyin" column="end_pinyin" jdbcType="VARCHAR"/>-->
+<!--            <result property="endTime" column="end_time" jdbcType="TIME"/>-->
+<!--            <result property="endIndex" column="end_index" jdbcType="TINYINT"/>-->
+<!--            <result property="ydz" column="ydz" jdbcType="INTEGER"/>-->
+<!--            <result property="ydzPrice" column="ydz_price" jdbcType="DECIMAL"/>-->
+<!--            <result property="edz" column="edz" jdbcType="INTEGER"/>-->
+<!--            <result property="edzPrice" column="edz_price" jdbcType="DECIMAL"/>-->
+<!--            <result property="rw" column="rw" jdbcType="INTEGER"/>-->
+<!--            <result property="rwPrice" column="rw_price" jdbcType="DECIMAL"/>-->
+<!--            <result property="yw" column="yw" jdbcType="INTEGER"/>-->
+<!--            <result property="ywPrice" column="yw_price" jdbcType="DECIMAL"/>-->
+<!--            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>-->
+<!--            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>-->
+<!--    </resultMap>-->
 
-    <sql id="Base_Column_List">
-        id,daily_train_id,start,
-        start_pinyin,start_time,start_index,
-        end,end_pinyin,end_time,
-        end_index,ydz,ydz_price,
-        edz,edz_price,rw,
-        rw_price,yw,yw_price,
-        create_time,update_time
-    </sql>
+<!--    <sql id="Base_Column_List">-->
+<!--        id,daily_train_id,start,-->
+<!--        start_pinyin,start_time,start_index,-->
+<!--        end,end_pinyin,end_time,-->
+<!--        end_index,ydz,ydz_price,-->
+<!--        edz,edz_price,rw,-->
+<!--        rw_price,yw,yw_price,-->
+<!--        create_time,update_time-->
+<!--    </sql>-->
+    <update id="updateBySell">
+        update daily_train_ticket
+        set
+        <if test="seatType == '1'.toString() ">
+            ydz = ydz - 1
+        </if>
+        <if test="seatType == '2'.toString() ">
+            edz = edz - 1
+        </if>
+        <if test="seatType == '3'.toString() ">
+            rw = rw - 1
+        </if>
+        <if test="seatType == '4'.toString() ">
+            yw = yw - 1
+        </if>
+        where
+            start_index >= #{minStart}
+        and
+            start_index  &lt;=  #{maxStart}
+        and
+            end_index >= #{minEnd}
+        and
+            end_index &lt;=  #{maxEnd}
+        and
+            `daily_train_id` = #{daily_train_id}
+    </update>
 </mapper>
