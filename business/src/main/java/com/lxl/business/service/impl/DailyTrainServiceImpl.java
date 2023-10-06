@@ -202,6 +202,15 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                 dailyTrainStation.setUpdateTime(now);
                 dailyTrainStation.setUpdateTime(now);
 
+                if (dailyTrainStation.getTrainIndex() >= trainStations.size()) {
+                    String format = String.format("列车%s的%d号车站index值大于或等于列车的的车站数",
+                            dailyTrain.getType() + dailyTrain.getCode(),
+                            dailyTrainStation.getTrainIndex());
+                    log.error(format);
+                    throw new BusinessException(BussinessExceptionEnum.CUSTOM_ERROR.
+                            setDesc(format));
+                }
+
                 return dailyTrainStation;
             }).toList();
             if (CollUtil.isNotEmpty(tempDailyTrainStations)) {
@@ -225,14 +234,6 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                 dailyTrainCarriage.setDailyTrainId(dailyTrain.getId());
                 dailyTrainCarriage.setCreateTime(now);
                 dailyTrainCarriage.setUpdateTime(now);
-                if (dailyTrainCarriage.getTrainIndex() >= carriages.size()) {
-                    String format = String.format("列车%s的%d号车厢index值大于或等于列车的的车厢数",
-                            dailyTrain.getType() + dailyTrain.getCode(),
-                            dailyTrainCarriage.getTrainIndex());
-                    log.error(format);
-                    throw new BusinessException(BussinessExceptionEnum.CUSTOM_ERROR.
-                            setDesc(format));
-                }
 
                 //生成dailySeat
                 LambdaQueryWrapper<TrainSeat> seatLambdaQueryWrapper = new LambdaQueryWrapper<>();
