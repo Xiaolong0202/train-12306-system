@@ -154,12 +154,14 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
         } else {
             log.info("会员没有进行选座");
-            getSeat(dailyTrainId,
-                    ticketReq0.getSeatType(),
-                    dailyTrainTicket.getStartIndex(),
-                    dailyTrainTicket.getEndIndex(),
-                    null,
-                    null);
+            for (ConfirmOrderTicketReq ticket : tickets) {
+                getSeat(dailyTrainId,
+                        ticket.getSeatType(),
+                        dailyTrainTicket.getStartIndex(),
+                        dailyTrainTicket.getEndIndex(),
+                        null,
+                        null);
+            }
         }
 
 
@@ -223,6 +225,10 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         log.info("查找到的车厢数目为" + dailyTrainCarriages.size());
         //遍历每一节车厢,查找车座
         for (DailyTrainCarriage carriage : dailyTrainCarriages) {
+            if (!carriage.getSeatType().equals(seatTypeCode)){
+                log.info("座位类型与车位类型不匹配,当前车厢座位类型：{},目标的席位类型：{}",carriage.getSeatType(),seatTypeCode);
+                continue;
+            }
             //找出所有的座位
             Long dailyCarriageId = carriage.getId();
             LambdaQueryWrapper<DailyTrainSeat> dailyTrainSeatLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -232,15 +238,52 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             List<DailyTrainSeat> seatList = dailyTrainSeatMapper.selectList(dailyTrainSeatLambdaQueryWrapper);
             log.info("查找到的车厢{}的座位数为" + seatList.size(), carriage.getTrainIndex());
 
-            for (DailyTrainSeat dailyTrainSeat : seatList) {
-               boolean canSell =  canSell(dailyTrainSeat,startIndex,endIndex);
-               if (canSell){
-                   log.info("选中座位");
-                   log.info(dailyTrainSeat.getSell());
-                   return;
-               }else {
-                   log.info("没有选中座位");
-               }
+            nextCarriage :
+            for (int i = 0; i < seatList.size(); i++) {
+                DailyTrainSeat dailyTrainSeat = seatList.get(i);
+
+                if (!StringUtils.hasText(seatCol)) {
+                    log.info("没有进行选座");
+                } else {
+                    log.info("进行了选座");
+                    if (!seatCol.equals(dailyTrainSeat.getSeatCol())) {
+                        log.info("座位{}的COL不对，将查找下一个座位，目标列{},当前列{}"
+                                , dailyTrainSeat.getCarriageSeatIndex()
+                                , seatCol, dailyTrainSeat.getSeatCol());
+                        continue;
+                    }
+
+                }
+
+
+                boolean canSell = canSell(dailyTrainSeat, startIndex, endIndex);
+                if (canSell) {
+                    log.info("座位{}被选中",dailyTrainSeat.getCarriageSeatIndex());
+                } else {
+                    log.info("没有选中座位{}",dailyTrainSeat.getCarriageSeatIndex());
+                    continue;
+                }
+
+                if (CollUtil.isNotEmpty(offsetList)) {
+                    log.info("偏移值有{}可选",offsetList);
+                    for (int j = 1; j < offsetList.size(); j++) {
+                        int nextIndex = offsetList.get(j) + i;
+
+                        if (nextIndex>=seatList.size()){
+                            log.info("下一个偏移量指向了另一节车厢，查找失败");
+                            break nextCarriage;
+                        }
+                        DailyTrainSeat nextDailyTrainSeat = seatList.get(nextIndex);
+                        canSell = canSell(nextDailyTrainSeat,startIndex,endIndex);
+                        if (canSell){
+                            log.info("座位{}被选中",nextDailyTrainSeat.getCarriageSeatIndex());
+                        }else {
+                            log.info("没有选中座位{}",nextDailyTrainSeat.getCarriageSeatIndex());
+                          break ;
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -248,14 +291,14 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     private boolean canSell(DailyTrainSeat dailyTrainSeat, Integer startIndex, Integer endIndex) {
         String sell = dailyTrainSeat.getSell();
         String part = sell.substring(startIndex, endIndex);
-        if (Integer.parseInt(part)>0){
+        if (Integer.parseInt(part) > 0) {
             log.info("该座位已经被购买");
             return false;
-        }else {
+        } else {
             char[] charArray = sell.toCharArray();
-            Arrays.fill(charArray,startIndex,endIndex,'1');
+            Arrays.fill(charArray, startIndex, endIndex, '1');
             dailyTrainSeat.setSell(String.valueOf(charArray));
-            log.info("该座位可以被购买，并且sell属性已被更新");
+            log.info("该座位可以被购买，并且sell属性已被更新,更新前{}，更新后{}", sell, dailyTrainSeat.getSell());
             return true;
         }
     }
