@@ -60,7 +60,8 @@ public class DailyTrainSeatServiceImpl implements DailyTrainSeatService{
     @Override
     public PageResp<DailyTrainSeatQueryResp> queryList(DailyTrainSeatQueryReq req) {
         LambdaQueryWrapper<DailyTrainSeat> wrapper = new LambdaQueryWrapper<>();
-        wrapper.orderByDesc(DailyTrainSeat::getCarriageSeatIndex);
+        wrapper.orderByAsc(DailyTrainSeat::getCarriageId);
+        wrapper.orderByAsc(DailyTrainSeat::getCarriageSeatIndex);
         wrapper.eq(!ObjectUtils.isEmpty(req.getDailyTrainId()), DailyTrainSeat::getDailyTrainId,req.getDailyTrainId());
 
         if (!ObjectUtils.isEmpty(req.getPageSize())&&!ObjectUtils.isEmpty(req.getCurrentPage())){

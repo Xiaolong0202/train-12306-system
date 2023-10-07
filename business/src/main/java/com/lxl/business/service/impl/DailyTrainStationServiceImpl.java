@@ -104,7 +104,7 @@ public class DailyTrainStationServiceImpl implements DailyTrainStationService{
     @Override
     public PageResp<DailyTrainStationQueryResp> queryList(DailyTrainStationQueryReq req) {
         LambdaQueryWrapper<DailyTrainStation> wrapper = new LambdaQueryWrapper<>();
-        wrapper.orderByDesc(DailyTrainStation::getTrainIndex);
+        wrapper.orderByAsc(DailyTrainStation::getTrainIndex);
         wrapper.eq(!ObjectUtils.isEmpty(req.getDailyTrainId()),DailyTrainStation::getDailyTrainId,req.getDailyTrainId());
 
         if (!ObjectUtils.isEmpty(req.getPageSize())&&!ObjectUtils.isEmpty(req.getCurrentPage())){
