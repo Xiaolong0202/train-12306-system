@@ -25,11 +25,6 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @GetMapping("hello")
-    public String  hello(){
-        return "hello";
-    }
-
     @GetMapping("/count")
     public CommonResp<?> conut(){
         return new CommonResp<>(memberService.count());
