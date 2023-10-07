@@ -30,6 +30,11 @@ public class DailyTrainSeatQueryResp {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long carriageId;
 
+
+
+    private Integer carriageIndex;
+
+
     /**
      * 座位类型|枚举
      */

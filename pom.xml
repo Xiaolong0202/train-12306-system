@@ -18,7 +18,6 @@
         <module>member</module>
         <module>common</module>
         <module>gateway</module>
-        <module>generator</module>
         <module>business</module>
         <module>batch</module>
     </modules>

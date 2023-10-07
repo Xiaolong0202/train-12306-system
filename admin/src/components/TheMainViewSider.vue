@@ -1,7 +1,6 @@
 <template>
   <a-layout-sider  width="200" style="background: #fff">
       <a-menu
-              v-model:openKeys="openKeys"
               v-model:selectedKeys="selectedKeys"
               theme="light"
               mode="inline"
@@ -48,7 +47,6 @@ const toPage = ({key,keyPath}) => {
     router.push(finalPath)
 }
 const selectedKeys = ref([sessionStorage.getItem('adminMainKey')])
-const openKeys = ref(['/main/base','/main/batch','/main/daily'])
 </script>
 
 <style scoped>

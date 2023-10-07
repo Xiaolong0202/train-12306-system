@@ -18,7 +18,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,daily_train_id,carriage_id,
+        id,daily_train_id,carriage_id,carriage_index,
         seat_type,seat_row,seat_col,
         carriage_seat_index,sell,create_time,
         update_time
@@ -31,6 +31,7 @@
             (#{item.id},
             #{item.dailyTrainId},
             #{item.carriageId},
+            #{item.carriageIndex},
             #{item.seatType},
             #{item.seatRow},
             #{item.seatCol},

@@ -244,6 +244,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                     dailyTrainSeat.setId(SnowUtils.nextSnowId());
                     dailyTrainSeat.setDailyTrainId(dailyTrain.getId());
                     dailyTrainSeat.setCarriageId(dailyTrainCarriage.getId());
+                    dailyTrainSeat.setCarriageIndex(dailyTrainCarriage.getTrainIndex());
                     dailyTrainSeat.setCreateTime(now);
                     dailyTrainSeat.setUpdateTime(now);
                     dailyTrainSeat.setSell(sell);

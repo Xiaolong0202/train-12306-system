@@ -31,6 +31,11 @@ public class DailyTrainSeat implements Serializable {
     private Long carriageId;
 
     /**
+     * 所在车厢
+     */
+    private Integer carriageIndex;
+
+    /**
      * 座位类型|枚举
      */
     private String seatType;

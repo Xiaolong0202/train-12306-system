@@ -128,6 +128,7 @@ create table `daily_train_seat`(
                              `id` bigint not null comment 'id',
                              `daily_train_id` bigint NOT NULL COMMENT '每日车次id',
                              `carriage_id` bigint not null comment '火车箱号',
+                             `carriage_index` int not null comment '所在的车厢',
                              `seat_type` char not null comment '座位类型|枚举',
                              `seat_row` char(2) not null comment '排',
                              `seat_col` VARCHAR(10) not null comment '列|枚举',
