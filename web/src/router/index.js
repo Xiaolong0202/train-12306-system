@@ -26,6 +26,9 @@ const routes = [
             },{
                 path: 'order',
                 component: ()=>import('../views/main/OrderView.vue')
+            },{
+                path: 'myTickets',
+                component: ()=>import('../views/main/MyTicketView.vue')
             }
         ]
     },

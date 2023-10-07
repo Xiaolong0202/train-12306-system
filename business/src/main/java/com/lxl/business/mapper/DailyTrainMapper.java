@@ -4,6 +4,7 @@ import com.lxl.business.domain.DailyTrain;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,9 @@ public interface DailyTrainMapper extends BaseMapper<DailyTrain> {
     void insertBatch(@Param("list") List<DailyTrain> dailyTrains);
 
     List<Long> selectAimDateTrainIds(@Param("date") Date date);
+
+    @Select("select `type` from train_business.daily_train where id = #{dailyTrainId}")
+    String selectTrainTypeById(Long dailyTrainId);
 }
 
 

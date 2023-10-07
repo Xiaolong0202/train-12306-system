@@ -45,7 +45,6 @@ public class TicketServiceImpl implements TicketService {
         Ticket ticket = BeanUtil.copyProperties(req, Ticket.class);
         Date now = DateTime.now();
         log.info("进行新增");
-        //id为空则进行新增
         ticket.setCreateTime(now);
         ticket.setUpdateTime(now);
         ticket.setId(SnowUtils.nextSnowId());
@@ -56,6 +55,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public PageResp<TicketQueryResp> queryList(TicketQueryReq req) {
         LambdaQueryWrapper<Ticket> wrapper = new LambdaQueryWrapper<>();
+        req.setMemberId(MemberInfoContext.getMemberId());
         wrapper.eq(!ObjectUtils.isEmpty(req.getMemberId()), Ticket::getMemberId, req.getMemberId());
         wrapper.orderByDesc(Ticket::getId);
 

@@ -3,6 +3,7 @@ package com.lxl.business.service.impl;
 import com.lxl.business.domain.DailyTrainSeat;
 import com.lxl.business.domain.DailyTrainTicket;
 import com.lxl.business.feign.MemberFeign;
+import com.lxl.business.mapper.DailyTrainMapper;
 import com.lxl.business.mapper.DailyTrainSeatMapper;
 import com.lxl.business.mapper.DailyTrainTicketMapper;
 import com.lxl.business.req.ConfirmOrderTicketReq;
@@ -35,8 +36,12 @@ public class ConfirmOrderAfterService {
     @Autowired
     MemberFeign memberFeign;
 
+    @Autowired
+    DailyTrainMapper dailyTrainMapper;
+
     @Transactional
     public void doAfterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> dailyTrainSeats, List<ConfirmOrderTicketReq> tickets, @NotBlank String trainCode) {
+        String trainTypeById = dailyTrainMapper.selectTrainTypeById(dailyTrainTicket.getDailyTrainId());
         for (int j = 0; j < dailyTrainSeats.size(); j++) {
             DailyTrainSeat dailyTrainSeat = dailyTrainSeats.get(j);
             dailyTrainSeatMapper.updateBatchSell(dailyTrainSeat);
@@ -71,7 +76,7 @@ public class ConfirmOrderAfterService {
             ticketSaveOrEditReq.setDailyTrainTicketId(dailyTrainTicket.getId());
             ticketSaveOrEditReq.setPassengerName(confirmOrderTicketReq.getName());
             ticketSaveOrEditReq.setDate(dailyTrainTicket.getStartDate());
-            ticketSaveOrEditReq.setTrainCode(trainCode);
+            ticketSaveOrEditReq.setTrainCode(trainTypeById+trainCode);
             ticketSaveOrEditReq.setCarriageIndex(dailyTrainSeat.getCarriageIndex());
             ticketSaveOrEditReq.setRow(dailyTrainSeat.getSeatRow());
             ticketSaveOrEditReq.setCol(dailyTrainSeat.getSeatRow());

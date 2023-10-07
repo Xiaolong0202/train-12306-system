@@ -47,7 +47,7 @@ public class Ticket implements Serializable {
     private Date date;
 
     /**
-     * 车次编号
+     * 车次编号 包含了车次类型
      */
     private String trainCode;
 
