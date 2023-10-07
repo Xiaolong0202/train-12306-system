@@ -1,8 +1,11 @@
 package com.lxl.business.service.impl;
 
+import com.lxl.business.domain.ConfirmOrder;
 import com.lxl.business.domain.DailyTrainSeat;
 import com.lxl.business.domain.DailyTrainTicket;
+import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
 import com.lxl.business.feign.MemberFeign;
+import com.lxl.business.mapper.ConfirmOrderMapper;
 import com.lxl.business.mapper.DailyTrainMapper;
 import com.lxl.business.mapper.DailyTrainSeatMapper;
 import com.lxl.business.mapper.DailyTrainTicketMapper;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,8 +43,11 @@ public class ConfirmOrderAfterService {
     @Autowired
     DailyTrainMapper dailyTrainMapper;
 
+    @Autowired
+    ConfirmOrderMapper confirmOrderMapper;
+
     @Transactional
-    public void doAfterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> dailyTrainSeats, List<ConfirmOrderTicketReq> tickets, @NotBlank String trainCode) {
+    public void doAfterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> dailyTrainSeats, List<ConfirmOrderTicketReq> tickets, @NotBlank String trainCode, ConfirmOrder confirmOrder) {
         String trainTypeById = dailyTrainMapper.selectTrainTypeById(dailyTrainTicket.getDailyTrainId());
         for (int j = 0; j < dailyTrainSeats.size(); j++) {
             DailyTrainSeat dailyTrainSeat = dailyTrainSeats.get(j);
@@ -92,6 +99,11 @@ public class ConfirmOrderAfterService {
             }else {
                 log.info("乘客{}的购票信息保存失败",ticketSaveOrEditReq.getPassengerName());
             }
+            confirmOrder.setUpdateTime(new Date());
+            confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.SUCCESS.getCode());
+            confirmOrderMapper.updateById(confirmOrder);
+
+
         }
     }
 }
