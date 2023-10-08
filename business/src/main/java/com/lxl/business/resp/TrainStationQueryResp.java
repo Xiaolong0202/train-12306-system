@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -14,7 +15,7 @@ import java.util.Date;
  * @DateTime 2023/9/26  20:58
  **/
 @Data
-public class TrainStationQueryResp {
+public class TrainStationQueryResp implements Serializable {
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;

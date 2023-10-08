@@ -80,6 +80,7 @@ public class StationServiceImpl implements StationService{
     }
 
 
+    @Cacheable(cacheNames = "StationServiceImpl.queryList")
     @Override
     public PageResp<StationQueryResp> queryList(StationQueryReq req) {
         LambdaQueryWrapper<Station> wrapper = new LambdaQueryWrapper<>();

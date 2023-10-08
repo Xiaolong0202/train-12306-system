@@ -12,6 +12,13 @@ spring:
       host: 39.107.52.125
       port: 6379
       password: "040202"
+  cache:
+    type: redis
+    redis:
+      use-key-prefix: true
+      key-prefix: train_code_
+      cache-null-values:  false
+      time-to-live: 10s
 
 server:
   port: 8002

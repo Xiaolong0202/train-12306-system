@@ -20,6 +20,7 @@ import com.lxl.common.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -102,8 +103,10 @@ public class TrainStationServiceImpl implements TrainStationService{
 
     }
 
+    @Cacheable(cacheNames = "TrainStationServiceImpl.queryList")
     @Override
     public PageResp<TrainStationQueryResp> queryList(TrainStationQueryReq req) {
+        log.info("NO CACHING!!!");
         LambdaQueryWrapper<TrainStation> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByDesc(TrainStation::getTrainIndex);
         wrapper.eq(!ObjectUtils.isEmpty(req.getTrainId()),TrainStation::getTrainId,req.getTrainId());

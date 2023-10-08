@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Max;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 /**
  * @Author LiuXiaolong
  * @Description train-12306-system
@@ -12,7 +14,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode
-public class PageReq {
+public class PageReq implements Serializable {
 
     private Integer currentPage;
 

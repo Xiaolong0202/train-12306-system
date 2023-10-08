@@ -12,4 +12,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode
 public class StationQueryReq extends PageReq {
+
 }

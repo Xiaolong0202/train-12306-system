@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan("com.lxl.*")
 @EnableFeignClients({"com.lxl.business.feign"})
 @EnableDiscoveryClient
+@EnableCaching
 public class BusinessMain {
     public static void main(String[] args) {
         SpringApplication.run(BusinessMain.class);

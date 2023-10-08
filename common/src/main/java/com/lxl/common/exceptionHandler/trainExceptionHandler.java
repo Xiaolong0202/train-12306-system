@@ -58,7 +58,7 @@ public class trainExceptionHandler {
     @ExceptionHandler(Exception.class)
     public CommonResp<?> handleException(Exception e) {
         e.printStackTrace();
-        return CommonResp.buildFailure(e, "本次响应失败，请联系网站管理员");
+        return CommonResp.buildFailure(e.getMessage(), "本次响应失败，请联系网站管理员");
     }
 
 }
