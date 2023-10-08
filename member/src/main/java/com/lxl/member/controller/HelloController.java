@@ -17,8 +17,11 @@ public class HelloController {
     @Value("${test.nacos}")
     private String v;
 
+    @Value("${server.port}")
+    private String serverPort;
+
     @RequestMapping("hello")
     public String hello(){
-        return v;
+        return v+"server.port "+serverPort;
     }
 }

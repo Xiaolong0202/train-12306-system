@@ -2,6 +2,7 @@ package com.lxl.business;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan("com.lxl.*")
 @EnableFeignClients({"com.lxl.business.feign"})
+@EnableDiscoveryClient
 public class BusinessMain {
     public static void main(String[] args) {
         SpringApplication.run(BusinessMain.class);

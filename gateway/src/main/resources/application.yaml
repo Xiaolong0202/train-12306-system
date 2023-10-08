@@ -1,20 +1,18 @@
 server:
   port: 80
 spring:
-  application:
-    name: batch
   cloud:
     gateway:
       routes: #配置路由转发
-        - uri: http://127.0.0.1:8001
+        - uri: lb://member
           id: member
           predicates:
             - Path=/member/**
-        - uri: http://127.0.0.1:8002
+        - uri: lb://business
           id: business
           predicates:
             - Path=/business/**
-        - uri: http://127.0.0.1:8003
+        - uri: lb://batch
           id: batch
           predicates:
             - Path=/batch/**
