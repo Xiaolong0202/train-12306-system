@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @Description train-12306-system
  * @DateTime 2023/10/7  15:18
  **/
-@FeignClient(name = "member" ,url = "http://127.0.0.1:8001/member")
+@FeignClient("member")
+//@FeignClient(name = "member" ,url = "http://127.0.0.1:8001")
 public interface MemberFeign {
 
-    @GetMapping("/ticket/query-list")
+    @GetMapping("/member/ticket/query-list")
     public CommonResp<?> queryList(TicketQueryReq ticketQueryReq);
 
-    @PostMapping("/ticket/save")
+    @PostMapping("/member/ticket/save")
     public CommonResp<?> save(@RequestBody TicketSaveOrEditReq ticketSaveOrEditReq);
 }
