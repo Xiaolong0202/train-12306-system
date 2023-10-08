@@ -18,7 +18,7 @@ spring:
       use-key-prefix: true
       key-prefix: train_code_
       cache-null-values:  false
-      time-to-live: 10s
+      time-to-live: 60s
 
 server:
   port: 8002

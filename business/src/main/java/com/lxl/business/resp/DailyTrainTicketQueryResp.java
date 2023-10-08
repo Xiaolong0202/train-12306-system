@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -15,7 +16,7 @@ import java.util.Date;
  * @DateTime 2023/10/3  16:01
  **/
 @Data
-public class DailyTrainTicketQueryResp {
+public class DailyTrainTicketQueryResp implements Serializable {
 
     /**
      * id

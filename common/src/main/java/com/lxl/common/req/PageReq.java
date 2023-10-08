@@ -11,13 +11,12 @@ import java.io.Serializable;
  * @Description train-12306-system
  * @DateTime 2023/9/23  21:46
  **/
-
 @Data
 @EqualsAndHashCode
 public class PageReq implements Serializable {
 
-    private Integer currentPage;
+    public Integer currentPage;
 
     @Max(value = 100,message = "页面大小最大不能超过100")
-    private Integer pageSize;
+    public Integer pageSize;
 }

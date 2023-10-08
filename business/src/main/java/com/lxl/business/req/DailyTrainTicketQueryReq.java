@@ -3,8 +3,11 @@ package com.lxl.business.req;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lxl.common.req.PageReq;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +16,9 @@ import java.util.Date;
  * @DateTime 2023/10/3  16:00
  **/
 @Data
-public class DailyTrainTicketQueryReq extends PageReq {
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class DailyTrainTicketQueryReq extends PageReq implements Serializable {
     private Long dailyTrainId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

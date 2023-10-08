@@ -13,6 +13,7 @@ import com.lxl.business.service.DailyTrainTicketService;
 import com.lxl.common.resp.PageResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -31,8 +32,11 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
     @Autowired
     DailyTrainTicketMapper dailyTrainTicketMapper;
 
+
+    @Cacheable(cacheNames = "DailyTrainTicketServiceImpl.queryList")
     @Override
     public PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req) {
+        log.info("NO CACHING!!");
         LambdaQueryWrapper<DailyTrainTicket> dailyTrainTicketLambdaQueryWrapper = new LambdaQueryWrapper<>();
         dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getDailyTrainId()),DailyTrainTicket::getDailyTrainId,req.getDailyTrainId());
         dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getStart()),DailyTrainTicket::getStart,req.getStart());

@@ -37,3 +37,7 @@ GET http://localhost:8002/business/trainStation/admin/query-list
 Accept: application/json
 
 ###
+GET http://localhost:8002/business/dailyTrainTicket/admin/query-list?end=沈阳&currentPage=1&pageSize=2
+Accept: application/json
+
+###
