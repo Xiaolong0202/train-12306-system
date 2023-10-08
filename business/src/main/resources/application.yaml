@@ -6,6 +6,12 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
   application:
     name: business
+  data:
+    redis:
+      database: 0
+      host: 39.107.52.125
+      port: 6379
+      password: "040202"
 
 server:
   port: 8002

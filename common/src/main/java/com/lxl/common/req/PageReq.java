@@ -2,6 +2,7 @@ package com.lxl.common.req;
 
 import jakarta.validation.constraints.Max;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @Author LiuXiaolong
@@ -10,6 +11,7 @@ import lombok.Data;
  **/
 
 @Data
+@EqualsAndHashCode
 public class PageReq {
 
     private Integer currentPage;

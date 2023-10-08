@@ -1,2 +1,10 @@
 mybatis一级缓存的范围是一个事务之内，减少数据库的无效访问范围是sqlSession级别的 在有多个会话以及分布式场景会产生脏读现象
 mybatis二级缓存是命名空间级别的，也就是Mapper.xml中的nameSpace属性增删改还会被失效，在分布式场景会被失效，实际用的也不多
+springCache 对方法进行缓存
+            开辟一块空间，根据不同的请求参数，
+            空间内会缓存多个结果。会根据请求参
+            数生成一个key,需要对请求参数生成
+            hashCode和equals方法，用于生成key
+
+我使用docker启动了redis
+docker run  --name Myredis -v /dockerVolume/myRedis/data:/data -v /dockerVolume/myRedis/conf:/etc/redis/conf -p 6379:6379 -d  redis /etc/redis/conf/redis.conf

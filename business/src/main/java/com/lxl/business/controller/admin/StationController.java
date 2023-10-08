@@ -8,6 +8,7 @@ import com.lxl.common.resp.CommonResp;
 import com.lxl.common.resp.PageResp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 /**

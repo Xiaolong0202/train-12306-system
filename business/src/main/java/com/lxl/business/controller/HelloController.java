@@ -1,5 +1,6 @@
 package com.lxl.business.controller;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @RequestMapping("hello")
-    public String hello(){
-        return "hello";
+    public String hello(String name){
+        return "hello"+name;
     }
 }
