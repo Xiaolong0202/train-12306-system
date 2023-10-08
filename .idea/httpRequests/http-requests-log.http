@@ -1,3 +1,73 @@
+GET http://localhost:80/business/trainStation/admin/query-list
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-08T145821.200.json
+
+###
+
+GET http://localhost:80/business/trainStation/admin/query-list
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-08T145817.200.json
+
+###
+
+GET http://localhost:80/business/trainStation/admin/query-list
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-08T145609.200.json
+
+###
+
+GET http://localhost:80/business/trainStation/admin/query-list
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-08T145600.200.json
+
+###
+
+GET http://localhost:80/business/trainStation/admin/query-list
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-08T145251.200.json
+
+###
+
+GET http://localhost:80/business/trainStation/admin/query-list
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-08T143419.200.json
+
+###
+
+GET http://localhost:80/business/admin/trainStation/admin/query-list
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-08T143400.404.json
+
+###
+
 POST http://localhost:8001/member/hello
 Accept: application/json
 Content-Length: 0
@@ -580,93 +650,6 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 }
 
 <> 2023-09-23T213017.200.json
-
-###
-
-GET http://localhost/member/passenger/query-list
-Accept: application/json
-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk1NDc1NjI1NjIwLCJtZW1iZXJJZCI6MTcwNTU1MjgyNDA1MTU2ODY0MH0.Vjr8w94avNmljF4vaY8Kci1uF4NhCv1_tdfcX0T1wo0
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-23T212035.200.json
-
-###
-
-GET http://localhost/member/passenger/query-list
-Accept: application/json
-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk1NDc1NjI1NjIwLCJtZW1iZXJJZCI6MTcwNTU1MjgyNDA1MTU2ODY0MH0.Vjr8w94avNmljF4vaY8Kci1uF4NhCv1_tdfcX0T1wo0
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-23T211922.200.json
-
-###
-
-GET http://localhost/member/passenger/query-list
-Accept: application/json
-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk1NDc1NjI1NjIwLCJtZW1iZXJJZCI6MTcwNTU1MjgyNDA1MTU2ODY0MH0.Vjr8w94avNmljF4vaY8Kci1uF4NhCv1_tdfcX0T1wo0
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-23T211734.200.json
-
-###
-
-POST http://localhost/member/login
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile": "13027378933",
-  "code" : "8888"
-}
-
-<> 2023-09-23T211706.200.json
-
-###
-
-GET http://localhost/member/passenger/query-list
-Accept: application/json
-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk1NDc1NTU3NzM3LCJtZW1iZXJJZCI6MTcwNTU1MjgyNDA1MTU2ODY0MH0.ZdAKVKU6dKxBY04q1NAYJBa_w_cGOhClwwmgqtC1foU
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-23T211601.200.json
-
-###
-
-POST http://localhost/member/login
-Content-Type: application/json
-Content-Length: 48
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "mobile": "13027378933",
-  "code" : "8888"
-}
-
-<> 2023-09-23T211557.200.json
-
-###
-
-GET http://localhost/member/passenger/query-list
-Accept: application/json
-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxNTExNjc3ODI5NiIsImV4cGlyZV90aW1lIjoxNjk1NDc1NTI5NjU0LCJtZW1iZXJJZCI6MTcwNTU2NDQ3MDQ1MDk4MjkxMn0.uE0BtMlNm_bP6iLmcBESKSA3ocxCUcEL9twSpSvMDus
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-23T211533.200.json
 
 ###
 

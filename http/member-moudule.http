@@ -33,3 +33,7 @@ Accept: application/json
 
 ###
 
+GET http://localhost:80/business/trainStation/admin/query-list
+Accept: application/json
+
+###
