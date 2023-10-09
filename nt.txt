@@ -8,3 +8,9 @@ springCache 对方法进行缓存
 
 我使用docker启动了redis
 docker run  --name Myredis -v /dockerVolume/myRedis/data:/data -v /dockerVolume/myRedis/conf:/etc/redis/conf -p 6379:6379 -d  redis /etc/redis/conf/redis.conf
+
+缓存击穿 热点key失效过期或失败 大量请求打到数据库上，承受补助  可以提前给redis延期，可以添加分布式锁只让一个请求访问数据库并且构建缓存,其他的请求做快速失败
+缓存穿透 反复查找数据库当中不存在的数据，数据库中本来就没有数据取出为null,也放入进redis当中,许多请求进来从Redis当中读取到null也会进入到数据库中,1、可以加分布式锁2、读到null可以用其他数据放入redis当中将null和空区分
+缓存雪崩，大量的key同时失效，导致数据库压力剧增，原因：许多KEY的过期时间周期一致
+
+SEATA

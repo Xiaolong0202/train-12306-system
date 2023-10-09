@@ -13,6 +13,7 @@ import com.lxl.business.service.DailyTrainTicketService;
 import com.lxl.common.resp.PageResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -31,6 +32,18 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
 
     @Autowired
     DailyTrainTicketMapper dailyTrainTicketMapper;
+
+
+    /**
+     * 更新车票信息的缓存缓存
+     * @param req
+     * @return
+     */
+    @CachePut(cacheNames = "DailyTrainTicketServiceImpl.queryList")
+    public PageResp<DailyTrainTicketQueryResp> updateDailyTrainTicket(DailyTrainTicketQueryReq req){
+        log.info("更新缓存！");
+        return queryList(req);
+    }
 
 
     @Cacheable(cacheNames = "DailyTrainTicketServiceImpl.queryList")

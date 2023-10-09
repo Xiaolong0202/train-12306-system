@@ -13,6 +13,7 @@ import com.lxl.business.enums.TrainTypeEnum;
 import com.lxl.business.mapper.*;
 import com.lxl.business.req.DailyTrainQueryReq;
 import com.lxl.business.req.DailyTrainSaveOrEditReq;
+import com.lxl.business.req.DailyTrainTicketQueryReq;
 import com.lxl.business.resp.DailyTrainQueryResp;
 import com.lxl.business.service.DailyTrainService;
 import com.lxl.common.exception.BusinessException;
