@@ -78,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
         }
         MemberLoginResp memberLoginResp = new MemberLoginResp();
         BeanUtils.copyProperties(member,memberLoginResp);
-        memberLoginResp.setToken(MemberTokenUtils.generateToken(member.getMobile(),member.getId(),1000*60*10));//生命周期为10分钟
+        memberLoginResp.setToken(MemberTokenUtils.generateToken(member.getMobile(),member.getId(),1000*60*10*100));//生命周期为10分钟
         return memberLoginResp;
     }
 

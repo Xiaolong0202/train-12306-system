@@ -18,7 +18,8 @@ public enum BussinessExceptionEnum {
     NO_DAILY_TRAIN_TICKET_INFO("没有对应的车次信息"),
     TICKET_INSUFFICIENT_ERROR("余票不足"),
     WRONG_ENUM_CODE("错误的枚举CODE"),
-    CUSTOM_ERROR("CUSTOM_ERROR");
+    CUSTOM_ERROR("CUSTOM_ERROR"),
+    SERVER_BUSY("服务器正忙,请稍后重试");
 
     public BussinessExceptionEnum setDesc(String desc) {
         this.desc = desc;

@@ -6,6 +6,7 @@ import com.lxl.common.resp.CommonResp;
 import com.lxl.common.resp.PageResp;
 import com.lxl.common.resp.TicketQueryResp;
 import com.lxl.member.service.TicketService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,13 @@ public class TicketController {
         return CommonResp.buildSuccess(ticketQueryRespPageResp,"查询成功");
     }
 
+    @GlobalTransactional
     @PostMapping("/save")
     public CommonResp<?> save(@RequestBody TicketSaveOrEditReq ticketSaveOrEditReq){
         ticketService.save(ticketSaveOrEditReq);
+        if (1==1){
+            throw new RuntimeException("test Seata 异常");
+        }
         return CommonResp.buildSuccess("保存成功");
     }
 }

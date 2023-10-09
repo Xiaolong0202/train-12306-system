@@ -166,7 +166,11 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         log.info("选座完成，被选择的座位:{}",res);
 
         if (CollUtil.isNotEmpty(res)) {
-            confirmOrderAfterService.doAfterConfirm(dailyTrainTicket,res,tickets,req.getTrainCode(),confirmOrder);
+            try {
+                confirmOrderAfterService.doAfterConfirm(dailyTrainTicket,res,tickets,req.getTrainCode(),confirmOrder);
+            }catch (Exception e){
+             throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
+            }
         }
 
         //选座

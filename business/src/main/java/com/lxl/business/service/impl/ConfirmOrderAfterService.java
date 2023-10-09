@@ -13,6 +13,7 @@ import com.lxl.business.req.ConfirmOrderTicketReq;
 import com.lxl.common.context.MemberInfoContext;
 import com.lxl.common.req.TicketSaveOrEditReq;
 import com.lxl.common.resp.CommonResp;
+import io.seata.spring.annotation.GlobalTransactional;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +47,13 @@ public class ConfirmOrderAfterService {
     @Autowired
     ConfirmOrderMapper confirmOrderMapper;
 
-    @Transactional
+    @GlobalTransactional
+//    @Transactional
     public void doAfterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> dailyTrainSeats, List<ConfirmOrderTicketReq> tickets, @NotBlank String trainCode, ConfirmOrder confirmOrder) {
         String trainTypeById = dailyTrainMapper.selectTrainTypeById(dailyTrainTicket.getDailyTrainId());
         for (int j = 0; j < dailyTrainSeats.size(); j++) {
             DailyTrainSeat dailyTrainSeat = dailyTrainSeats.get(j);
-            dailyTrainSeatMapper.updateBatchSell(dailyTrainSeat);
+//            dailyTrainSeatMapper.updateBatchSell(dailyTrainSeat);
 
             char[] charArray = dailyTrainSeat.getSell().toCharArray();
             Integer startIndex = dailyTrainTicket.getStartIndex();
@@ -82,14 +84,14 @@ public class ConfirmOrderAfterService {
             ticketSaveOrEditReq.setPassengerId(confirmOrderTicketReq.getPassengerId());
             ticketSaveOrEditReq.setDailyTrainTicketId(dailyTrainTicket.getId());
             ticketSaveOrEditReq.setPassengerName(confirmOrderTicketReq.getName());
-            ticketSaveOrEditReq.setDate(dailyTrainTicket.getStartDate());
+            ticketSaveOrEditReq.setTrainDate(dailyTrainTicket.getStartDate());
             ticketSaveOrEditReq.setTrainCode(trainTypeById+trainCode);
             ticketSaveOrEditReq.setCarriageIndex(dailyTrainSeat.getCarriageIndex());
-            ticketSaveOrEditReq.setRow(dailyTrainSeat.getSeatRow());
-            ticketSaveOrEditReq.setCol(dailyTrainSeat.getSeatRow());
-            ticketSaveOrEditReq.setStart(dailyTrainTicket.getStart());
+            ticketSaveOrEditReq.setSeatRow(dailyTrainSeat.getSeatRow());
+            ticketSaveOrEditReq.setSeatCol(dailyTrainSeat.getSeatRow());
+            ticketSaveOrEditReq.setStartStation(dailyTrainTicket.getStart());
             ticketSaveOrEditReq.setStartTime(dailyTrainTicket.getStartTime());
-            ticketSaveOrEditReq.setEnd(dailyTrainTicket.getEnd());
+            ticketSaveOrEditReq.setEndStation(dailyTrainTicket.getEnd());
             ticketSaveOrEditReq.setEndTime(dailyTrainTicket.getEndTime());
             ticketSaveOrEditReq.setSeatType(dailyTrainSeat.getSeatType());
 

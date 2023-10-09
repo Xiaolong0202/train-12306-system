@@ -46,8 +46,8 @@ public class TicketSaveOrEditReq {
     /**
      * 日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd"  , timezone = "GMT+8")
-    private Date date;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date trainDate;
 
     /**
      * 车次编号
@@ -62,33 +62,35 @@ public class TicketSaveOrEditReq {
     /**
      * 排号|01, 02
      */
-    private String row;
+//    @TableField("`row`")
+    private String seatRow;
 
     /**
      * 列号|枚举[SeatColEnum]
      */
-    private String col;
+//    @TableField("`col`")
+    private String seatCol;
 
     /**
      * 出发站
      */
-    private String start;
+    private String startStation;
 
     /**
      * 出发时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
     private Date startTime;
 
     /**
      * 到达站
      */
-    private String end;
+    private String endStation;
 
     /**
      * 到站时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
     private Date endTime;
 
     /**

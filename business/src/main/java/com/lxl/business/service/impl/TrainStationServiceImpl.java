@@ -103,7 +103,6 @@ public class TrainStationServiceImpl implements TrainStationService{
 
     }
 
-    @Cacheable(cacheNames = "TrainStationServiceImpl.queryList")
     @Override
     public PageResp<TrainStationQueryResp> queryList(TrainStationQueryReq req) {
         log.info("NO CACHING!!!");

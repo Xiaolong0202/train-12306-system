@@ -53,8 +53,8 @@ const columns = [
     },
     {
         title: '发车日期',
-        dataIndex: 'date',
-        key: 'date',
+        dataIndex: 'trainDate',
+        key: 'trainDate',
     },
     {
         title: '座位类型',
@@ -73,18 +73,18 @@ const columns = [
     },
     {
         title: '排号',
-        dataIndex: 'row',
-        key: 'row',
+        dataIndex: 'seatRow',
+        key: 'seatRow',
     },
     {
         title: '列号',
-        dataIndex: 'col',
-        key: 'col',
+        dataIndex: 'seatCol',
+        key: 'seatCol',
     },
     {
         title: '出发站',
-        dataIndex: 'start',
-        key: 'start',
+        dataIndex: 'startStation',
+        key: 'startStation',
     },
     {
         title: '出发时间',
@@ -93,8 +93,8 @@ const columns = [
     },
     {
         title: '到达站',
-        dataIndex: 'end',
-        key: 'end',
+        dataIndex: 'endStation',
+        key: 'endStation',
     },
     {
         title: '到达时间',

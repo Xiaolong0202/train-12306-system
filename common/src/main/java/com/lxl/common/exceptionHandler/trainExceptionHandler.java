@@ -2,6 +2,10 @@ package com.lxl.common.exceptionHandler;
 
 import com.lxl.common.exception.BusinessException;
 import com.lxl.common.resp.CommonResp;
+import io.seata.core.context.RootContext;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +19,7 @@ import java.util.List;
  * @Description train-12306-system
  * @DateTime 2023/9/19  22:36
  **/
+@Slf4j
 @ControllerAdvice
 public class trainExceptionHandler {
 
@@ -57,6 +62,11 @@ public class trainExceptionHandler {
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public CommonResp<?> handleException(Exception e) {
+        if (StringUtils.hasText(RootContext.getXID())){
+            log.info("Seata全局事务ID{}",RootContext.getXID());
+            log.info("异常{}是在seata的全局事务当中发生，将会将异常抛出",e.getMessage());
+            throw new RuntimeException(e);
+        }
         e.printStackTrace();
         return CommonResp.buildFailure(e.getMessage(), "本次响应失败，请联系网站管理员");
     }

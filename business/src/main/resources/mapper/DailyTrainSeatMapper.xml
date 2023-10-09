@@ -42,9 +42,9 @@
         </foreach>
     </insert>
     <update id="updateBatchSell">
-        update `daily_train_seat`
-        set `sell` = #{sell},
+        update daily_train_seat
+        set sell = #{sell},
             update_time = now()
-        where `id` = #{id}
+        where id = #{id}
     </update>
 </mapper>

@@ -29,14 +29,14 @@ create table `ticket` (
                           `passenger_id` bigint not null comment '乘客id',
                           `daily_train_ticket_id` bigint not null  comment '车次票的ID',
                           `passenger_name` varchar(20) comment '乘客姓名',
-                          `date` date not null comment '日期',
+                          `train_date` date not null comment '日期',
                           `train_code` varchar(20) not null comment '车次编号',
                           `carriage_index` int not null comment '箱序',
-                          `row` char(2) not null comment '排号|01, 02',
-                          `col` varchar(20) not null comment '列号|枚举[SeatColEnum]',
-                          `start` varchar(20) not null comment '出发站',
+                          `seat_row` char(2) not null comment '排号|01, 02',
+                          `seat_col` varchar(20) not null comment '列号|枚举[SeatColEnum]',
+                          `start_station` varchar(20) not null comment '出发站',
                           `start_time` time not null comment '出发时间',
-                          `end` varchar(20) not null comment '到达站',
+                          `end_station` varchar(20) not null comment '到达站',
                           `end_time` time not null comment '到站时间',
                           `seat_type` char(1) not null comment '座位类型|枚举[SeatTypeEnum]',
                           `create_time` datetime(3) comment '新增时间',
@@ -44,6 +44,8 @@ create table `ticket` (
                           primary key (`id`),
                           index `member_id_index` (`member_id`)
 ) engine=innodb default charset=utf8mb4 comment='车票';
+
+drop table if exists `undo_log`;
 -- 注意此处0.7.0+ 增加字段 context
 CREATE TABLE `undo_log` (
                             `id` bigint(20) NOT NULL AUTO_INCREMENT,

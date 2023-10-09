@@ -43,8 +43,7 @@ public class Ticket implements Serializable {
     /**
      * 日期
      */
-    @TableField("`date`")
-    private Date date;
+    private Date trainDate;
 
     /**
      * 车次编号 包含了车次类型
@@ -59,19 +58,19 @@ public class Ticket implements Serializable {
     /**
      * 排号|01, 02
      */
-    @TableField("`row`")
-    private String row;
+//    @TableField("`row`")
+    private String seatRow;
 
     /**
      * 列号|枚举[SeatColEnum]
      */
-    @TableField("`col`")
-    private String col;
+//    @TableField("`col`")
+    private String seatCol;
 
     /**
      * 出发站
      */
-    private String start;
+    private String startStation;
 
     /**
      * 出发时间
@@ -81,7 +80,7 @@ public class Ticket implements Serializable {
     /**
      * 到达站
      */
-    private String end;
+    private String endStation;
 
     /**
      * 到站时间
@@ -105,87 +104,4 @@ public class Ticket implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    @Override
-    public boolean equals(Object that) {
-        if (this == that) {
-            return true;
-        }
-        if (that == null) {
-            return false;
-        }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        Ticket other = (Ticket) that;
-        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getMemberId() == null ? other.getMemberId() == null : this.getMemberId().equals(other.getMemberId()))
-            && (this.getPassengerId() == null ? other.getPassengerId() == null : this.getPassengerId().equals(other.getPassengerId()))
-            && (this.getDailyTrainTicketId() == null ? other.getDailyTrainTicketId() == null : this.getDailyTrainTicketId().equals(other.getDailyTrainTicketId()))
-            && (this.getPassengerName() == null ? other.getPassengerName() == null : this.getPassengerName().equals(other.getPassengerName()))
-            && (this.getDate() == null ? other.getDate() == null : this.getDate().equals(other.getDate()))
-            && (this.getTrainCode() == null ? other.getTrainCode() == null : this.getTrainCode().equals(other.getTrainCode()))
-            && (this.getCarriageIndex() == null ? other.getCarriageIndex() == null : this.getCarriageIndex().equals(other.getCarriageIndex()))
-            && (this.getRow() == null ? other.getRow() == null : this.getRow().equals(other.getRow()))
-            && (this.getCol() == null ? other.getCol() == null : this.getCol().equals(other.getCol()))
-            && (this.getStart() == null ? other.getStart() == null : this.getStart().equals(other.getStart()))
-            && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
-            && (this.getEnd() == null ? other.getEnd() == null : this.getEnd().equals(other.getEnd()))
-            && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
-            && (this.getSeatType() == null ? other.getSeatType() == null : this.getSeatType().equals(other.getSeatType()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getMemberId() == null) ? 0 : getMemberId().hashCode());
-        result = prime * result + ((getPassengerId() == null) ? 0 : getPassengerId().hashCode());
-        result = prime * result + ((getDailyTrainTicketId() == null) ? 0 : getDailyTrainTicketId().hashCode());
-        result = prime * result + ((getPassengerName() == null) ? 0 : getPassengerName().hashCode());
-        result = prime * result + ((getDate() == null) ? 0 : getDate().hashCode());
-        result = prime * result + ((getTrainCode() == null) ? 0 : getTrainCode().hashCode());
-        result = prime * result + ((getCarriageIndex() == null) ? 0 : getCarriageIndex().hashCode());
-        result = prime * result + ((getRow() == null) ? 0 : getRow().hashCode());
-        result = prime * result + ((getCol() == null) ? 0 : getCol().hashCode());
-        result = prime * result + ((getStart() == null) ? 0 : getStart().hashCode());
-        result = prime * result + ((getStartTime() == null) ? 0 : getStartTime().hashCode());
-        result = prime * result + ((getEnd() == null) ? 0 : getEnd().hashCode());
-        result = prime * result + ((getEndTime() == null) ? 0 : getEndTime().hashCode());
-        result = prime * result + ((getSeatType() == null) ? 0 : getSeatType().hashCode());
-        result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
-        result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", memberId=").append(memberId);
-        sb.append(", passengerId=").append(passengerId);
-        sb.append(", dailyTrainTicketId=").append(dailyTrainTicketId);
-        sb.append(", passengerName=").append(passengerName);
-        sb.append(", date=").append(date);
-        sb.append(", trainCode=").append(trainCode);
-        sb.append(", carriageIndex=").append(carriageIndex);
-        sb.append(", row=").append(row);
-        sb.append(", col=").append(col);
-        sb.append(", start=").append(start);
-        sb.append(", startTime=").append(startTime);
-        sb.append(", end=").append(end);
-        sb.append(", endTime=").append(endTime);
-        sb.append(", seatType=").append(seatType);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
 }
