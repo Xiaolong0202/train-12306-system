@@ -270,7 +270,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     }
 
     private boolean canSell(DailyTrainSeat dailyTrainSeat, Integer startIndex, Integer endIndex) {
-        String sell = dailyTrainSeat.getSell();
+        String sell = dailyTrainSeat.getSeatSell();
         String part = sell.substring(startIndex, endIndex);
         if (Integer.parseInt(part) > 0) {
             log.info("该座位已经被购买");
@@ -278,8 +278,8 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         } else {
             char[] charArray = sell.toCharArray();
             Arrays.fill(charArray, startIndex, endIndex, '1');
-            dailyTrainSeat.setSell(String.valueOf(charArray));
-            log.info("该座位可以被购买，并且sell属性已被更新,更新前{}，更新后{}", sell, dailyTrainSeat.getSell());
+            dailyTrainSeat.setSeatSell(String.valueOf(charArray));
+            log.info("该座位可以被购买，并且sell属性已被更新,更新前{}，更新后{}", sell, dailyTrainSeat.getSeatSell());
             return true;
         }
     }

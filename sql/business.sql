@@ -61,7 +61,7 @@ create table `train_carriage` (
 
 DROP TABLE IF EXISTS `train_seat`;
 create table `train_seat`(
-    `id` bigint not null comment 'id',
+    `id` bigint not null primary key comment 'id',
     `train_id` bigint NOT NULL COMMENT '车次id',
     `carriage_id` bigint not null comment '火车箱号',
     `seat_type` char not null comment '座位类型|枚举',
@@ -125,7 +125,7 @@ create table `daily_train_carriage` (
 
 DROP TABLE IF EXISTS `daily_train_seat`;
 create table `daily_train_seat`(
-                             `id` bigint not null comment 'id',
+                             `id` bigint not null primary key comment 'id',
                              `daily_train_id` bigint NOT NULL COMMENT '每日车次id',
                              `carriage_id` bigint not null comment '火车箱号',
                              `carriage_index` int not null comment '所在的车厢',
@@ -133,7 +133,7 @@ create table `daily_train_seat`(
                              `seat_row` char(2) not null comment '排',
                              `seat_col` VARCHAR(10) not null comment '列|枚举',
                              `carriage_seat_index` int not null comment '同车厢座序',
-                             `sell` varchar(100) not null comment '售卖情况|比如100100就是表示第一站与第四站被卖出去了',
+                             `seat_sell` varchar(100) not null comment '售卖情况|比如100100就是表示第一站与第四站被卖出去了',
                              `create_time` datetime(3) DEFAULT NULL COMMENT '新增时间',
                              `update_time` datetime(3) DEFAULT NULL COMMENT '修改时间'
 )COMMENT='每日座位';

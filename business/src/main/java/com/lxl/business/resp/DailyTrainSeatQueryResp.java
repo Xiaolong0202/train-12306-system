@@ -58,7 +58,7 @@ public class DailyTrainSeatQueryResp {
     /**
      * 售卖情况|比如100100就是表示第一站与第四站被卖出去了
      */
-    private String sell;
+    private String seatSell;
 
     /**
      * 新增时间

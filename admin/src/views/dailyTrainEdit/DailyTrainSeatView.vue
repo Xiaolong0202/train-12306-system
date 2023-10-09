@@ -78,8 +78,8 @@ const columns = [
     },
     {
         title: '售票情况',
-        dataIndex: 'sell',
-        key: 'sell',
+        dataIndex: 'seatSell',
+        key: 'seatSell',
     },
     ]
 const pagination = reactive({

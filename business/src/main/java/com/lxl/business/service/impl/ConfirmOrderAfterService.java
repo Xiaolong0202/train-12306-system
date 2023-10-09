@@ -53,9 +53,9 @@ public class ConfirmOrderAfterService {
         String trainTypeById = dailyTrainMapper.selectTrainTypeById(dailyTrainTicket.getDailyTrainId());
         for (int j = 0; j < dailyTrainSeats.size(); j++) {
             DailyTrainSeat dailyTrainSeat = dailyTrainSeats.get(j);
-//            dailyTrainSeatMapper.updateBatchSell(dailyTrainSeat);
+            dailyTrainSeatMapper.updateBatchSell(dailyTrainSeat);
 
-            char[] charArray = dailyTrainSeat.getSell().toCharArray();
+            char[] charArray = dailyTrainSeat.getSeatSell().toCharArray();
             Integer startIndex = dailyTrainTicket.getStartIndex();
             Integer endIndex = dailyTrainTicket.getEndIndex();
             Integer maxStart = endIndex - 1;

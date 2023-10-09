@@ -248,7 +248,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                     dailyTrainSeat.setCarriageIndex(dailyTrainCarriage.getTrainIndex());
                     dailyTrainSeat.setCreateTime(now);
                     dailyTrainSeat.setUpdateTime(now);
-                    dailyTrainSeat.setSell(sell);
+                    dailyTrainSeat.setSeatSell(sell);
 
                     return dailyTrainSeat;
                 }).toList();

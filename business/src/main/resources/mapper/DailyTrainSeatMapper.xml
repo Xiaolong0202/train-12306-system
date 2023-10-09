@@ -43,7 +43,7 @@
     </insert>
     <update id="updateBatchSell">
         update daily_train_seat
-        set sell = #{sell},
+        set seat_sell = #{seatSell},
             update_time = now()
         where id = #{id}
     </update>

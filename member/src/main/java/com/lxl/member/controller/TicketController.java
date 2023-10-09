@@ -32,9 +32,9 @@ public class TicketController {
     @PostMapping("/save")
     public CommonResp<?> save(@RequestBody TicketSaveOrEditReq ticketSaveOrEditReq){
         ticketService.save(ticketSaveOrEditReq);
-        if (1==1){
-            throw new RuntimeException("test Seata 异常");
-        }
+//        if (1==1){
+//            throw new RuntimeException("test Seata 异常");
+//        }
         return CommonResp.buildSuccess("保存成功");
     }
 }
