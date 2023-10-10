@@ -169,6 +169,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             try {
                 confirmOrderAfterService.doAfterConfirm(dailyTrainTicket,res,tickets,req.getTrainCode(),confirmOrder);
             }catch (Exception e){
+                e.printStackTrace();
              throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
             }
         }
