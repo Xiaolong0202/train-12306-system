@@ -1,0 +1,24 @@
+store:
+  mode: db
+  db:
+    datasource: druid
+    dbType: mysql
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/seata?rewriteBatchedStatements=true
+    user: root
+    password: "040202"
+    minConn: 10
+    maxConn: 100
+    globalTable: global_table
+    branchTable: branch_table
+    lock-table: lock_table
+    distributedLockTable: distributed_lock
+    queryLimit: 1000
+    maxWait: 5000
+
+
+service:
+  vgroupMapping:
+    train_group: default
+  grouplist:
+    default: 127.0.0.1:8091
