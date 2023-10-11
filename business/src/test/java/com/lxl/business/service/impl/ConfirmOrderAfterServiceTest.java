@@ -8,6 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author LiuXiaolong
@@ -18,12 +21,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 class ConfirmOrderAfterServiceTest {
 
     @Autowired
-    RedisTemplate redisTemplate;
+    StringRedisTemplate stringRedisTemplate;
 
     @Test
     void test1(){
-//        redisTemplate.opsForValue().set("a",456);
-        System.out.println("redisTemplate.opsForValue().get(\"a\") = "
-                + redisTemplate.opsForValue().get("a"));
+        System.out.println("stringRedisTemplate.expire(\"asdas\",20, TimeUnit.SECONDS) = "
+                + stringRedisTemplate.expire("a", 20, TimeUnit.SECONDS));
     }
 }

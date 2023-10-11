@@ -49,6 +49,7 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
     @Cacheable(cacheNames = "DailyTrainTicketServiceImpl.queryList")
     @Override
     public PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req) {
+        //TODO 可以实现分布式锁防止缓存击穿的问题
         log.info("NO CACHING!!");
         LambdaQueryWrapper<DailyTrainTicket> dailyTrainTicketLambdaQueryWrapper = new LambdaQueryWrapper<>();
         dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getDailyTrainId()),DailyTrainTicket::getDailyTrainId,req.getDailyTrainId());

@@ -2,6 +2,7 @@ package com.lxl.business.service.impl;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -128,17 +129,36 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         String lockId = SnowUtils.nextSnowIdStr();
         for (int i = 0; true; i++) {
             if (Boolean.TRUE.equals(stringRedisTemplate.opsForValue()
-                    .setIfAbsent(lockKey, lockId, 5L, TimeUnit.SECONDS))) {
+                    .setIfAbsent(lockKey, lockId, 30L, TimeUnit.SECONDS))) {
                 break;
             }
             if (i == tryTimes) {
-                log.info("经过三次重试，客户{}依然没有抢到锁，请求被驳回！",confirmOrder.getMemberId());
+                log.info("经过三次重试，客户{}依然没有抢到锁，请求被驳回！", confirmOrder.getMemberId());
                 throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
             }
         }
         //到这一步说明已经拿到锁了,所以要加异常处理，在finally当中将释放锁
         try {
-            log.info("成功拿到锁locKey：{},lockV：{}",lockKey,lockId);
+            log.info("成功拿到锁locKey：{},lockV：{}", lockKey, lockId);
+            //添加定时任务实现看门狗机制，自动续命
+            Thread demo = new Thread(() -> {
+                while (true) {
+                    Boolean expire = stringRedisTemplate.expire(lockKey, 30, TimeUnit.SECONDS);//有可能已经主动删除key,不需要在续命
+                    if(Boolean.FALSE.equals(expire)){
+                        log.info("该锁{}已经被删除",lockKey);
+                        return;
+                    }
+                    try {
+                        //每隔十秒就进行检测
+                        TimeUnit.SECONDS.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            demo.setDaemon(true);
+            demo.start();
+
             DailyTrainTicket dailyTrainTicket = dailyTrainTicketMapper.selectById(confirmOrder.getDailyTrainTicketId());
             if (ObjectUtils.isEmpty(dailyTrainTicket)) {
                 throw new BusinessException(BussinessExceptionEnum.NO_DAILY_TRAIN_TICKET_INFO);
@@ -204,11 +224,11 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             }
         } finally {
             //解锁
-            if (!Objects.equals(stringRedisTemplate.opsForValue().get(lockKey), lockId)){
-                log.error("当前获取的锁中的ID与当前线程中生成的ID{}不一致",lockId);
+            if (!Objects.equals(stringRedisTemplate.opsForValue().get(lockKey), lockId)) {
+                log.error("当前获取的锁中的ID与当前线程中生成的ID{}不一致", lockId);
                 throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
-            }else {
-                log.info("成功释放锁locKey：{},lockV：{}",lockKey,lockId);
+            } else {
+                log.info("成功释放锁locKey：{},lockV：{}", lockKey, lockId);
                 stringRedisTemplate.delete(lockKey);
             }
         }
@@ -366,6 +386,30 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         }
     }
 
+    public static void main(String[] args) {
+        Thread thread = Thread.currentThread();
+        AtomicInteger a = new AtomicInteger();
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("a.get() = " + a.getAndIncrement());
+                if (!thread.isAlive()) {
+                    System.out.println("主线程死了");
+                    cancel();
+                    timer.cancel();
+                } else {
+                    System.out.println("没有si");
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 
