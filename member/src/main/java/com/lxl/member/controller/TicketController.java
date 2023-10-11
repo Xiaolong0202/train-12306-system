@@ -30,18 +30,18 @@ public class TicketController {
         return CommonResp.buildSuccess(ticketQueryRespPageResp,"查询成功");
     }
 
-    @GlobalTransactional
+
     @PostMapping("/save")
     public CommonResp<?> save(@RequestBody TicketSaveOrEditReq ticketSaveOrEditReq){
         ticketService.save(ticketSaveOrEditReq);
-        try {
-            Thread.sleep(1000*10*10*10);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        if (1==1){
-            throw new RuntimeException("test Seata 异常");
-        }
+//        try {
+//            Thread.sleep(1000*10*10*10);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        if (1==1){
+//            throw new RuntimeException("test Seata 异常");
+//        }
         return CommonResp.buildSuccess("保存成功");
     }
 }

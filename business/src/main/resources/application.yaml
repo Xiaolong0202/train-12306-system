@@ -35,3 +35,6 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启控制台打印sql
     localCacheScope: statement #取消一级缓存，在有多个会话一级分布式场景会产生脏读现象
 
+snow:
+  dataCenterId: 12
+  machineId: 24

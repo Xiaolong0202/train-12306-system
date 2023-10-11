@@ -1,6 +1,9 @@
 package com.lxl.business.service.impl;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -34,6 +37,7 @@ import com.lxl.common.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -58,8 +62,12 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     DailyTrainSeatMapper dailyTrainSeatMapper;
     @Autowired
     ConfirmOrderAfterService confirmOrderAfterService;
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
 
+    public static final int tryTimes = 3;//设置重试获取锁的次数
 
+    //    private static final Lock lock = new ReentrantLock();
     @Override
     public PageResp<ConfirmOrderQueryResp> queryList(ConfirmOrderQueryReq req) {
         LambdaQueryWrapper<ConfirmOrder> wrapper = new LambdaQueryWrapper<>();
@@ -114,63 +122,94 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
         confirmOrderMapper.insert(confirmOrder);
 
-        DailyTrainTicket dailyTrainTicket = dailyTrainTicketMapper.selectById(confirmOrder.getDailyTrainTicketId());
-        if (ObjectUtils.isEmpty(dailyTrainTicket)) {
-            throw new BusinessException(BussinessExceptionEnum.NO_DAILY_TRAIN_TICKET_INFO);
-        }
-        log.info("查出余票记录{}", dailyTrainTicket.toString());
-
-        //判断余票的数量
-        reduceTickets(req, dailyTrainTicket);
-        Long dailyTrainId = dailyTrainTicket.getDailyTrainId();
-        //计算ticket选座的偏移值
-        List<ConfirmOrderTicketReq> tickets = req.getTickets();
-        ConfirmOrderTicketReq ticketReq0 = tickets.get(0);
-        List<DailyTrainSeat> res = new ArrayList<>();
-        if (CollUtil.isNotEmpty(tickets) && StringUtils.hasText(ticketReq0.getSeat())) {
-            log.info("会员有进行选座");
-            //构建选座
-            List<SeatColTypeEnum> seatCols = SeatColTypeEnum.getSeatCols(ticketReq0.getSeatType());
-            List<String> referSeatList = new ArrayList<>();
-            for (int i = 1; i <= 2; i++) {
-                for (SeatColTypeEnum seatCol : seatCols) {
-                    referSeatList.add(seatCol.code + String.valueOf(i));
-                }
+//        lock.lock();//加锁
+        //使用redis加上分布式锁
+        String lockKey = confirmOrder.getDate().getTime() + ':' + req.getTrainCode() + ':' + req.getDailyTrainTicketId();
+        String lockId = SnowUtils.nextSnowIdStr();
+        for (int i = 0; true; i++) {
+            if (Boolean.TRUE.equals(stringRedisTemplate.opsForValue()
+                    .setIfAbsent(lockKey, lockId, 5L, TimeUnit.SECONDS))) {
+                break;
             }
-            //先获取绝对的偏移量
-            List<Integer> offsetList = tickets.stream().map(confirmOrderTicketReq -> referSeatList.indexOf(confirmOrderTicketReq.getSeat())).toList();
-            //再将所有元素减去第一个座位的绝对偏移量
-            Integer firstAbsoluteOffset = offsetList.get(0);
-            offsetList = offsetList.stream().map(offset -> offset - firstAbsoluteOffset).toList();
-            log.info("所有座位相对于第一个座位的偏移量{}", offsetList.toString());
+            if (i == tryTimes) {
+                log.info("经过三次重试，客户{}依然没有抢到锁，请求被驳回！",confirmOrder.getMemberId());
+                throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
+            }
+        }
+        //到这一步说明已经拿到锁了,所以要加异常处理，在finally当中将释放锁
+        try {
+            log.info("成功拿到锁locKey：{},lockV：{}",lockKey,lockId);
+            DailyTrainTicket dailyTrainTicket = dailyTrainTicketMapper.selectById(confirmOrder.getDailyTrainTicketId());
+            if (ObjectUtils.isEmpty(dailyTrainTicket)) {
+                throw new BusinessException(BussinessExceptionEnum.NO_DAILY_TRAIN_TICKET_INFO);
+            }
+            log.info("查出余票记录{}", dailyTrainTicket.toString());
 
-            getSeat(res,
-                    dailyTrainId,
-                    ticketReq0.getSeatType(),
-                    dailyTrainTicket.getStartIndex(),
-                    dailyTrainTicket.getEndIndex(),
-                    ticketReq0.getSeat().substring(0, ticketReq0.getSeat().length() - 1),
-                    offsetList);
-        } else {
-            log.info("会员没有进行选座");
-            for (ConfirmOrderTicketReq ticket : tickets) {
+            //判断余票的数量
+            reduceTickets(req, dailyTrainTicket);
+            Long dailyTrainId = dailyTrainTicket.getDailyTrainId();
+            //计算ticket选座的偏移值
+            List<ConfirmOrderTicketReq> tickets = req.getTickets();
+            ConfirmOrderTicketReq ticketReq0 = tickets.get(0);
+            List<DailyTrainSeat> res = new ArrayList<>();
+            if (CollUtil.isNotEmpty(tickets) && StringUtils.hasText(ticketReq0.getSeat())) {
+                log.info("会员有进行选座");
+                //构建选座
+                List<SeatColTypeEnum> seatCols = SeatColTypeEnum.getSeatCols(ticketReq0.getSeatType());
+                List<String> referSeatList = new ArrayList<>();
+                for (int i = 1; i <= 2; i++) {
+                    for (SeatColTypeEnum seatCol : seatCols) {
+                        referSeatList.add(seatCol.code + String.valueOf(i));
+                    }
+                }
+                //先获取绝对的偏移量
+                List<Integer> offsetList = tickets.stream().map(confirmOrderTicketReq -> referSeatList.indexOf(confirmOrderTicketReq.getSeat())).toList();
+                //再将所有元素减去第一个座位的绝对偏移量
+                Integer firstAbsoluteOffset = offsetList.get(0);
+                offsetList = offsetList.stream().map(offset -> offset - firstAbsoluteOffset).toList();
+                log.info("所有座位相对于第一个座位的偏移量{}", offsetList.toString());
+
                 getSeat(res,
                         dailyTrainId,
-                        ticket.getSeatType(),
+                        ticketReq0.getSeatType(),
                         dailyTrainTicket.getStartIndex(),
                         dailyTrainTicket.getEndIndex(),
-                        null,
-                        null);
+                        ticketReq0.getSeat().substring(0, ticketReq0.getSeat().length() - 1),
+                        offsetList);
+            } else {
+                log.info("会员没有进行选座");
+                for (ConfirmOrderTicketReq ticket : tickets) {
+                    getSeat(res,
+                            dailyTrainId,
+                            ticket.getSeatType(),
+                            dailyTrainTicket.getStartIndex(),
+                            dailyTrainTicket.getEndIndex(),
+                            null,
+                            null);
+                }
             }
-        }
-        log.info("选座完成，被选择的座位:{}",res);
+            log.info("选座完成，被选择的座位:{}", res);
 
-        if (CollUtil.isNotEmpty(res)) {
-            try {
-                confirmOrderAfterService.doAfterConfirm(dailyTrainTicket,res,tickets,req.getTrainCode(),confirmOrder);
-            }catch (Exception e){
-                e.printStackTrace();
-             throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
+            if (res.size() < tickets.size()) {
+                throw new BusinessException(BussinessExceptionEnum.TICKET_INSUFFICIENT_ERROR);
+            }
+
+            if (CollUtil.isNotEmpty(res)) {
+                try {
+                    confirmOrderAfterService.doAfterConfirm(dailyTrainTicket, res, tickets, req.getTrainCode(), confirmOrder);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
+                }
+            }
+        } finally {
+            //解锁
+            if (!Objects.equals(stringRedisTemplate.opsForValue().get(lockKey), lockId)){
+                log.error("当前获取的锁中的ID与当前线程中生成的ID{}不一致",lockId);
+                throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
+            }else {
+                log.info("成功释放锁locKey：{},lockV：{}",lockKey,lockId);
+                stringRedisTemplate.delete(lockKey);
             }
         }
 
@@ -188,7 +227,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     private void getSeat(List<DailyTrainSeat> res, Long dailyTrainId, String seatTypeCode, Integer startIndex, Integer endIndex, String seatCol, List<Integer> offsetList) {
         //避免选择已经选择了的座位
         HashSet<Long> set = new HashSet<>();
-        res.forEach(seat->set.add(seat.getId()));
+        res.forEach(seat -> set.add(seat.getId()));
         //一个车厢一个车厢的查找
         LambdaQueryWrapper<DailyTrainCarriage> dailyTrainCarriageLambdaQueryWrapper = new LambdaQueryWrapper<>();
         dailyTrainCarriageLambdaQueryWrapper.orderByAsc(DailyTrainCarriage::getTrainIndex);
@@ -198,8 +237,8 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         //遍历每一节车厢,查找车座
         for (DailyTrainCarriage carriage : dailyTrainCarriages) {
             List<DailyTrainSeat> tempList = new ArrayList<>();
-            if (!carriage.getSeatType().equals(seatTypeCode)){
-                log.info("座位类型与车位类型不匹配,当前车厢座位类型：{},目标的席位类型：{}",carriage.getSeatType(),seatTypeCode);
+            if (!carriage.getSeatType().equals(seatTypeCode)) {
+                log.info("座位类型与车位类型不匹配,当前车厢座位类型：{},目标的席位类型：{}", carriage.getSeatType(), seatTypeCode);
                 continue;
             }
             //找出所有的座位
@@ -229,33 +268,33 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
 
                 DailyTrainSeat checkedSeat = BeanUtil.copyProperties(dailyTrainSeat, DailyTrainSeat.class);
-                if (!set.contains(checkedSeat.getId())&&canSell(checkedSeat, startIndex, endIndex)) {
-                    log.info("座位{}被选中",dailyTrainSeat.getCarriageSeatIndex());
+                if (!set.contains(checkedSeat.getId()) && canSell(checkedSeat, startIndex, endIndex)) {
+                    log.info("座位{}被选中", dailyTrainSeat.getCarriageSeatIndex());
                     tempList.add(checkedSeat);
                 } else {
-                    log.info("没有选中座位{}",dailyTrainSeat.getCarriageSeatIndex());
+                    log.info("没有选中座位{}", dailyTrainSeat.getCarriageSeatIndex());
                     continue;
                 }
 
                 boolean isGetAllOffsetSeat = true;
                 if (CollUtil.isNotEmpty(offsetList)) {
-                    log.info("偏移值有{}可选",offsetList);
+                    log.info("偏移值有{}可选", offsetList);
                     for (int j = 1; j < offsetList.size(); j++) {
                         int nextIndex = offsetList.get(j) + i;
 
-                        if (nextIndex>=seatList.size()){
+                        if (nextIndex >= seatList.size()) {
                             log.info("下一个偏移量指向了另一节车厢，查找失败");
                             isGetAllOffsetSeat = false;
                             break;
                         }
-                        DailyTrainSeat nextDailyTrainSeat = BeanUtil.copyProperties(seatList.get(nextIndex),DailyTrainSeat.class);
-                        if (!set.contains(nextDailyTrainSeat.getId())&&canSell(nextDailyTrainSeat,startIndex,endIndex)){
-                            log.info("座位{}被选中",nextDailyTrainSeat.getCarriageSeatIndex());
+                        DailyTrainSeat nextDailyTrainSeat = BeanUtil.copyProperties(seatList.get(nextIndex), DailyTrainSeat.class);
+                        if (!set.contains(nextDailyTrainSeat.getId()) && canSell(nextDailyTrainSeat, startIndex, endIndex)) {
+                            log.info("座位{}被选中", nextDailyTrainSeat.getCarriageSeatIndex());
                             tempList.add(nextDailyTrainSeat);
-                        }else {
-                            log.info("没有选中座位{}",nextDailyTrainSeat.getCarriageSeatIndex());
+                        } else {
+                            log.info("没有选中座位{}", nextDailyTrainSeat.getCarriageSeatIndex());
                             isGetAllOffsetSeat = false;
-                          break ;
+                            break;
                         }
                     }
                 }

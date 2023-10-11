@@ -18,6 +18,7 @@ import com.lxl.common.utils.SnowUtils;
 import com.lxl.member.domain.Ticket;
 import com.lxl.member.mapper.TicketMapper;
 import com.lxl.member.service.TicketService;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     TicketMapper ticketMapper;
 
+//    @GlobalTransactional
     @Override
     public void save(TicketSaveOrEditReq req) {
         Ticket ticket = BeanUtil.copyProperties(req, Ticket.class);

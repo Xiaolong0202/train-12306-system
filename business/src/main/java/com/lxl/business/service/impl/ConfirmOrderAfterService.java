@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @Author LiuXiaolong
@@ -47,7 +50,7 @@ public class ConfirmOrderAfterService {
     @Autowired
     ConfirmOrderMapper confirmOrderMapper;
 
-    @GlobalTransactional
+//    @GlobalTransactional
 //    @Transactional
     public void doAfterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> dailyTrainSeats, List<ConfirmOrderTicketReq> tickets, @NotBlank String trainCode, ConfirmOrder confirmOrder) {
         String trainTypeById = dailyTrainMapper.selectTrainTypeById(dailyTrainTicket.getDailyTrainId());
@@ -104,8 +107,6 @@ public class ConfirmOrderAfterService {
             confirmOrder.setUpdateTime(new Date());
             confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.SUCCESS.getCode());
             confirmOrderMapper.updateById(confirmOrder);
-
-
         }
     }
 }

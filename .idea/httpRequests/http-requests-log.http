@@ -1,3 +1,33 @@
+POST http://localhost:8001/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "13027378933",
+  "code" : "8888"
+}
+
+<> 2023-10-10T222700.200.json
+
+###
+
+POST http://localhost/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "13027378933",
+  "code" : "8888"
+}
+
+###
+
 GET http://localhost:8002/business/dailyTrainTicket/admin/query-list?end=沈阳&currentPage=1&pageSize=2
 Accept: application/json
 Connection: Keep-Alive
@@ -475,26 +505,6 @@ User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
 Accept-Encoding: br,deflate,gzip,x-gzip
 
 <> 2023-10-08T213152.200.json
-
-###
-
-GET http://localhost:8002/business/trainStation/admin/query-list
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-10-08T213146.200.json
-
-###
-
-GET http://localhost:80/business/trainStation/admin/query-list
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-10-08T213104.200.json
 
 ###
 

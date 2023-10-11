@@ -182,8 +182,6 @@ const queryDailyTrainTicketList = () => {
                     }
 
                     dataSource.value = res.data.content.list
-                    console.log("list")
-                    console.log(res.data.content.list)
                     pagination.total = res.data.content.total
 
                 }

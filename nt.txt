@@ -14,3 +14,10 @@ docker run  --name Myredis -v /dockerVolume/myRedis/data:/data -v /dockerVolume/
 缓存雪崩，大量的key同时失效，导致数据库压力剧增，原因：许多KEY的过期时间周期一致
 
 SEATA
+
+
+分布式锁常见的问题:没拿到锁的线程把别人的锁给删了
+本小节把释放锁移出finally不是最优解，解法有2
+1加锁的动作不要放在try里(后 面的小节会有介绍)
+2加锁时，将当前线程ID放到锁对应的value中，删除时，先去
+获取value,比对value值和当前线程ID-致才能删除

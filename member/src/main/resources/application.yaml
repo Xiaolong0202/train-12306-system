@@ -14,3 +14,7 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启控制台打印sql
     localCacheScope: statement
+
+snow:
+  dataCenterId: 12
+  machineId: 165

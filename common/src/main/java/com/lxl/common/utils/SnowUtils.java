@@ -24,6 +24,11 @@ public class SnowUtils {
         return String.valueOf(SNOWFLAKE.nextId());
     }
 
+
+    public static void updateSnowflake(){
+        SNOWFLAKE =  IdUtil.getSnowflake(DATA_CENTER_ID,MACHINE_ID);
+    }
+
     public static long getDataCenterId() {
         return DATA_CENTER_ID;
     }
@@ -40,11 +45,5 @@ public class SnowUtils {
         MACHINE_ID = machineId;
     }
 
-    public static Snowflake getSNOWFLAKE() {
-        return SNOWFLAKE;
-    }
 
-    public static void setSNOWFLAKE(Snowflake SNOWFLAKE) {
-        SnowUtils.SNOWFLAKE = SNOWFLAKE;
-    }
 }
