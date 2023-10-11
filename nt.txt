@@ -21,3 +21,13 @@ SEATA
 1加锁的动作不要放在try里(后 面的小节会有介绍)
 2加锁时，将当前线程ID放到锁对应的value中，删除时，先去
 获取value,比对value值和当前线程ID-致才能删除
+
+常见的限流算法
+静态窗口限流
+动态窗口限流
+漏桶限流
+令牌桶限流
+令牌大闸
+
+java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard-1.8.6.jar
+注意: business加上控制台配置后，启动后，不能马上在控制台里看到business，必须business有流量，才会显示到控制台

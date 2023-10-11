@@ -8,6 +8,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxl.business.domain.DailyTrainCarriage;
@@ -98,6 +101,8 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         return pageResp;
     }
 
+
+    @SentinelResource(value = "ConfirmOrderServiceImpl.doConfirm",blockHandler = "doConfirmBlockerHandle")
     @Override
     public void doConfirm(ConfirmOrderDoReq req) {
         Date now = new Date(System.currentTimeMillis());
@@ -386,29 +391,9 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         }
     }
 
-    public static void main(String[] args) {
-        Thread thread = Thread.currentThread();
-        AtomicInteger a = new AtomicInteger();
-        Timer timer = new Timer();
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("a.get() = " + a.getAndIncrement());
-                if (!thread.isAlive()) {
-                    System.out.println("主线程死了");
-                    cancel();
-                    timer.cancel();
-                } else {
-                    System.out.println("没有si");
-                }
-            }
-        };
-        timer.scheduleAtFixedRate(timerTask, 0, 1000);
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    public void doConfirmBlockerHandle(ConfirmOrderDoReq req, BlockException e){
+        log.info("当前请求：{}访问量超出限流规则",req);
+        throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
     }
 }
 
