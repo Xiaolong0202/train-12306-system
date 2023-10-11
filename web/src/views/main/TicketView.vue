@@ -9,14 +9,14 @@
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading"
                  style="margin-top: 20px">
             <template #bodyCell="{column , record}">
-                <template v-if="column.dataIndex === 'dailyTrain' ">
+                <template v-if="column.dataIndex === 'dailyTrain' && record.train">
                     {{ record.train.type }}{{ record.train.code }}
                 </template>
                 <template v-if="column.dataIndex === 'time' ">
                     始：{{ record.startTime }}<br/>
                     终：{{ record.endTime }}
                 </template>
-                <template v-if="column.dataIndex === 'intervalTime' ">
+                <template v-if="column.dataIndex === 'intervalTime' && record.train ">
                     {{ computedTimeInterval(record, record.startTime, record.endTime, record.train.intervalDay) }}
                 </template>
                 <template v-if="column.dataIndex === 'station' ">
@@ -182,6 +182,8 @@ const queryDailyTrainTicketList = () => {
                     }
 
                     dataSource.value = res.data.content.list
+                    console.log("list")
+                    console.log(res.data.content.list)
                     pagination.total = res.data.content.total
 
                 }
@@ -242,12 +244,12 @@ function formatTimeDifference(timeDifference) {
 
 
 onMounted(() => {
-    let parse = JSON.parse(sessionStorage.getItem(SESSION_TICKET) || '{}');
-    if (parse.start && parse.end && parse.startDate) {
-        Object.assign(params,parse)
-        queryDailyTrainTicketList()
-    }
 
+        let parse = JSON.parse(sessionStorage.getItem(SESSION_TICKET) || '{}');
+        if (parse.start && parse.end && parse.startDate) {
+            Object.assign(params,parse)
+            queryDailyTrainTicketList()
+        }
 })
 
 
