@@ -11,10 +11,10 @@ import cn.hutool.core.util.IdUtil;
  **/
 public class SnowUtils {
 
-    private static final long DATA_CENTER_ID = 1;
-    private static final long MACHINE_ID = 1;
+    private static  long DATA_CENTER_ID = 1;
+    private static  long MACHINE_ID = 1;
 
-    private static final Snowflake SNOWFLAKE = IdUtil.getSnowflake(DATA_CENTER_ID,MACHINE_ID);
+    private static  Snowflake SNOWFLAKE = IdUtil.getSnowflake(DATA_CENTER_ID,MACHINE_ID);
 
     public static long nextSnowId(){
        return SNOWFLAKE.nextId();
@@ -24,7 +24,27 @@ public class SnowUtils {
         return String.valueOf(SNOWFLAKE.nextId());
     }
 
+    public static long getDataCenterId() {
+        return DATA_CENTER_ID;
+    }
 
+    public static void setDataCenterId(long dataCenterId) {
+        DATA_CENTER_ID = dataCenterId;
+    }
 
+    public static long getMachineId() {
+        return MACHINE_ID;
+    }
 
+    public static void setMachineId(long machineId) {
+        MACHINE_ID = machineId;
+    }
+
+    public static Snowflake getSNOWFLAKE() {
+        return SNOWFLAKE;
+    }
+
+    public static void setSNOWFLAKE(Snowflake SNOWFLAKE) {
+        SnowUtils.SNOWFLAKE = SNOWFLAKE;
+    }
 }
