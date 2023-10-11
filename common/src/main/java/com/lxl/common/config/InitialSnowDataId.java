@@ -1,4 +1,4 @@
-package com.lxl.business.config;
+package com.lxl.common.config;
 
 import cn.hutool.core.util.IdUtil;
 import com.lxl.common.utils.SnowUtils;
