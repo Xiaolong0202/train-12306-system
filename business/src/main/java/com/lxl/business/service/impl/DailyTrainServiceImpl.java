@@ -137,8 +137,14 @@ public class DailyTrainServiceImpl implements DailyTrainService {
         return pageResp;
     }
 
+    @Transactional
     @Override
     public void delete(Long id) {
+        Map<String, Object> columnMap = Map.of("daily_train_id", id);
+        dailyTrainTicketMapper.deleteByMap(columnMap);
+        dailyTrainStationMapper.deleteByMap(columnMap);
+        dailyTrainCarriageMapper.deleteByMap(columnMap);
+        dailyTrainSeatMapper.deleteByMap(columnMap);
         dailyTrainMapper.deleteById(id);
     }
 
