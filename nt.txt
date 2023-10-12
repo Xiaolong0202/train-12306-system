@@ -30,4 +30,30 @@ SEATA
 令牌大闸
 
 java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard-1.8.6.jar
+java '-Dserver.port=8080' '-Dcsp.sentinel.dashboard.server=localhost:8080' -jar .\sentinel-dashboard-1.8.6.jar
+在power shell 启动jar 包时添加参数时候，注意用单引号包裹参数
 注意: business加上控制台配置后，启动后，不能马上在控制台里看到business，必须business有流量，才会显示到控制台
+
+json 配置:
+{
+    // 资源名
+    "resource": "ConfirmOrderWebController.doConfirm",
+    // 针对来源，若为 default 则不区分调用来源
+    "limitApp": "default",
+    // 限流阈值类型(1:QPS;0:并发线程数）
+    "grade": 1,
+    // 阈值
+    "count": 1,
+    // 是否是集群模式
+    "clusterMode": false,
+    // 流控效果(0:快速失败;1:Warm Up(预热模式);2:排队等待)
+    "controlBehavior": 0,
+    // 流控模式(0:直接；1:关联;2:链路)
+    "strategy": 0
+    // 预热时间（秒，预热模式需要此参数）
+    // "warmUpPeriodSec": 10,
+    // 超时时间（排队等待模式需要此参数）
+    // "maxQueueingTimeMs": 500
+    // 关联资源、入口资源(关联、链路模式)
+    // "refResource": "rrr"
+  }

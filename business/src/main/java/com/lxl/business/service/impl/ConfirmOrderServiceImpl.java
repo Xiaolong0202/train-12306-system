@@ -102,7 +102,6 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     }
 
 
-    @SentinelResource(value = "ConfirmOrderServiceImpl.doConfirm",blockHandler = "doConfirmBlockerHandle")
     @Override
     public void doConfirm(ConfirmOrderDoReq req) {
         Date now = new Date(System.currentTimeMillis());
@@ -391,10 +390,6 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         }
     }
 
-    public void doConfirmBlockerHandle(ConfirmOrderDoReq req, BlockException e){
-        log.info("当前请求：{}访问量超出限流规则",req);
-        throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
-    }
 }
 
 

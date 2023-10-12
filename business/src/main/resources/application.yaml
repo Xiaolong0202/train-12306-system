@@ -19,11 +19,24 @@ spring:
       key-prefix: train_code_
       cache-null-values:  true #spring-boot-cache会自动帮我处理缓存穿透的问题
       time-to-live: 60s
+  cloud:
+    sentinel:  #sentinel使用nacos存储配置
+      datasource:
+        nacos:
+          nacos:
+            serverAddr: 127.0.0.1:8848
+            namespace: trainNameSpaceId
+            groupId: TRAIN_GROUP
+            dataId: sentinel
+            ruleType: flow
+
 
 server:
   port: 8002
   servlet:
     context-path: /business
+
+
 
 
 mybatis-plus:
