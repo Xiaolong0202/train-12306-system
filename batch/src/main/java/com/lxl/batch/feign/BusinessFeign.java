@@ -1,5 +1,6 @@
 package com.lxl.batch.feign;
 
+import com.lxl.batch.feign.fallback.BusinessFeignFallBack;
 import com.lxl.common.resp.CommonResp;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,7 +16,7 @@ import java.util.Date;
  * @DateTime 2023/10/2  21:09
  **/
 @Service
-@FeignClient("business")
+@FeignClient(value = "business",fallback = BusinessFeignFallBack.class)
 //@FeignClient(name = "business" , url="http://127.0.0.1:8002/business")
 public interface BusinessFeign {
 
