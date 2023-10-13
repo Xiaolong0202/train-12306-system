@@ -34,6 +34,15 @@ java '-Dserver.port=8080' '-Dcsp.sentinel.dashboard.server=localhost:8080' -jar 
 在power shell 启动jar 包时添加参数时候，注意用单引号包裹参数
 注意: business加上控制台配置后，启动后，不能马上在控制台里看到business，必须business有流量，才会显示到控制台
 
+sentinel流控效果:
+流控效果
+1、快速失败：直接失败
+2、Warm Up：即请求 QPS 从 threshold / 3 开始，经预热时长逐渐升至设定的 QPS 阈值
+3、排队等待
+流控模式
+1、直接
+2、关联 只有关联的资源受到限流，该资源才会开启限流
+3、链路 只有只有指定接口进来的请求才会被限流
 json 配置:
 {
     // 资源名
@@ -57,3 +66,14 @@ json 配置:
     // 关联资源、入口资源(关联、链路模式)
     // "refResource": "rrr"
   }
+
+//慢调用比例JSON配置：
+[{
+        "resource": "GET:http://business/business/hello",
+        "count": 201,
+        "grade": 0,
+        "timeWindow": 10,
+        "minRequestAmount": 5,
+        "statIntervalMs": 1000,
+        "slowRatioThreshold": 0.3
+    }]

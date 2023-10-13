@@ -6,6 +6,23 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
   application:
     name: batch
+  cloud:
+    sentinel: #sentinel使用nacos存储配置
+      transport:
+        dashboard: 127.0.0.1:8080
+        port: 8719
+      datasource:
+        degrade:
+          nacos:
+            serverAddr: 127.0.0.1:8848
+            namespace: trainNameSpaceId
+            groupId: TRAIN_GROUP
+            dataId: degradeSentinel
+            ruleType: degrade
+feign:
+  sentinel:
+    enabled: true
+
 
 server:
   port: 8003

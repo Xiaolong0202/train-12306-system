@@ -22,7 +22,7 @@ spring:
   cloud:
     sentinel:  #sentinel使用nacos存储配置
       datasource:
-        nacos:
+        flow:
           nacos:
             serverAddr: 127.0.0.1:8848
             namespace: trainNameSpaceId
@@ -30,6 +30,28 @@ spring:
             dataId: sentinel
             ruleType: flow
 
+#spring:
+#  cloud:
+#    sentinel:
+#      # nacos 持久化数据
+#      datasource:
+#        # 可配置多个规则
+#        # 可自定义key-流控规则
+#        dashboard-flow:
+#          nacos:
+#            server-addr: http:localhost
+#            dataId: ${spring.application.name}-flow
+#            file-extension: json
+#            rule-type: flow
+#            namespace: ${spring.profiles.active}
+#        # 可自定义key-系统规则
+#        dashboard-system:
+#          nacos:
+#            server-addr: http:localhost
+#            dataId: ${spring.application.name}-system
+#            file-extension: json
+#            rule-type: system
+#            namespace: ${spring.profiles.active}
 
 server:
   port: 8002

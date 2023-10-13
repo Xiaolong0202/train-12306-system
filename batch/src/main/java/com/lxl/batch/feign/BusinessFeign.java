@@ -19,7 +19,7 @@ import java.util.Date;
 //@FeignClient(name = "business" , url="http://127.0.0.1:8002/business")
 public interface BusinessFeign {
 
-    @RequestMapping("/hello")
+    @RequestMapping("/business/hello")
     public String hello();
 
     @RequestMapping("/business/dailyTrain/admin/gen-daily/{date}")
