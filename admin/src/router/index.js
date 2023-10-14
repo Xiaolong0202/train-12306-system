@@ -51,6 +51,10 @@ const routes = [
                     {
                         path:'Dtrain',
                         component: () => import('@/views/daily/DailyTrainView.vue')
+                    },
+                    {
+                        path: 'token',
+                        component: ()=> import('@/views/main/TrainTokenView.vue')
                     }
                 ]
             },

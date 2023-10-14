@@ -182,6 +182,20 @@ create table `confirm_order` (
                                  index `date_train_code_index` (`date`, `train_code`)
 ) engine=innodb default charset=utf8mb4 comment='确认订单';
 
+drop table if exists `train_token`;
+create table `train_token`(
+                              `id` bigint not null comment 'ID',
+                              `daily_train_id` bigint NOT NULL COMMENT '每日车次id',
+                              `start_date` date not null COMMENT '发车日期',
+                              `train_code` varchar(20) not null COMMENT'列车编号',
+                              `type` char(1) not null comment '车次类型|枚举',
+                              `token_count` int not null COMMENT '令牌余量',
+                              `create_time` datetime(3) comment '新增时间',
+                              `update_time` datetime(3) comment '修改时间',
+                              primary key (`id`)
+)engine=innodb default charset=utf8mb4 comment='秒杀令牌';
+
+
 drop table if exists `undo_log`;
 -- 注意此处0.7.0+ 增加字段 context
 CREATE TABLE `undo_log` (

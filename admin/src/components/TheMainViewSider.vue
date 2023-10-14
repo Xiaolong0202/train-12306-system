@@ -35,7 +35,8 @@ const items = reactive([
         getItem('JOB', '/job', h(UserOutlined),null, null),
     ], null),
     getItem('每日','/main/daily',h(HourglassOutlined),[
-        getItem('车次','/Dtrain',h(UserOutlined),null,null)
+        getItem('车次','/Dtrain',h(UserOutlined),null,null),
+        getItem('令牌','/token',h(UserOutlined),null,null)
     ],null)
 ])
 const toPage = ({key,keyPath}) => {

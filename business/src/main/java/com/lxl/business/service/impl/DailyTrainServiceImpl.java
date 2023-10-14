@@ -68,6 +68,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
     @Autowired
     DailyTrainTicketMapper dailyTrainTicketMapper;
 
+    @Autowired
+    TrainTokenMapper trainTokenMapper;
+
 
     @Override
     public void save(DailyTrainSaveOrEditReq req) {
@@ -145,6 +148,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
         dailyTrainStationMapper.deleteByMap(columnMap);
         dailyTrainCarriageMapper.deleteByMap(columnMap);
         dailyTrainSeatMapper.deleteByMap(columnMap);
+        trainTokenMapper.deleteByMap(columnMap);
         dailyTrainMapper.deleteById(id);
     }
 
@@ -176,6 +180,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             dailyTrainCarriageMapper.deleteByMap(columnMap);
             dailyTrainStationMapper.deleteByMap(columnMap);
             dailyTrainTicketMapper.deleteByMap(columnMap);
+            trainTokenMapper.deleteByMap(columnMap);
         });
 
 
@@ -195,7 +200,8 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             dailyTrain.setUpdateTime(now);
             dailyTrain.setCreateTime(now);
 
-            //将所有的trainStation转换为批量的dailyTrainStaion
+
+            //将所有的trainStation转换为批量的dailyTrainStation
             LambdaQueryWrapper<TrainStation> trainStationLambdaQueryWrapper = new LambdaQueryWrapper<>();
             //按照车站序号读取
             trainStationLambdaQueryWrapper.orderByAsc(TrainStation::getTrainIndex);
@@ -208,7 +214,6 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                 dailyTrainStation.setDailyTrainId(dailyTrain.getId());
                 dailyTrainStation.setUpdateTime(now);
                 dailyTrainStation.setUpdateTime(now);
-
                 if (dailyTrainStation.getTrainIndex() >= trainStations.size()) {
                     String format = String.format("列车%s的%d号车站index值大于或等于列车的的车站数",
                             dailyTrain.getType() + dailyTrain.getCode(),
@@ -293,6 +298,19 @@ public class DailyTrainServiceImpl implements DailyTrainService {
                     ywCount += carriage.getSeatCount();
                 }
             }
+
+            //生成该车次的令牌
+            TrainToken trainToken = new TrainToken();
+            trainToken.setTokenCount(ydzCount+edzCount+rwCount+ywCount);
+            trainToken.setId(SnowUtils.nextSnowId());
+            trainToken.setUpdateTime(now);
+            trainToken.setCreateTime(now);
+            trainToken.setTrainCode(dailyTrain.getCode());
+            trainToken.setStartDate(dailyTrain.getStartDate());
+            trainToken.setType(dailyTrain.getType());
+            trainToken.setDailyTrainId(dailyTrain.getId());
+            trainTokenMapper.insert(trainToken);
+
             //来获取当前火车的这个票价计算
             String trainType = train.getType();
             BigDecimal trainPriceRate = EnumSet.allOf(TrainTypeEnum.class)
@@ -345,7 +363,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
             return dailyTrain;
         }).toList();
 
-        //批量生成 每日车站
+        //批量生成 每日车次
         dailyTrainMapper.insertBatch(dailyTrains);
 //        dailyTrainStationMapper.insertBatch(dailyTrainStations);
 //        dailyTrainCarriageMapper.insertBatch(dailyTrainCarriages);
