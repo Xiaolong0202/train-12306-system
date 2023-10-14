@@ -3,6 +3,9 @@ package com.lxl.business.mapper;
 import com.lxl.business.domain.TrainToken;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
 
 /**
 * @author 13430
@@ -13,6 +16,8 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TrainTokenMapper extends BaseMapper<TrainToken> {
 
+
+    int decreaseToken(@Param("date") Date date, @Param("trainCode") String trainCode);
 }
 
 

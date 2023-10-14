@@ -1,6 +1,8 @@
 package com.lxl.business.req;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lxl.common.req.PageReq;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +21,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class DailyTrainTicketQueryReq extends PageReq implements Serializable {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long dailyTrainId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

@@ -20,4 +20,11 @@
         train_code,type,token_count,
         create_time,update_time
     </sql>
+    <update id="decreaseToken">
+        UPDATE train_token
+        SET `token_count` = IF(`token_count` <![CDATA[<]]>1 ,0,`token_count`-1)
+        WHERE `token_count` > 0
+        AND `start_date` = #{date}
+        AND  `train_code` = #{trainCode}
+    </update>
 </mapper>

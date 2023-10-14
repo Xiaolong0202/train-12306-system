@@ -192,7 +192,8 @@ create table `train_token`(
                               `token_count` int not null COMMENT '令牌余量',
                               `create_time` datetime(3) comment '新增时间',
                               `update_time` datetime(3) comment '修改时间',
-                              primary key (`id`)
+                              primary key (`id`),
+                              unique (`daily_train_id`)
 )engine=innodb default charset=utf8mb4 comment='秒杀令牌';
 
 

@@ -19,14 +19,16 @@ public enum BussinessExceptionEnum {
     TICKET_INSUFFICIENT_ERROR("余票不足"),
     WRONG_ENUM_CODE("错误的枚举CODE"),
     CUSTOM_ERROR("CUSTOM_ERROR"),
-    SERVER_BUSY("服务器正忙,请稍后重试");
+    SERVER_BUSY("服务器正忙,请稍后重试"),
+    FREQUENT_VISITS("下单操作过于频繁，请稍后再试"),
+    TICKET_MAY_SELLOUT("车票可能已经售空");
 
     public BussinessExceptionEnum setDesc(String desc) {
         this.desc = desc;
         return this;
     }
 
-    public  String desc ;
+    public String desc;
 
     BussinessExceptionEnum(String desc) {
         this.desc = desc;

@@ -2,15 +2,9 @@ package com.lxl.business.service.impl;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
-import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxl.business.domain.DailyTrainCarriage;
@@ -19,16 +13,13 @@ import com.lxl.business.domain.DailyTrainTicket;
 import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
 import com.lxl.business.enums.SeatColTypeEnum;
 import com.lxl.business.enums.SeatTypeEnum;
-import com.lxl.business.mapper.DailyTrainCarriageMapper;
-import com.lxl.business.mapper.DailyTrainSeatMapper;
-import com.lxl.business.mapper.DailyTrainTicketMapper;
+import com.lxl.business.mapper.*;
 import com.lxl.business.req.ConfirmOrderTicketReq;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.domain.ConfirmOrder;
-import com.lxl.business.mapper.ConfirmOrderMapper;
 import com.lxl.business.req.ConfirmOrderDoReq;
 import com.lxl.business.req.ConfirmOrderQueryReq;
 import com.lxl.business.resp.ConfirmOrderQueryResp;
@@ -38,6 +29,7 @@ import com.lxl.common.exception.BusinessException;
 import com.lxl.common.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.common.resp.PageResp;
 import com.lxl.common.utils.SnowUtils;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +60,8 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     ConfirmOrderAfterService confirmOrderAfterService;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    TrainTokenMapper trainTokenMapper;
 
     public static final int tryTimes = 3;//设置重试获取锁的次数
 
@@ -105,31 +99,13 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     @Override
     public void doConfirm(ConfirmOrderDoReq req) {
         Date now = new Date(System.currentTimeMillis());
-        // 车次是否存在、余票是否存在、车次是否在有效期之内 ticket条数大于0 同乘客同车次是否已经买过
-        //保存确认订单表，初始化
-        //查出余票初始化
-        ConfirmOrder confirmOrder = new ConfirmOrder();
-        confirmOrder.setId(SnowUtils.nextSnowId());
-        confirmOrder.setMemberId(MemberInfoContext.getMemberId());
-        confirmOrder.setDate(req.getDate());
-        confirmOrder.setTrainCode(req.getTrainCode());
-        confirmOrder.setStart(req.getStart());
-        confirmOrder.setEnd(req.getEnd());
-        confirmOrder.setDailyTrainTicketId(req.getDailyTrainTicketId());
-        try {
-            confirmOrder.setTickets(objectMapper.writeValueAsString(req.getTickets()));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.INIT.getCode());
-        confirmOrder.setCreateTime(now);
-        confirmOrder.setUpdateTime(now);
+        Long memberId = MemberInfoContext.getMemberId();
 
-        confirmOrderMapper.insert(confirmOrder);
+        validateToken(memberId, req.getDate(), req.getTrainCode());
 
 //        lock.lock();//加锁
         //使用redis加上分布式锁
-        String lockKey = confirmOrder.getDate().getTime() + ':' + req.getTrainCode() + ':' + req.getDailyTrainTicketId();
+        String lockKey = req.getDate().getTime() + ':' + req.getTrainCode() + ':' + req.getDailyTrainTicketId();
         String lockId = SnowUtils.nextSnowIdStr();
         for (int i = 0; true; i++) {
             if (Boolean.TRUE.equals(stringRedisTemplate.opsForValue()
@@ -137,7 +113,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                 break;
             }
             if (i == tryTimes) {
-                log.info("经过三次重试，客户{}依然没有抢到锁，请求被驳回！", confirmOrder.getMemberId());
+                log.info("经过三次重试，客户{}依然没有抢到锁，请求被驳回！", memberId);
                 throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
             }
         }
@@ -148,8 +124,8 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             Thread demo = new Thread(() -> {
                 while (true) {
                     Boolean expire = stringRedisTemplate.expire(lockKey, 30, TimeUnit.SECONDS);//有可能已经主动删除key,不需要在续命
-                    if(Boolean.FALSE.equals(expire)){
-                        log.info("该锁{}已经被删除",lockKey);
+                    if (Boolean.FALSE.equals(expire)) {
+                        log.info("该锁{}已经被删除", lockKey);
                         return;
                     }
                     try {
@@ -162,6 +138,28 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             });
             demo.setDaemon(true);
             demo.start();
+
+            // 车次是否存在、余票是否存在、车次是否在有效期之内 ticket条数大于0 同乘客同车次是否已经买过
+            //保存确认订单表，初始化
+            //查出余票初始化
+            ConfirmOrder confirmOrder = new ConfirmOrder();
+            confirmOrder.setId(SnowUtils.nextSnowId());
+            confirmOrder.setMemberId(memberId);
+            confirmOrder.setDate(req.getDate());
+            confirmOrder.setTrainCode(req.getTrainCode());
+            confirmOrder.setStart(req.getStart());
+            confirmOrder.setEnd(req.getEnd());
+            confirmOrder.setDailyTrainTicketId(req.getDailyTrainTicketId());
+            try {
+                confirmOrder.setTickets(objectMapper.writeValueAsString(req.getTickets()));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+            confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.INIT.getCode());
+            confirmOrder.setCreateTime(now);
+            confirmOrder.setUpdateTime(now);
+
+            confirmOrderMapper.insert(confirmOrder);
 
             DailyTrainTicket dailyTrainTicket = dailyTrainTicketMapper.selectById(confirmOrder.getDailyTrainTicketId());
             if (ObjectUtils.isEmpty(dailyTrainTicket)) {
@@ -243,6 +241,18 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         //修改座位表的情况
         //余票详情表的余票
         //添加会员购买记录
+    }
+
+    private void validateToken(Long memberId, Date date, String trainCode) {
+        Boolean setSuccess = stringRedisTemplate.opsForValue().setIfAbsent(date.getTime() + ":" + trainCode + ":" + memberId, String.valueOf(memberId), 5, TimeUnit.SECONDS);
+        if (Boolean.FALSE.equals(setSuccess)) {
+            throw new BusinessException(BussinessExceptionEnum.FREQUENT_VISITS);
+        }
+        int update = trainTokenMapper.decreaseToken(date, trainCode);
+        if (update <= 0) {
+            throw new BusinessException(BussinessExceptionEnum.TICKET_MAY_SELLOUT);
+        }
+        log.info("会员{}在购票过程中成功的获取到令牌,可以参与下单", memberId);
     }
 
     /**
