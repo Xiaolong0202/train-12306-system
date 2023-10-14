@@ -22,7 +22,7 @@
     </sql>
     <update id="decreaseToken">
         UPDATE train_token
-        SET `token_count` = IF(`token_count` <![CDATA[<]]>1 ,0,`token_count`-1)
+        SET `token_count` = IF(`token_count` <![CDATA[<]]>#{decreaseCount} ,0,`token_count`-#{decreaseCount})
         WHERE `token_count` > 0
         AND `start_date` = #{date}
         AND  `train_code` = #{trainCode}

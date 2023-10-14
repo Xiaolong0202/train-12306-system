@@ -17,7 +17,7 @@ import java.util.Date;
 public interface TrainTokenMapper extends BaseMapper<TrainToken> {
 
 
-    int decreaseToken(@Param("date") Date date, @Param("trainCode") String trainCode);
+    int decreaseToken(@Param("date") Date date, @Param("trainCode") String trainCode, @Param("decreaseCount") int decreaseCount);
 }
 
 
