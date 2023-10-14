@@ -7,7 +7,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxl.business.domain.*;
@@ -37,6 +36,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
 
 /**
  * @author 13430
@@ -105,7 +105,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
 //        lock.lock();//加锁
         //使用redis加上分布式锁
-        String lockKey = req.getDate().getTime() + ':' + req.getTrainCode() + ':' + req.getDailyTrainTicketId();
+        String lockKey = RedisKeyPrefix.DISTRIBUTE_LOCK + ":" +req.getDate().getTime() + ':' + req.getTrainCode() + ':' + req.getDailyTrainTicketId();
         String lockId = SnowUtils.nextSnowIdStr();
         for (int i = 0; true; i++) {
             if (Boolean.TRUE.equals(stringRedisTemplate.opsForValue()
@@ -431,7 +431,6 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             }
         }
     }
-
 }
 
 

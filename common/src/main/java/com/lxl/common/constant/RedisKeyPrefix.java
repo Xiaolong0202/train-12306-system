@@ -13,4 +13,8 @@ public interface RedisKeyPrefix {
 
     //防止会员频繁购买
     public static final String TRAIN_TOKEN_LOCK = "TRAIN_TOKEN_LOCK";
+
+    public static final String DISTRIBUTE_LOCK = "DISTRIBUTE_LOCK";
+
+    public static final String CAPTCHA_TOKEN = "CAPTCHA_TOKEN";
 }

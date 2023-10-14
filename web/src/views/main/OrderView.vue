@@ -7,7 +7,7 @@
         ——
         <span class="ticketInfo">{{ ticketInfo.end }}</span>&nbsp;
         <span class="ticketInfo">({{ ticketInfo.startTime }}到)</span>&nbsp;
-        <span style="font-weight: bold">(间隔：{{ticketInfo.train.intervalDay}}天)</span>
+        <span style="font-weight: bold">(间隔：{{ ticketInfo.train.intervalDay }}天)</span>
         <br><br>
         <div style="float: left">
             <template v-for="item in seatType" :key="item.code">
@@ -58,12 +58,12 @@
         <a-modal
                 width="500"
                 title="请确认车票信息如下信息"
-                v-model:open="visible"
+                v-model:open="ChooseSeatVsible"
                 :closable="false"
                 :mask="true"
                 :maskClosable="false"
-                @ok="handleOk"
-                @cancel="visible=false">
+                @ok="handleOpenCaptcha"
+                @cancel="ChooseSeatVsible=false">
             <a-row class="tickets-row" style=" background-color: dodgerblue;color: white;" v-show="tickets.length>0">
                 <a-col :span="3">姓名</a-col>
                 <a-col :span="9">身份证</a-col>
@@ -92,7 +92,7 @@
             </a-row>
             <br> <br>
             <div v-if="chooseSeatType === 0" style="color: red">
-                您购买的车票不支持选座<br>
+                您购买的车票不支持选座{{ captchaInfo }}<br>
                 <div>只有当所有乘客选择的都是一等座或二等座才可以支持选座</div>
                 <div>选中的座位类型余票数大于20张时才支持选座</div>
             </div>
@@ -113,20 +113,38 @@
                 <br>
                 <span style="color: grey">提示：您可以选择{{ tickets.length }}个座位</span>
             </div>
-            <!--            {{chooseSeatType}}-->
-            <!--            {{SEAT_COL_ARR}}-->
-            <!--            {{ chooseSeatObj }}-->
-<!--            {{ tickets }}-->
         </a-modal>
 
+        <a-modal
+                title="请确认车票信息如下信息"
+                v-model:open="captchaVisible"
+                :closable="false"
+                :mask="true"
+                :maskClosable="false"
+                @ok="handleOk"
+                @cancel="captchaVisible=false;Object.assign(captchaInfo,{captchaToken: null,  captchaCodeImgURL : null})">
+            <p>
+                <a-input
+                    size="large"
+                    placeholder="请输入验证码">
+                    <template #addonAfter v-if="!!captchaInfo.captchaCodeImgURL">
+                        <a-image
+                            :width="90"
+                            @click="reloadCaptcha"
+                            :src="captchaInfo.captchaCodeImgURL"
+                        />
+                    </template>
+                </a-input>
+            </p>
+        </a-modal>
     </div>
 </template>
 
 <script setup>
 import {SESSION_ORDER} from "@/constant/SessionStorageKeys";
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
-import {info} from "@/util/info";
+import {generateUUID, info} from "@/util/info";
 
 const ticketInfo = JSON.parse(sessionStorage.getItem(SESSION_ORDER) || '{}')
 
@@ -139,7 +157,7 @@ const seatType = ref([])
 const passengerType = ref([])
 const seatColType = ref([])
 
-const visible = ref(false)
+const ChooseSeatVsible = ref(false)
 
 //0 不支持选座 1选 一等座 2 选二等座
 const chooseSeatType = ref(0)
@@ -148,6 +166,21 @@ const chooseSeatType = ref(0)
 const SEAT_COL_ARR = computed(() => {
     return seatColType.value.filter(col => String(col.type) === String(chooseSeatType.value))
 })
+
+const captchaInfo = reactive({
+    captchaToken: null,
+    captchaCodeImgURL: null
+})
+const captchaVisible = ref(false)
+
+const reloadCaptcha = () => {
+    captchaInfo.captchaToken = generateUUID()
+    captchaInfo.captchaCodeImgURL = process.env.VUE_APP_URL + '/business/captcha/' + captchaInfo.captchaToken
+}
+const handleOpenCaptcha = () => {
+    reloadCaptcha()
+    captchaVisible.value = true
+}
 /**选择的座位:
  *{
  *   A1  C1 D1 F1
@@ -276,20 +309,20 @@ const handleOk = () => {
         }
     }
 
-    axios.post('/business/confirmOrder/do',{
+    axios.post('/business/confirmOrder/do', {
         date: ticketInfo.startDate,
         trainCode: ticketInfo.train.code,
         start: ticketInfo.start,
         end: ticketInfo.end,
         dailyTrainTicketId: ticketInfo.id,
         tickets: tickets.value
-    }).then(res=>{
-        if(res){
-            if (res.data.success){
-                info('success',res.data.message)
-                visible.value = false
-            }else {
-                info('error',res.data.message)
+    }).then(res => {
+        if (res) {
+            if (res.data.success) {
+                info('success', res.data.message)
+                ChooseSeatVsible.value = false
+            } else {
+                info('error', res.data.message)
             }
         }
     })
@@ -337,7 +370,7 @@ const handleSubmit = () => {
     }
 
 
-    visible.value = true
+    ChooseSeatVsible.value = true
 }
 
 watch(() => chosePassengers.value, () => {

@@ -22,3 +22,4 @@ request:
     - /member/send-code
     - /business/get-enum/**
     - /batch/**
+    - /business/captcha
