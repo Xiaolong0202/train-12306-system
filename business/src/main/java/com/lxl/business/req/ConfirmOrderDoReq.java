@@ -57,5 +57,11 @@ public class ConfirmOrderDoReq {
     @NotNull
     private List<ConfirmOrderTicketReq> tickets;
 
+    @NotBlank
+    private String captchaToken;
+
+    @NotBlank
+    private String captchaCode;
+
 
 }

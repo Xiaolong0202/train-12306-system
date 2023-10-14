@@ -92,7 +92,7 @@
             </a-row>
             <br> <br>
             <div v-if="chooseSeatType === 0" style="color: red">
-                您购买的车票不支持选座{{ captchaInfo }}<br>
+                您购买的车票不支持选座<br>
                 <div>只有当所有乘客选择的都是一等座或二等座才可以支持选座</div>
                 <div>选中的座位类型余票数大于20张时才支持选座</div>
             </div>
@@ -116,22 +116,23 @@
         </a-modal>
 
         <a-modal
-                title="请确认车票信息如下信息"
+                title="输入验证码开始确认订单"
                 v-model:open="captchaVisible"
                 :closable="false"
                 :mask="true"
                 :maskClosable="false"
                 @ok="handleOk"
-                @cancel="captchaVisible=false;Object.assign(captchaInfo,{captchaToken: null,  captchaCodeImgURL : null})">
+                @cancel="captchaVisible=false;Object.assign(captchaInfo,{captchaToken: null,captchaCodeImgURL: null,captchaCode: null})">
             <p>
                 <a-input
-                    size="large"
-                    placeholder="请输入验证码">
+                        v-model:value="captchaInfo.captchaCode"
+                        size="large"
+                        placeholder="请输入验证码">
                     <template #addonAfter v-if="!!captchaInfo.captchaCodeImgURL">
                         <a-image
-                            :width="90"
-                            @click="reloadCaptcha"
-                            :src="captchaInfo.captchaCodeImgURL"
+                                :width="90"
+                                @click="reloadCaptcha"
+                                :src="captchaInfo.captchaCodeImgURL"
                         />
                     </template>
                 </a-input>
@@ -144,7 +145,7 @@
 import {SESSION_ORDER} from "@/constant/SessionStorageKeys";
 import {computed, onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
-import {generateUUID, info} from "@/util/info";
+import {generateUUID, info, isEmpty} from "@/util/info";
 
 const ticketInfo = JSON.parse(sessionStorage.getItem(SESSION_ORDER) || '{}')
 
@@ -169,7 +170,8 @@ const SEAT_COL_ARR = computed(() => {
 
 const captchaInfo = reactive({
     captchaToken: null,
-    captchaCodeImgURL: null
+    captchaCodeImgURL: null,
+    captchaCode: null
 })
 const captchaVisible = ref(false)
 
@@ -265,6 +267,10 @@ const getPassengerType = () => {
 }
 
 const handleOk = () => {
+    if (isEmpty(captchaInfo.captchaCode)) {
+        info('error', "验证码不能为空!")
+        return
+    }
 
     //设置每张票的座位
     //先清空Tickets中的 seat
@@ -315,12 +321,16 @@ const handleOk = () => {
         start: ticketInfo.start,
         end: ticketInfo.end,
         dailyTrainTicketId: ticketInfo.id,
-        tickets: tickets.value
+        tickets: tickets.value,
+        captchaToken: captchaInfo.captchaToken,
+        captchaCode: captchaInfo.captchaCode
     }).then(res => {
         if (res) {
             if (res.data.success) {
                 info('success', res.data.message)
+                captchaVisible.value=false
                 ChooseSeatVsible.value = false
+                Object.assign(captchaInfo,{captchaToken: null,captchaCodeImgURL: null,captchaCode: null})
             } else {
                 info('error', res.data.message)
             }
