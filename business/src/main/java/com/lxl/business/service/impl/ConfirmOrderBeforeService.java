@@ -2,8 +2,14 @@ package com.lxl.business.service.impl;
 
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lxl.business.domain.ConfirmOrder;
 import com.lxl.business.domain.TrainToken;
+import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
+import com.lxl.business.mapper.ConfirmOrderMapper;
 import com.lxl.business.mapper.TrainTokenMapper;
 import com.lxl.business.req.ConfirmOrderDoReq;
 import com.lxl.business.req.ConfirmOrderQueryReq;
@@ -41,8 +47,8 @@ public class ConfirmOrderBeforeService {
 
     @Autowired
     TrainTokenMapper trainTokenMapper;
-
-    public static final int tryTimes = 3;//设置重试获取锁的次数
+    @Autowired
+    ConfirmOrderMapper confirmOrderMapper;
 
     public void doConfirmBefore(ConfirmOrderDoReq req){
         Date now = new Date(System.currentTimeMillis());
@@ -50,53 +56,24 @@ public class ConfirmOrderBeforeService {
 
         validateToken(memberId, req.getDate(), req.getTrainCode());
 
-//        lock.lock();//加锁
-        //使用redis加上分布式锁
-        String lockKey = RedisKeyPrefix.DISTRIBUTE_LOCK + ":" +req.getDate().getTime() + ':' + req.getTrainCode() + ':' + req.getDailyTrainTicketId();
-        String lockId = SnowUtils.nextSnowIdStr();
-        for (int i = 0; true; i++) {
-            if (Boolean.TRUE.equals(stringRedisTemplate.opsForValue()
-                    .setIfAbsent(lockKey, lockId, 30L, TimeUnit.SECONDS))) {
-                break;
-            }
-            if (i == tryTimes) {
-                log.info("经过三次重试，客户{}依然没有抢到锁，请求被驳回！", memberId);
-                throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
-            }
-        }
-        try {
-            log.info("成功拿到锁locKey：{},lockV：{}", lockKey, lockId);
-            //添加定时任务实现看门狗机制，自动续命
-            Thread demo = new Thread(() -> {
-                while (true) {
-                    Boolean expire = stringRedisTemplate.expire(lockKey, 30, TimeUnit.SECONDS);//有可能已经主动删除key,不需要在续命
-                    if (Boolean.FALSE.equals(expire)) {
-                        log.info("该锁{}已经被删除", lockKey);
-                        return;
-                    }
-                    try {
-                        //每隔十秒就进行检测
-                        TimeUnit.SECONDS.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            demo.setDaemon(true);
-            demo.start();
-            rocketMQTemplate.convertAndSend(MQ_TOPIC.CONFIRM_ORDER, MessageBuilder.withPayload(req.getTickets().toString()));
-            log.info("会员{}订单前的校验完成，将使用MQ去异步化购票",memberId);
-        }catch (Exception e){
-            //解锁
-            if (!Objects.equals(stringRedisTemplate.opsForValue().get(lockKey), lockId)) {
-                log.error("当前获取的锁中的ID与当前线程中生成的ID{}不一致", lockId);
-                throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
-            } else {
-                log.info("成功释放锁locKey：{},lockV：{}", lockKey, lockId);
-                stringRedisTemplate.delete(lockKey);
-            }
-            throw e;
-        }
+        ConfirmOrder confirmOrder = new ConfirmOrder();
+        confirmOrder.setId(SnowUtils.nextSnowId());
+        confirmOrder.setMemberId(memberId);
+        confirmOrder.setDate(req.getDate());
+        confirmOrder.setTrainCode(req.getTrainCode());
+        confirmOrder.setStart(req.getStart());
+        confirmOrder.setEnd(req.getEnd());
+        confirmOrder.setDailyTrainTicketId(req.getDailyTrainTicketId());
+        confirmOrder.setTickets(JSON.toJSONString(req.getTickets()));
+        confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.INIT.getCode());
+        confirmOrder.setCreateTime(now);
+        confirmOrder.setUpdateTime(now);
+        confirmOrderMapper.insert(confirmOrder);
+        req.setConfirmOrderId(confirmOrder.getId());
+        req.setMemberId(memberId);
+
+        rocketMQTemplate.convertAndSend(MQ_TOPIC.CONFIRM_ORDER,JSON.toJSONString(req));
+        log.info("会员{}订单前的校验完成，将使用MQ去异步化购票",memberId);
     }
 
     private void validateToken(Long memberId, Date date, String trainCode) {
@@ -143,5 +120,8 @@ public class ConfirmOrderBeforeService {
         log.info("会员{}在购票过程中成功的获取到令牌,可以参与下单", memberId);
     }
 
-
+    public static void main(String[] args) {
+        Date date = new Date(1697383469473L);
+        System.out.println("date = " + date);
+    }
 }

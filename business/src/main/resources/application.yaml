@@ -78,5 +78,6 @@ rocketmq:
   name-server: 39.107.52.125:9876
   producer:
     group: TRAIN_TICKET_ORDER_PRODUCER
+    retryTimesWhenSendFailed: 3
   consumer:
     group: TRAIN_TICKET_ORDER_CONSUMER

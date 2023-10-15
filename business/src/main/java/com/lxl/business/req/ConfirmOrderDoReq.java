@@ -63,5 +63,9 @@ public class ConfirmOrderDoReq {
     @NotBlank
     private String captchaCode;
 
+    private Long memberId;
+
+    private Long confirmOrderId;
+
 
 }

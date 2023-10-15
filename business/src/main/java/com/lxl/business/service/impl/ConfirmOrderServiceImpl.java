@@ -50,8 +50,7 @@ import org.springframework.util.StringUtils;
  */
 @Slf4j
 @Service
-@RocketMQMessageListener(topic = MQ_TOPIC.CONFIRM_ORDER,consumerGroup = "${rocketmq.consumer.group}",messageModel = MessageModel.CLUSTERING)
-public class ConfirmOrderServiceImpl implements ConfirmOrderService , RocketMQListener<MessageExt> {
+public class ConfirmOrderServiceImpl implements ConfirmOrderService{
     @Autowired
     ConfirmOrderMapper confirmOrderMapper;
     @Autowired
@@ -74,10 +73,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService , RocketMQLi
     //    private static final Lock lock = new ReentrantLock();
 
 
-    @Override
-    public void onMessage(MessageExt message) {
-       log.info("收到消息:"+String.valueOf(message.getBody()));
-    }
+
 
     @Override
     public PageResp<ConfirmOrderQueryResp> queryList(ConfirmOrderQueryReq req) {
@@ -111,10 +107,6 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService , RocketMQLi
 
     @Override
     public void doConfirm(ConfirmOrderDoReq req) {
-        Date now = new Date(System.currentTimeMillis());
-        Long memberId = MemberInfoContext.getMemberId();
-
-        validateToken(memberId, req.getDate(), req.getTrainCode());
 
 //        lock.lock();//加锁
         //使用redis加上分布式锁
@@ -126,7 +118,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService , RocketMQLi
                 break;
             }
             if (i == tryTimes) {
-                log.info("经过三次重试，客户{}依然没有抢到锁，请求被驳回！", memberId);
+                log.info("经过三次重试，客户{}依然没有抢到锁，请求被驳回！", req.getMemberId());
                 throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
             }
         }
@@ -153,28 +145,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService , RocketMQLi
             demo.start();
 
             // 车次是否存在、余票是否存在、车次是否在有效期之内 ticket条数大于0 同乘客同车次是否已经买过
-            //保存确认订单表，初始化
-            //查出余票初始化
-            ConfirmOrder confirmOrder = new ConfirmOrder();
-            confirmOrder.setId(SnowUtils.nextSnowId());
-            confirmOrder.setMemberId(memberId);
-            confirmOrder.setDate(req.getDate());
-            confirmOrder.setTrainCode(req.getTrainCode());
-            confirmOrder.setStart(req.getStart());
-            confirmOrder.setEnd(req.getEnd());
-            confirmOrder.setDailyTrainTicketId(req.getDailyTrainTicketId());
-            try {
-                confirmOrder.setTickets(objectMapper.writeValueAsString(req.getTickets()));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-            confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.INIT.getCode());
-            confirmOrder.setCreateTime(now);
-            confirmOrder.setUpdateTime(now);
-
-            confirmOrderMapper.insert(confirmOrder);
-
-            DailyTrainTicket dailyTrainTicket = dailyTrainTicketMapper.selectById(confirmOrder.getDailyTrainTicketId());
+            DailyTrainTicket dailyTrainTicket = dailyTrainTicketMapper.selectById(req.getDailyTrainTicketId());
             if (ObjectUtils.isEmpty(dailyTrainTicket)) {
                 throw new BusinessException(BussinessExceptionEnum.NO_DAILY_TRAIN_TICKET_INFO);
             }
@@ -231,7 +202,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService , RocketMQLi
 
             if (CollUtil.isNotEmpty(res)) {
                 try {
-                    confirmOrderAfterService.doAfterConfirm(dailyTrainTicket, res, tickets, req.getTrainCode(), confirmOrder);
+                    confirmOrderAfterService.doAfterConfirm(dailyTrainTicket, res, tickets, req.getTrainCode(), ConfirmOrder.builder().id(req.getConfirmOrderId()).memberId(req.getMemberId()).build());
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
@@ -256,49 +227,6 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService , RocketMQLi
         //添加会员购买记录
     }
 
-    private void validateToken(Long memberId, Date date, String trainCode) {
-        Boolean setSuccess = stringRedisTemplate.opsForValue().setIfAbsent(RedisKeyPrefix.TRAIN_TOKEN_LOCK + ":" + date.getTime() + ":" + trainCode + ":" + memberId, String.valueOf(memberId), 5, TimeUnit.SECONDS);
-        if (Boolean.FALSE.equals(setSuccess)) {
-            log.info("会员{}在5秒钟之类下了一次单了", memberId);
-            throw new BusinessException(BussinessExceptionEnum.FREQUENT_VISITS);
-        }
-
-        String redisTokenCountKey = RedisKeyPrefix.TRAIN_TOKEN_COUNT + ":" + date.getTime() + ":" + trainCode;
-        String countStr = stringRedisTemplate.opsForValue().getAndExpire(redisTokenCountKey, 60, TimeUnit.SECONDS);
-        if (ObjectUtil.isNotEmpty(countStr) && NumberUtil.isInteger(countStr)) {
-            //如果令牌存存在
-            log.info("缓存中有该车次{}令牌大闸的缓存", redisTokenCountKey);
-            Long decrementRes = stringRedisTemplate.opsForValue().decrement(redisTokenCountKey);
-            if (decrementRes < 0) {
-                //该令牌值已经用尽，将该key删除
-                stringRedisTemplate.delete(redisTokenCountKey);
-                log.info("令牌{}已经用尽！", redisTokenCountKey);
-                throw new BusinessException(BussinessExceptionEnum.TICKET_MAY_SELLOUT);
-            }
-            log.info("令牌{}的余数：{}", redisTokenCountKey, decrementRes);
-            if (decrementRes % 10 == 0) {
-                //每隔10个令牌就更新一下数据库
-                int update = trainTokenMapper.decreaseToken(date, trainCode, 10);
-                if (update <= 0) {
-                    throw new BusinessException(BussinessExceptionEnum.TICKET_MAY_SELLOUT);
-                }
-                log.info("将令牌大闸{}的数据跟新至数据库当中", redisTokenCountKey);
-            }
-        } else {
-            log.info("令牌{}不存在，需要去数据库当中获取", redisTokenCountKey);
-            LambdaQueryWrapper<TrainToken> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(TrainToken::getStartDate, date);
-            queryWrapper.eq(TrainToken::getTrainCode, trainCode);
-            TrainToken trainTokenDB = trainTokenMapper.selectOne(queryWrapper);
-            if (ObjectUtil.isEmpty(trainTokenDB)) {
-                log.info("数据库当中没有对应的令牌信息{}", redisTokenCountKey);
-                throw new BusinessException(BussinessExceptionEnum.TICKET_MAY_SELLOUT);
-            }
-            stringRedisTemplate.opsForValue().set(redisTokenCountKey, String.valueOf(trainTokenDB.getTokenCount() - 1), 60, TimeUnit.SECONDS);
-            log.info("将数据库当中的令牌信息{}放入redis当中", redisTokenCountKey);
-        }
-        log.info("会员{}在购票过程中成功的获取到令牌,可以参与下单", memberId);
-    }
 
     /**
      * 一个车厢一个车厢的查找

@@ -9,7 +9,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.lxl.business.req.ConfirmOrderTicketReq;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 确认订单
@@ -17,6 +20,9 @@ import lombok.Data;
  */
 @TableName(value ="confirm_order")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ConfirmOrder implements Serializable {
     /**
      * id

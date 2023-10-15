@@ -83,7 +83,7 @@ public class ConfirmOrderAfterService {
             ConfirmOrderTicketReq confirmOrderTicketReq = tickets.get(j);
 
             TicketSaveOrEditReq ticketSaveOrEditReq = new TicketSaveOrEditReq();
-            ticketSaveOrEditReq.setMemberId(MemberInfoContext.getMemberId());
+            ticketSaveOrEditReq.setMemberId(confirmOrder.getMemberId());
             ticketSaveOrEditReq.setPassengerId(confirmOrderTicketReq.getPassengerId());
             ticketSaveOrEditReq.setDailyTrainTicketId(dailyTrainTicket.getId());
             ticketSaveOrEditReq.setPassengerName(confirmOrderTicketReq.getName());
@@ -100,13 +100,17 @@ public class ConfirmOrderAfterService {
 
             CommonResp<?> save = memberFeign.save(ticketSaveOrEditReq);
             if (save.isSuccess()){
+                confirmOrder.setUpdateTime(new Date());
+                confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.SUCCESS.getCode());
+                confirmOrderMapper.updateById(confirmOrder);
                 log.info("乘客{}的购票信息保存成功",ticketSaveOrEditReq.getPassengerName());
             }else {
+                confirmOrder.setUpdateTime(new Date());
+                confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.FAILURE.getCode());
+                confirmOrderMapper.updateById(confirmOrder);
                 log.info("乘客{}的购票信息保存失败",ticketSaveOrEditReq.getPassengerName());
             }
-            confirmOrder.setUpdateTime(new Date());
-            confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.SUCCESS.getCode());
-            confirmOrderMapper.updateById(confirmOrder);
+
         }
     }
 }
