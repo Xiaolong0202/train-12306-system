@@ -73,3 +73,10 @@ mybatis-plus:
 snow:
   dataCenterId: 12
   machineId: 24
+
+rocketmq:
+  name-server: 39.107.52.125:9876
+  producer:
+    group: TRAIN_TICKET_ORDER_PRODUCER
+  consumer:
+    group: TRAIN_TICKET_ORDER_CONSUMER

@@ -6,6 +6,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.lxl.business.req.ConfirmOrderDoReq;
 import com.lxl.business.req.ConfirmOrderQueryReq;
 import com.lxl.business.service.ConfirmOrderService;
+import com.lxl.business.service.impl.ConfirmOrderBeforeService;
 import com.lxl.common.constant.RedisKeyPrefix;
 import com.lxl.common.context.MemberInfoContext;
 import com.lxl.common.exception.BusinessException;
@@ -31,6 +32,8 @@ public class ConfirmOrderWebController {
     ConfirmOrderService confirmOrderService;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    ConfirmOrderBeforeService confirmOrderBeforeService;
 
     @GetMapping("/query-list")
     public CommonResp<?> queryList(ConfirmOrderQueryReq req){
@@ -49,7 +52,7 @@ public class ConfirmOrderWebController {
         }
         log.info("会员{}的验证码{}校验通过，进行下单操作", MemberInfoContext.getMemberId(), ClientCaptchaCode);
         //验证码校验通过，进行下单操作
-        confirmOrderService.doConfirm(req);
+        confirmOrderBeforeService.doConfirmBefore(req);
         return CommonResp.buildSuccess("下单成功!");
     }
 

@@ -23,6 +23,7 @@ import com.lxl.business.req.ConfirmOrderDoReq;
 import com.lxl.business.req.ConfirmOrderQueryReq;
 import com.lxl.business.resp.ConfirmOrderQueryResp;
 import com.lxl.business.service.ConfirmOrderService;
+import com.lxl.common.constant.MQ_TOPIC;
 import com.lxl.common.constant.RedisKeyPrefix;
 import com.lxl.common.context.MemberInfoContext;
 import com.lxl.common.exception.BusinessException;
@@ -30,6 +31,10 @@ import com.lxl.common.exception.exceptionEnum.BussinessExceptionEnum;
 import com.lxl.common.resp.PageResp;
 import com.lxl.common.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.spring.annotation.MessageModel;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -45,7 +50,8 @@ import org.springframework.util.StringUtils;
  */
 @Slf4j
 @Service
-public class ConfirmOrderServiceImpl implements ConfirmOrderService {
+@RocketMQMessageListener(topic = MQ_TOPIC.CONFIRM_ORDER,consumerGroup = "${rocketmq.consumer.group}",messageModel = MessageModel.CLUSTERING)
+public class ConfirmOrderServiceImpl implements ConfirmOrderService , RocketMQListener<MessageExt> {
     @Autowired
     ConfirmOrderMapper confirmOrderMapper;
     @Autowired
@@ -66,6 +72,13 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     public static final int tryTimes = 3;//设置重试获取锁的次数
 
     //    private static final Lock lock = new ReentrantLock();
+
+
+    @Override
+    public void onMessage(MessageExt message) {
+       log.info("收到消息:"+String.valueOf(message.getBody()));
+    }
+
     @Override
     public PageResp<ConfirmOrderQueryResp> queryList(ConfirmOrderQueryReq req) {
         LambdaQueryWrapper<ConfirmOrder> wrapper = new LambdaQueryWrapper<>();
