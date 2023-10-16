@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,14 +20,12 @@ import com.lxl.business.req.ConfirmOrderTicketReq;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.lxl.business.req.ConfirmOrderDoReq;
 import com.lxl.business.req.ConfirmOrderQueryReq;
 import com.lxl.business.resp.ConfirmOrderQueryResp;
 import com.lxl.business.service.ConfirmOrderService;
 import com.lxl.common.constant.RedisKeyPrefix;
 import com.lxl.common.exception.BusinessException;
 import com.lxl.common.exception.exceptionEnum.BussinessExceptionEnum;
-import com.lxl.common.req.TicketQueryReq;
 import com.lxl.common.resp.PageResp;
 import com.lxl.common.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -97,6 +96,28 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         return pageResp;
     }
 
+    @Override
+    public Integer queryOrderQueueStatus(Long confirmOrderId) {
+        ConfirmOrder confirmOrder = confirmOrderMapper.selectById(confirmOrderId);
+        if (ObjectUtil.isNotEmpty(confirmOrder)){
+            String statusDB = confirmOrder.getStatus();
+            ConfirmOrderStatusTypeEnum typeEnum = EnumUtil.getBy(ConfirmOrderStatusTypeEnum::getCode, statusDB);
+            int result = switch (typeEnum){
+                case INIT -> 999;
+                case SUCCESS -> -1;
+                case FAILURE -> -2;
+                case EMPTY -> -3;
+                case CANCEL ->-4;
+                case PENDING -> 0;
+            };
+            if (result==999){
+                //表示还没被处理说明需要查询排队
+              result =   confirmOrderMapper.queryOrderQueueStatus(confirmOrder,ConfirmOrderStatusTypeEnum.INIT.getCode(),ConfirmOrderStatusTypeEnum.PENDING.getCode());
+            }
+            return result;
+        }
+        throw new BusinessException(BussinessExceptionEnum.NO_TRAIN_INFO);
+    }
 
     @Override
     public void doConfirm(ConfirmOrderMQDTO mqdto) {
@@ -191,7 +212,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         // 车次是否存在、余票是否存在、车次是否在有效期之内 ticket条数大于0 同乘客同车次是否已经买过
         DailyTrainTicket dailyTrainTicket = dailyTrainTicketMapper.selectById(confirmOrder.getDailyTrainTicketId());
         if (ObjectUtils.isEmpty(dailyTrainTicket)) {
-            throw new BusinessException(BussinessExceptionEnum.NO_DAILY_TRAIN_TICKET_INFO);
+            throw new BusinessException(BussinessExceptionEnum.NO_TRAIN_INFO);
         }
         log.info("查出余票记录{}", dailyTrainTicket.toString());
 

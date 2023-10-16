@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.lxl.business.mapper.ConfirmOrderMapper">
+    <select id="queryOrderQueueStatus" resultType="java.lang.Integer"><![CDATA[
+        SELECT count(*)
+        FROM `confirm_order`
+        WHERE
+        `date` = #{confirmOrder.date}
+        AND
+        `train_code` = #{confirmOrder.trainCode}
+        AND
+        ((`status` = #{initCode} AND `create_time` < #{confirmOrder.createTime}) OR `status` = #{pendingCode})
+    ]]></select>
 </mapper>

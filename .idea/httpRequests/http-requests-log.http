@@ -1,3 +1,84 @@
+GET http://localhost:81/business/confirmOrder/query-order-queue-status/1713880654148714496
+Accept: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk3NTIxODU2OTEwLCJtZW1iZXJJZCI6MTcxMTM4MjMxNDQ3NjUwNzEzNn0.tTABaeBiyWH_-O62bcuFcnhTsdCKuQbfWrBhtK8P9BE
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-16T211329.200.json
+
+###
+
+GET http://localhost:81/business/confirmOrder/query-order-queue-status/1713880654148714496
+Accept: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk3NTIxODU2OTEwLCJtZW1iZXJJZCI6MTcxMTM4MjMxNDQ3NjUwNzEzNn0.tTABaeBiyWH_-O62bcuFcnhTsdCKuQbfWrBhtK8P9BE
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-16T211321.200.json
+
+###
+
+GET http://localhost:81/business/confirmOrder/query-order-queue-status/1713880654148714496
+Accept: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk3NTIxODU2OTEwLCJtZW1iZXJJZCI6MTcxMTM4MjMxNDQ3NjUwNzEzNn0.tTABaeBiyWH_-O62bcuFcnhTsdCKuQbfWrBhtK8P9BE
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-16T211306.200.json
+
+###
+
+GET http://localhost:81/business/confirmOrder/query-order-queue-status/1713863409028612096
+Accept: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk3NTIxODU2OTEwLCJtZW1iZXJJZCI6MTcxMTM4MjMxNDQ3NjUwNzEzNn0.tTABaeBiyWH_-O62bcuFcnhTsdCKuQbfWrBhtK8P9BE
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-16T211148.200.json
+
+###
+
+GET http://localhost:81/business/ocnfirmOrder/query-order-queue-status/1713863409028612096
+Accept: application/json
+token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2JpbGUiOiIxMzAyNzM3ODkzMyIsImV4cGlyZV90aW1lIjoxNjk3NTIxODU2OTEwLCJtZW1iZXJJZCI6MTcxMTM4MjMxNDQ3NjUwNzEzNn0.tTABaeBiyWH_-O62bcuFcnhTsdCKuQbfWrBhtK8P9BE
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-16T211103.404.json
+
+###
+
+POST http://localhost:8001/member/login
+Content-Type: application/json
+Content-Length: 48
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "mobile": "13027378933",
+  "code" : "8888"
+}
+
+<> 2023-10-16T211057.200.json
+
+###
+
+GET http://localhost:8002/business/dailyTrainTicket/admin/query-list?end=沈阳&currentPage=1&pageSize=2
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-16T211049.200.json
+
+###
+
 POST http://localhost:8001/member/login
 Content-Type: application/json
 Content-Length: 48
@@ -435,76 +516,6 @@ User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
 Accept-Encoding: br,deflate,gzip,x-gzip
 
 <> 2023-10-08T215732.200.json
-
-###
-
-GET http://localhost:8002/business/trainStation/admin/query-list
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-10-08T215731.200.json
-
-###
-
-GET http://localhost:8002/business/trainStation/admin/query-list
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-10-08T214000.200.json
-
-###
-
-GET http://localhost:8002/business/trainStation/admin/query-list
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-10-08T213957.200.json
-
-###
-
-GET http://localhost:8002/business/trainStation/admin/query-list
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-10-08T213536.200.json
-
-###
-
-GET http://localhost:8002/business/trainStation/admin/query-list
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-10-08T213531.200.json
-
-###
-
-GET http://localhost:8002/business/trainStation/admin/query-list
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-10-08T213158.200.json
-
-###
-
-GET http://localhost:8002/business/trainStation/admin/query-list
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.6)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-10-08T213152.200.json
 
 ###
 

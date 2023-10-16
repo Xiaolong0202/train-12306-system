@@ -61,12 +61,23 @@ public class ConfirmOrderWebController {
             }
             log.info("会员{}的验证码{}校验通过，进行下单操作", MemberInfoContext.getMemberId(), clientCaptchaCode);
         }
-        //验证码校验通过，进行下单操作
-        confirmOrderBeforeService.doConfirmBefore(req);
-        return CommonResp.buildSuccess("下单成功!");
+        //验证码校验通过，进行下单操作,返回订单ID
+        Long confirmOrderId = confirmOrderBeforeService.doConfirmBefore(req);
+        return CommonResp.buildSuccess(String.valueOf(confirmOrderId),"下单成功!");
     }
 
+    @GetMapping("/query-order-queue-status/{confirmOrderId}")
+    public CommonResp<?> getOrderQueueStatus(@PathVariable("confirmOrderId") Long confirmOrderId){
+        Integer result = confirmOrderService.queryOrderQueueStatus(confirmOrderId);
+        return CommonResp.buildSuccess(result,"查找到了对应的信息");
+    }
 
+    /**
+     * 限流blockHandler
+     * @param req
+     * @param e
+     * @return
+     */
     public CommonResp<?> doConfirmBlockerHandle(ConfirmOrderDoReq req, BlockException e){
         log.info("当前请求：{}访问量超出限流规则",req);
 //        throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);

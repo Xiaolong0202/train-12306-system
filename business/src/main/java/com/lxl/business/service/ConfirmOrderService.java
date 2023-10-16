@@ -14,4 +14,6 @@ public interface ConfirmOrderService  {
     PageResp<ConfirmOrderQueryResp> queryList(ConfirmOrderQueryReq req);
 
     void doConfirm(ConfirmOrderMQDTO req);
+
+    Integer queryOrderQueueStatus(Long confirmOrderId);
 }

@@ -13,7 +13,6 @@ import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
 import com.lxl.business.mapper.ConfirmOrderMapper;
 import com.lxl.business.mapper.TrainTokenMapper;
 import com.lxl.business.req.ConfirmOrderDoReq;
-import com.lxl.business.req.ConfirmOrderQueryReq;
 import com.lxl.common.constant.EnvironmentConstant;
 import com.lxl.common.constant.MQ_TOPIC;
 import com.lxl.common.constant.RedisKeyPrefix;
@@ -26,11 +25,9 @@ import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -55,7 +52,7 @@ public class ConfirmOrderBeforeService {
     @Value("${spring.profiles.active}")
     private String env;
 
-    public void doConfirmBefore(ConfirmOrderDoReq req) {
+    public Long doConfirmBefore(ConfirmOrderDoReq req) {
         Date now = new Date(System.currentTimeMillis());
         Long memberId = MemberInfoContext.getMemberId();
 
@@ -81,6 +78,7 @@ public class ConfirmOrderBeforeService {
 
         rocketMQTemplate.convertAndSend(MQ_TOPIC.CONFIRM_ORDER, JSON.toJSONString(confirmOrderMQDTO));
         log.info("会员{}订单前的校验完成，将使用MQ去异步化购票", memberId);
+        return confirmOrder.getId();
     }
 
     private void validateToken(Long memberId, Date date, String trainCode) {

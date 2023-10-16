@@ -3,8 +3,7 @@ package com.lxl.business.mapper;
 import com.lxl.business.domain.ConfirmOrder;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author 13430
@@ -14,6 +13,7 @@ import java.util.List;
 */
 @Mapper
 public interface ConfirmOrderMapper extends BaseMapper<ConfirmOrder> {
+    int queryOrderQueueStatus(@Param("confirmOrder") ConfirmOrder confirmOrder, @Param("initCode") String initCode, @Param("pendingCode") String pendingCode);
 }
 
 
