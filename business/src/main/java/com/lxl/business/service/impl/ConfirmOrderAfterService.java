@@ -10,21 +10,14 @@ import com.lxl.business.mapper.DailyTrainMapper;
 import com.lxl.business.mapper.DailyTrainSeatMapper;
 import com.lxl.business.mapper.DailyTrainTicketMapper;
 import com.lxl.business.req.ConfirmOrderTicketReq;
-import com.lxl.common.context.MemberInfoContext;
 import com.lxl.common.req.TicketSaveOrEditReq;
 import com.lxl.common.resp.CommonResp;
-import io.seata.spring.annotation.GlobalTransactional;
-import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @Author LiuXiaolong
@@ -52,7 +45,7 @@ public class ConfirmOrderAfterService {
 
 //    @GlobalTransactional
 //    @Transactional
-    public void doAfterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> dailyTrainSeats, List<ConfirmOrderTicketReq> tickets, @NotBlank String trainCode, ConfirmOrder confirmOrder) {
+    public void doAfterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> dailyTrainSeats, List<ConfirmOrderTicketReq> tickets, final ConfirmOrder confirmOrder) {
         String trainTypeById = dailyTrainMapper.selectTrainTypeById(dailyTrainTicket.getDailyTrainId());
         for (int j = 0; j < dailyTrainSeats.size(); j++) {
             DailyTrainSeat dailyTrainSeat = dailyTrainSeats.get(j);
@@ -88,7 +81,7 @@ public class ConfirmOrderAfterService {
             ticketSaveOrEditReq.setDailyTrainTicketId(dailyTrainTicket.getId());
             ticketSaveOrEditReq.setPassengerName(confirmOrderTicketReq.getName());
             ticketSaveOrEditReq.setTrainDate(dailyTrainTicket.getStartDate());
-            ticketSaveOrEditReq.setTrainCode(trainTypeById+trainCode);
+            ticketSaveOrEditReq.setTrainCode(trainTypeById+confirmOrder.getTrainCode());
             ticketSaveOrEditReq.setCarriageIndex(dailyTrainSeat.getCarriageIndex());
             ticketSaveOrEditReq.setSeatRow(dailyTrainSeat.getSeatRow());
             ticketSaveOrEditReq.setSeatCol(dailyTrainSeat.getSeatRow());

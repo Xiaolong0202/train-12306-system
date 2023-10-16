@@ -4,6 +4,8 @@ import com.lxl.business.domain.ConfirmOrder;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author 13430
 * @description 针对表【confirm_order(确认订单)】的数据库操作Mapper
@@ -12,7 +14,6 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface ConfirmOrderMapper extends BaseMapper<ConfirmOrder> {
-
 }
 
 

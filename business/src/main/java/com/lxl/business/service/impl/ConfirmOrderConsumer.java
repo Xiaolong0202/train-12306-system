@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxl.business.domain.ConfirmOrder;
+import com.lxl.business.dto.ConfirmOrderMQDTO;
 import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
 import com.lxl.business.mapper.ConfirmOrderMapper;
 import com.lxl.business.req.ConfirmOrderDoReq;
@@ -20,6 +21,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.json.Json;
 import java.util.Date;
 
 /**
@@ -40,9 +42,9 @@ public class ConfirmOrderConsumer implements  RocketMQListener<String> {
     @Override
     public void onMessage(String message) {
         log.info("message = " + message);
-        ConfirmOrderDoReq req = JSON.parseObject(message, ConfirmOrderDoReq.class);
-        log.info("MQ获取信息"+req);
-//        confirmOrderService.doConfirm(req);
+        ConfirmOrderMQDTO mqdto = JSON.parseObject(message, ConfirmOrderMQDTO.class);
+        log.info("MQ获取信息"+mqdto);
+        confirmOrderService.doConfirm(mqdto);
     }
 
 }

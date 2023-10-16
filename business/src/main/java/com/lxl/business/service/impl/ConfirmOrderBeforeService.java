@@ -4,10 +4,10 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.lxl.business.domain.ConfirmOrder;
 import com.lxl.business.domain.TrainToken;
+import com.lxl.business.dto.ConfirmOrderMQDTO;
 import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
 import com.lxl.business.mapper.ConfirmOrderMapper;
 import com.lxl.business.mapper.TrainTokenMapper;
@@ -65,14 +65,16 @@ public class ConfirmOrderBeforeService {
         confirmOrder.setEnd(req.getEnd());
         confirmOrder.setDailyTrainTicketId(req.getDailyTrainTicketId());
         confirmOrder.setTickets(JSON.toJSONString(req.getTickets()));
-        confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.INIT.getCode());
+        confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.INIT.getCode());//设置为订单正在初始化
         confirmOrder.setCreateTime(now);
         confirmOrder.setUpdateTime(now);
         confirmOrderMapper.insert(confirmOrder);
-        req.setConfirmOrderId(confirmOrder.getId());
-        req.setMemberId(memberId);
+        log.info("创建了订单：{}",confirmOrder);
+        ConfirmOrderMQDTO confirmOrderMQDTO = new ConfirmOrderMQDTO();
+        confirmOrderMQDTO.setDate(req.getDate());
+        confirmOrderMQDTO.setTrainCode(req.getTrainCode());
 
-        rocketMQTemplate.convertAndSend(MQ_TOPIC.CONFIRM_ORDER,JSON.toJSONString(req));
+        rocketMQTemplate.convertAndSend(MQ_TOPIC.CONFIRM_ORDER,JSON.toJSONString(confirmOrderMQDTO));
         log.info("会员{}订单前的校验完成，将使用MQ去异步化购票",memberId);
     }
 
