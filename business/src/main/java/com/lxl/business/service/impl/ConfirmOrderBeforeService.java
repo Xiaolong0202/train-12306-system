@@ -2,6 +2,7 @@ package com.lxl.business.service.impl;
 
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.csp.sentinel.util.StringUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
@@ -13,6 +14,7 @@ import com.lxl.business.mapper.ConfirmOrderMapper;
 import com.lxl.business.mapper.TrainTokenMapper;
 import com.lxl.business.req.ConfirmOrderDoReq;
 import com.lxl.business.req.ConfirmOrderQueryReq;
+import com.lxl.common.constant.EnvironmentConstant;
 import com.lxl.common.constant.MQ_TOPIC;
 import com.lxl.common.constant.RedisKeyPrefix;
 import com.lxl.common.context.MemberInfoContext;
@@ -22,6 +24,7 @@ import com.lxl.common.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
@@ -49,8 +52,10 @@ public class ConfirmOrderBeforeService {
     TrainTokenMapper trainTokenMapper;
     @Autowired
     ConfirmOrderMapper confirmOrderMapper;
+    @Value("${spring.profiles.active}")
+    private String env;
 
-    public void doConfirmBefore(ConfirmOrderDoReq req){
+    public void doConfirmBefore(ConfirmOrderDoReq req) {
         Date now = new Date(System.currentTimeMillis());
         Long memberId = MemberInfoContext.getMemberId();
 
@@ -69,20 +74,24 @@ public class ConfirmOrderBeforeService {
         confirmOrder.setCreateTime(now);
         confirmOrder.setUpdateTime(now);
         confirmOrderMapper.insert(confirmOrder);
-        log.info("创建了订单：{}",confirmOrder);
+        log.info("创建了订单：{}", confirmOrder);
         ConfirmOrderMQDTO confirmOrderMQDTO = new ConfirmOrderMQDTO();
         confirmOrderMQDTO.setDate(req.getDate());
         confirmOrderMQDTO.setTrainCode(req.getTrainCode());
 
-        rocketMQTemplate.convertAndSend(MQ_TOPIC.CONFIRM_ORDER,JSON.toJSONString(confirmOrderMQDTO));
-        log.info("会员{}订单前的校验完成，将使用MQ去异步化购票",memberId);
+        rocketMQTemplate.convertAndSend(MQ_TOPIC.CONFIRM_ORDER, JSON.toJSONString(confirmOrderMQDTO));
+        log.info("会员{}订单前的校验完成，将使用MQ去异步化购票", memberId);
     }
 
     private void validateToken(Long memberId, Date date, String trainCode) {
-        Boolean setSuccess = stringRedisTemplate.opsForValue().setIfAbsent(RedisKeyPrefix.TRAIN_TOKEN_LOCK + ":" + date.getTime() + ":" + trainCode + ":" + memberId, String.valueOf(memberId), 5, TimeUnit.SECONDS);
-        if (Boolean.FALSE.equals(setSuccess)) {
-            log.info("会员{}在5秒钟之类下了一次单了", memberId);
-            throw new BusinessException(BussinessExceptionEnum.FREQUENT_VISITS);
+        if (StringUtil.equals(env, EnvironmentConstant.DEV)) {
+            log.info("当前环境为开发环境，无需校验会员重复下单");
+        } else {
+            Boolean setSuccess = stringRedisTemplate.opsForValue().setIfAbsent(RedisKeyPrefix.TRAIN_TOKEN_LOCK + ":" + date.getTime() + ":" + trainCode + ":" + memberId, String.valueOf(memberId), 5, TimeUnit.SECONDS);
+            if (Boolean.FALSE.equals(setSuccess)) {
+                log.info("会员{}在5秒钟之类下了一次单了", memberId);
+                throw new BusinessException(BussinessExceptionEnum.FREQUENT_VISITS);
+            }
         }
 
         String redisTokenCountKey = RedisKeyPrefix.TRAIN_TOKEN_COUNT + ":" + date.getTime() + ":" + trainCode;
@@ -120,10 +129,5 @@ public class ConfirmOrderBeforeService {
             log.info("将数据库当中的令牌信息{}放入redis当中", redisTokenCountKey);
         }
         log.info("会员{}在购票过程中成功的获取到令牌,可以参与下单", memberId);
-    }
-
-    public static void main(String[] args) {
-        Date date = new Date(1697383469473L);
-        System.out.println("date = " + date);
     }
 }
