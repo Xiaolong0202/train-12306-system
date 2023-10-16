@@ -58,12 +58,12 @@
         <a-modal
                 width="500"
                 title="请确认车票信息如下信息"
-                v-model:open="ChooseSeatVsible"
+                v-model:open="chooseSeatVisible"
                 :closable="false"
                 :mask="true"
                 :maskClosable="false"
                 @ok="handleOpenCaptcha"
-                @cancel="ChooseSeatVsible=false">
+                @cancel="chooseSeatVisible=false">
             <a-row class="tickets-row" style=" background-color: dodgerblue;color: white;" v-show="tickets.length>0">
                 <a-col :span="3">姓名</a-col>
                 <a-col :span="9">身份证</a-col>
@@ -121,7 +121,7 @@
                 :closable="false"
                 :mask="true"
                 :maskClosable="false"
-                @ok="handleOk"
+                @ok="verifyCodeAndOrder"
                 @cancel="captchaVisible=false;Object.assign(captchaInfo,{captchaToken: null,captchaCodeImgURL: null,captchaCode: null})">
             <p>
                 <a-input
@@ -138,10 +138,27 @@
                 </a-input>
             </p>
         </a-modal>
+
+        <a-modal
+                :footer="[]"
+                title="输入验证码开始确认订单"
+                v-model:open="queryOrderQueueModalVisible"
+                :closable="false"
+                :mask="true"
+                :maskClosable="false">
+            <p>
+                <LoadingOutlined/>
+                正在查询{{ confirmOrderId }}的订单情况
+            </p>
+            <p>
+                你的前面大概还有{{ estimatedQueSize }}个人
+            </p>
+        </a-modal>
     </div>
 </template>
 
 <script setup>
+import {LoadingOutlined} from "@ant-design/icons-vue";
 import {SESSION_ORDER} from "@/constant/SessionStorageKeys";
 import {computed, onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
@@ -158,7 +175,11 @@ const seatType = ref([])
 const passengerType = ref([])
 const seatColType = ref([])
 
-const ChooseSeatVsible = ref(false)
+const confirmOrderId = ref(null)
+const queryOrderQueueModalVisible = ref(false)
+const estimatedQueSize = ref(99999)
+
+const chooseSeatVisible = ref(false)
 
 //0 不支持选座 1选 一等座 2 选二等座
 const chooseSeatType = ref(0)
@@ -266,7 +287,53 @@ const getPassengerType = () => {
         })
 }
 
-const handleOk = () => {
+function periodicQueryOrderQue(orderId) {
+    let timer
+    timer = setInterval(()=>{
+        axios.get('/business/confirmOrder/query-order-queue-status/' + orderId)
+            .then(resp => {
+                if (resp) {
+                    if (resp.data.success) {
+                        let res = resp.data.content
+                        switch (res) {
+                            case -1:
+                                info('success','下单选座成功')
+                                clearInterval(timer)
+                                queryOrderQueueModalVisible.value = false
+                                estimatedQueSize.value = 9999
+                                confirmOrderId.value = null
+                                break
+                            case -2:
+                                info('error','下单的时候出现了异常,选座失败')
+                                clearInterval(timer)
+                                queryOrderQueueModalVisible.value = false
+                                estimatedQueSize.value = 9999
+                                confirmOrderId.value = null
+                                break
+                            case -3:
+                                info('error','已经没有空座了')
+                                clearInterval(timer)
+                                queryOrderQueueModalVisible.value = false
+                                estimatedQueSize.value = 9999
+                                confirmOrderId.value = null
+                                break
+                            case -4:
+                                info('error','订单被取消')
+                                clearInterval(timer)
+                                queryOrderQueueModalVisible.value = false
+                                estimatedQueSize.value = 9999
+                                confirmOrderId.value = null
+                                break
+                            default:
+                                estimatedQueSize.value = res
+                        }
+                    }
+                }
+            })
+    },500)//每隔半秒查询一次订单状况
+}
+
+const verifyCodeAndOrder = () => {
     if (isEmpty(captchaInfo.captchaCode)) {
         info('error', "验证码不能为空!")
         return
@@ -328,9 +395,12 @@ const handleOk = () => {
         if (res) {
             if (res.data.success) {
                 info('success', res.data.message)
-                captchaVisible.value=false
-                ChooseSeatVsible.value = false
-                Object.assign(captchaInfo,{captchaToken: null,captchaCodeImgURL: null,captchaCode: null})
+                confirmOrderId.value = res.data.content
+                captchaVisible.value = false
+                chooseSeatVisible.value = false
+                queryOrderQueueModalVisible.value = true
+                Object.assign(captchaInfo, {captchaToken: null, captchaCodeImgURL: null, captchaCode: null})
+                periodicQueryOrderQue(confirmOrderId.value)
             } else {
                 info('error', res.data.message)
             }
@@ -380,7 +450,7 @@ const handleSubmit = () => {
     }
 
 
-    ChooseSeatVsible.value = true
+    chooseSeatVisible.value = true
 }
 
 watch(() => chosePassengers.value, () => {

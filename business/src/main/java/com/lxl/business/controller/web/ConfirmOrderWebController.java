@@ -63,7 +63,7 @@ public class ConfirmOrderWebController {
         }
         //验证码校验通过，进行下单操作,返回订单ID
         Long confirmOrderId = confirmOrderBeforeService.doConfirmBefore(req);
-        return CommonResp.buildSuccess(String.valueOf(confirmOrderId),"下单成功!");
+        return CommonResp.buildSuccess(String.valueOf(confirmOrderId),"订单已经创建，正在排队进行选座");
     }
 
     @GetMapping("/query-order-queue-status/{confirmOrderId}")

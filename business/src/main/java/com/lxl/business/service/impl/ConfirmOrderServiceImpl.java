@@ -166,13 +166,21 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                     break;
                 }
 
-                //将订单的状态设置为处理中
+
                 confirmOrdersDB.forEach(confirmOrder -> {
-                    confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.PENDING.getCode());
-                    confirmOrderMapper.updateById(confirmOrder);
+
                 });
                 log.info("本轮将要处理{}条订单",confirmOrdersDB.size());
                 confirmOrdersDB.forEach(confirmOrder -> {
+                    //这里使用休眠使得排队情况等待的效果变得明显
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    //将订单的状态设置为处理中
+                    confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.PENDING.getCode());
+                    confirmOrderMapper.updateById(confirmOrder);
                     try {
                         sell(confirmOrder);
                     } catch (BusinessException e) {
