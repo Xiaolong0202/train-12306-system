@@ -179,9 +179,9 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">0</stringProp>
+          <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -195,7 +195,7 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;dailyTrainTicketId&quot;:1712009913988943872,&quot;date&quot;:1696953600000,&quot;end&quot;:&quot;拉萨&quot;,&quot;start&quot;:&quot;上海&quot;,&quot;tickets&quot;:[{&quot;idCard&quot;:&quot;430902200405034579&quot;,&quot;name&quot;:&quot;刘德华&quot;,&quot;passengerId&quot;:1711383087809695744,&quot;passengerType&quot;:&quot;1&quot;,&quot;seatType&quot;:&quot;1&quot;}],&quot;trainCode&quot;:&quot;54613&quot;}</stringProp>
+                <stringProp name="Argument.value">{&quot;captchaCode&quot;:&quot;a&quot;,&quot;captchaToken&quot;:&quot;bc84ea50-7acb-4d68-8b4c-910bdbed7294&quot;,&quot;dailyTrainTicketId&quot;:1714117804605751296,&quot;date&quot;:1697472000000,&quot;end&quot;:&quot;拉萨&quot;,&quot;start&quot;:&quot;乌鲁木齐&quot;,&quot;tickets&quot;:[{&quot;idCard&quot;:&quot;430902200405034579&quot;,&quot;name&quot;:&quot;刘德华&quot;,&quot;passengerId&quot;:1711383087809695744,&quot;passengerType&quot;:&quot;1&quot;,&quot;seatType&quot;:&quot;1&quot;},{&quot;idCard&quot;:&quot;430902200402020513&quot;,&quot;name&quot;:&quot;刘孝龙&quot;,&quot;passengerId&quot;:1711382704714551296,&quot;passengerType&quot;:&quot;3&quot;,&quot;seatType&quot;:&quot;1&quot;}],&quot;trainCode&quot;:&quot;54613&quot;}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -303,7 +303,7 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">2</stringProp>
+          <stringProp name="LoopController.loops">0</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">2</stringProp>
