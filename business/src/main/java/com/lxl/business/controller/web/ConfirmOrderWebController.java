@@ -72,6 +72,13 @@ public class ConfirmOrderWebController {
         return CommonResp.buildSuccess(result,"查找到了对应的信息");
     }
 
+    @PutMapping("/cancel/{confirmOrderId}")
+    public CommonResp<?> cancelOrderQue(@PathVariable("confirmOrderId") Long confirmOrderId){
+        Integer count = confirmOrderService.cancel(confirmOrderId);
+        log.info("订单{}的取消数{}",confirmOrderId,count);
+        return CommonResp.buildSuccess(count,"返回取消了的订单数");
+    }
+
     /**
      * 限流blockHandler
      * @param req

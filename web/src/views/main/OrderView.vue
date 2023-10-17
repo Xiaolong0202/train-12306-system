@@ -153,6 +153,13 @@
             <p>
                 你的前面大概还有{{ estimatedQueSize }}个人
             </p>
+            <p>
+                <a-button
+                    @click="cancelOrderQue"
+                    danger>
+                    取消排队
+                </a-button>
+            </p>
         </a-modal>
     </div>
 </template>
@@ -331,6 +338,24 @@ function periodicQueryOrderQue(orderId) {
                 }
             })
     },500)//每隔半秒查询一次订单状况
+}
+
+const cancelOrderQue = ()=>{
+    axios.put('/business/confirmOrder/cancel/'+confirmOrderId.value)
+        .then(resp=>{
+            if (resp){
+                if (resp.data.success){
+                    if (resp.data.content>0){
+                        info('success','排队取消成功')
+                    }else {
+                        info('error','排队取消失败,订单可能已经正在处理当中或者处理完成')
+                    }
+                }else {
+                    info('error','排队取消失败,订单可能已经正在处理当中或者处理完成')
+                }
+
+            }
+        })
 }
 
 const verifyCodeAndOrder = () => {

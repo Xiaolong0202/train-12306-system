@@ -99,24 +99,34 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     @Override
     public Integer queryOrderQueueStatus(Long confirmOrderId) {
         ConfirmOrder confirmOrder = confirmOrderMapper.selectById(confirmOrderId);
-        if (ObjectUtil.isNotEmpty(confirmOrder)){
+        if (ObjectUtil.isNotEmpty(confirmOrder)) {
             String statusDB = confirmOrder.getStatus();
             ConfirmOrderStatusTypeEnum typeEnum = EnumUtil.getBy(ConfirmOrderStatusTypeEnum::getCode, statusDB);
-            int result = switch (typeEnum){
+            int result = switch (typeEnum) {
                 case INIT -> 999;
                 case SUCCESS -> -1;
                 case FAILURE -> -2;
                 case EMPTY -> -3;
-                case CANCEL ->-4;
+                case CANCEL -> -4;
                 case PENDING -> 0;
             };
-            if (result==999){
+            if (result == 999) {
                 //表示还没被处理说明需要查询排队
-              result =   confirmOrderMapper.queryOrderQueueStatus(confirmOrder,ConfirmOrderStatusTypeEnum.INIT.getCode(),ConfirmOrderStatusTypeEnum.PENDING.getCode());
+                result = confirmOrderMapper.queryOrderQueueStatus(confirmOrder, ConfirmOrderStatusTypeEnum.INIT.getCode(), ConfirmOrderStatusTypeEnum.PENDING.getCode());
             }
             return result;
         }
         throw new BusinessException(BussinessExceptionEnum.NO_TRAIN_INFO);
+    }
+
+    @Override
+    public Integer cancel(Long confirmOrderId) {
+        LambdaQueryWrapper<ConfirmOrder> confirmOrderLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        confirmOrderLambdaQueryWrapper.eq(ObjectUtil.isNotEmpty(confirmOrderId),ConfirmOrder::getId,confirmOrderId);
+        confirmOrderLambdaQueryWrapper.eq(ConfirmOrder::getStatus,ConfirmOrderStatusTypeEnum.INIT.getCode());
+        //找到所有的正在初始化的订单并将订单的状态设置为取消
+       return confirmOrderMapper.update(ConfirmOrder.builder().status(ConfirmOrderStatusTypeEnum.CANCEL.getCode()).build(),
+                confirmOrderLambdaQueryWrapper);
     }
 
     @Override
@@ -170,14 +180,14 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                 confirmOrdersDB.forEach(confirmOrder -> {
 
                 });
-                log.info("本轮将要处理{}条订单",confirmOrdersDB.size());
+                log.info("本轮将要处理{}条订单", confirmOrdersDB.size());
                 confirmOrdersDB.forEach(confirmOrder -> {
                     //这里使用休眠使得排队情况等待的效果变得明显
-//                    try {
-//                        TimeUnit.SECONDS.sleep(1);
-//                    } catch (InterruptedException e) {
-//                        throw new RuntimeException(e);
-//                    }
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     //将订单的状态设置为处理中
                     confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.PENDING.getCode());
                     confirmOrderMapper.updateById(confirmOrder);
@@ -185,7 +195,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                         sell(confirmOrder);
                     } catch (Exception e) {
 
-                        if (e instanceof BusinessException businessException){
+                        if (e instanceof BusinessException businessException) {
                             if (businessException.getExceptionEnum().equals(BussinessExceptionEnum.TICKET_INSUFFICIENT_ERROR)) {
                                 confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.EMPTY.getCode());
                                 log.info("订单{}的余票不足,将处理下一个订单", confirmOrder.getId());
@@ -193,7 +203,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                                 log.info("订单{}的购票出现业务异常,将处理下一个订单", confirmOrder.getId());
                                 confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.FAILURE.getCode());
                             }
-                        }else {
+                        } else {
                             throw e;
                         }
                     } finally {

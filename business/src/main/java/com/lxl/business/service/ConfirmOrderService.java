@@ -16,4 +16,6 @@ public interface ConfirmOrderService  {
     void doConfirm(ConfirmOrderMQDTO req);
 
     Integer queryOrderQueueStatus(Long confirmOrderId);
+
+    Integer cancel(Long confirmOrderId);
 }

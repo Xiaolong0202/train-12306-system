@@ -195,7 +195,7 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;captchaCode&quot;:&quot;a&quot;,&quot;captchaToken&quot;:&quot;bc84ea50-7acb-4d68-8b4c-910bdbed7294&quot;,&quot;dailyTrainTicketId&quot;:1714117804605751296,&quot;date&quot;:1697472000000,&quot;end&quot;:&quot;拉萨&quot;,&quot;start&quot;:&quot;乌鲁木齐&quot;,&quot;tickets&quot;:[{&quot;idCard&quot;:&quot;430902200405034579&quot;,&quot;name&quot;:&quot;刘德华&quot;,&quot;passengerId&quot;:1711383087809695744,&quot;passengerType&quot;:&quot;1&quot;,&quot;seatType&quot;:&quot;1&quot;},{&quot;idCard&quot;:&quot;430902200402020513&quot;,&quot;name&quot;:&quot;刘孝龙&quot;,&quot;passengerId&quot;:1711382704714551296,&quot;passengerType&quot;:&quot;3&quot;,&quot;seatType&quot;:&quot;1&quot;}],&quot;trainCode&quot;:&quot;54613&quot;}</stringProp>
+                <stringProp name="Argument.value">{&quot;captchaCode&quot;:&quot;q&quot;,&quot;captchaToken&quot;:&quot;f6e4aab0-0462-40b3-9ad3-af3d780507cb&quot;,&quot;dailyTrainTicketId&quot;:1714145443185737728,&quot;date&quot;:1697472000000,&quot;end&quot;:&quot;拉萨&quot;,&quot;start&quot;:&quot;上海&quot;,&quot;tickets&quot;:[{&quot;idCard&quot;:&quot;430902200402020513&quot;,&quot;name&quot;:&quot;刘孝龙&quot;,&quot;passengerId&quot;:1711382704714551296,&quot;passengerType&quot;:&quot;3&quot;,&quot;seatType&quot;:&quot;1&quot;}],&quot;trainCode&quot;:&quot;54613&quot;}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
