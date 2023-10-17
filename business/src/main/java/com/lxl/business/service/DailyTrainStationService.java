@@ -1,9 +1,12 @@
 package com.lxl.business.service;
 
+import com.lxl.business.domain.DailyTrainStation;
 import com.lxl.business.req.DailyTrainStationQueryReq;
 import com.lxl.business.req.DailyTrainStationSaveOrEditReq;
 import com.lxl.business.resp.DailyTrainStationQueryResp;
 import com.lxl.common.resp.PageResp;
+
+import java.util.List;
 
 /**
 * @author 13430
@@ -17,4 +20,6 @@ public interface DailyTrainStationService {
     PageResp<DailyTrainStationQueryResp> queryList(DailyTrainStationQueryReq req);
 
     void delete(Long id);
+
+    List<DailyTrainStation> getDailyTrainStationsById(Long dailyTrainId);
 }

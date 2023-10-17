@@ -7,10 +7,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 /**
  * 每日车站
+ * @author 13430
  * @TableName daily_train_station
  */
 @TableName(value ="daily_train_station")
@@ -20,6 +25,7 @@ public class DailyTrainStation implements Serializable {
      * id
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
@@ -46,16 +52,19 @@ public class DailyTrainStation implements Serializable {
     /**
      * 进站时间
      */
+    @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
     private Date inTime;
 
     /**
      * 出站时间
      */
+    @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
     private Date outTime;
 
     /**
      * 停站时间
      */
+    @JsonFormat(pattern = "mm:ss",timezone = "GMT+8")
     private Date stopTime;
 
     /**

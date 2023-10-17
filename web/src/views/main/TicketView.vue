@@ -71,6 +71,9 @@
                     <a-button @click="toOrder(record)">
                         订票
                     </a-button>
+                    <a-button style="margin-left: 10px" @click="queryStationInfo(record)">
+                        车站信息
+                    </a-button>
                 </template>
             </template>
         </a-table>
@@ -81,6 +84,49 @@
                       :showSizeChanger="true"
                       @change="queryDailyTrainTicketList"
         />
+        <a-modal :footer="[]" @cancel="trainStationListVisible=false;trainStationList=[]"
+                 :open="trainStationListVisible">
+            <a-table :data-source="trainStationList" :pagination="false">
+                <a-table-column key="trainIndex" title="站序" dataIndex="trainIndex"/>
+                <a-table-column key="stationName" title="站名" dataIndex="stationName"/>
+                <a-table-column key="inTime" title="入站时间" dataIndex="inTime">
+                    <template #default="{record}">
+                        {{record.trainIndex === 0 ? '---':record.inTime}}
+                    </template>
+                </a-table-column>
+                <a-table-column key="outTime" title="出站时间" dataIndex="outTime">
+                    <template #default="{record}">
+                        {{record.trainIndex === trainStationList.length-1 ? '---':record.outTime}}
+                    </template>
+                </a-table-column>
+                <a-table-column key="stopTime" title="停留时间" dataIndex="stopTime">
+                    <template #default="{record}">
+                        {{record.trainIndex === 0||record.trainIndex === trainStationList.length-1 ? '---':record.stopTime}}
+                    </template>
+                </a-table-column>
+
+            </a-table>
+<!--            <a-list item-layout="horizontal" :data-source="trainStationList">-->
+<!--                <template #renderItem="{ item }">-->
+<!--                    <a-list-item>-->
+<!--                        <h3>{{ item.trainIndex }}、{{ item.stationName }}&nbsp;{{ item.namePinyin }}</h3>-->
+<!--                        &lt;!&ndash; 当该站为第一站的时候不显示停留时间与入站时间  当该站为最后一站的时候不显示停留时间与入站时间 &ndash;&gt;-->
+<!--                        入站时间:-->
+<!--                        <template v-if="item.trainIndex===0">-&#45;&#45;</template>-->
+<!--                        <template v-else>{{ item.inTime }}</template>-->
+<!--                        &nbsp;&nbsp;-->
+<!--                        出站时间:-->
+<!--                        <template v-if="item.trainIndex===trainStationList.length-1">-&#45;&#45;</template>-->
+<!--                        <template v-else>{{ item.outTime }}</template>-->
+<!--                        &nbsp;&nbsp;-->
+<!--                        停留时间:-->
+<!--                        <template v-if="item.trainIndex===trainStationList.length-1||item.trainIndex===0">-&#45;&#45;-->
+<!--                        </template>-->
+<!--                        <template v-else>{{ item.stopTime }}</template>-->
+<!--                    </a-list-item>-->
+<!--                </template>-->
+<!--            </a-list>-->
+        </a-modal>
     </div>
 </template>
 <script setup>
@@ -146,6 +192,9 @@ const pagination = reactive({
     current: 1,
     pageSize: 2,
 })
+
+const trainStationList = ref([])
+const trainStationListVisible = ref(false)
 const queryDailyTrainTicketList = () => {
 
     if (!params.start) {
@@ -177,7 +226,7 @@ const queryDailyTrainTicketList = () => {
                 if (res.data.success) {
                     for (let i = 0; i < res.data.content.list.length; i++) {
                         res.data.content.list[i].train = await getDailyTrain(res.data.content.list[i].dailyTrainId)
-                        sessionStorage.setItem(SESSION_TICKET,JSON.stringify(params))
+                        sessionStorage.setItem(SESSION_TICKET, JSON.stringify(params))
                         loading.value = true
                     }
 
@@ -240,14 +289,28 @@ function formatTimeDifference(timeDifference) {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
 
+function queryStationInfo(record) {
+    axios.get('/business/dailyTrainStation/' + record.dailyTrainId)
+        .then(resp => {
+            if (resp) {
+                if (resp.data.success) {
+                    trainStationList.value = resp.data.content
+                    trainStationListVisible.value = true
+                } else {
+                    info('error', resp.data.message)
+                }
+            }
+        })
+}
+
 
 onMounted(() => {
 
-        let parse = JSON.parse(sessionStorage.getItem(SESSION_TICKET) || '{}');
-        if (parse.start && parse.end && parse.startDate) {
-            Object.assign(params,parse)
-            queryDailyTrainTicketList()
-        }
+    let parse = JSON.parse(sessionStorage.getItem(SESSION_TICKET) || '{}');
+    if (parse.start && parse.end && parse.startDate) {
+        Object.assign(params, parse)
+        queryDailyTrainTicketList()
+    }
 })
 
 

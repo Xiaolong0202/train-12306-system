@@ -3,6 +3,7 @@ package com.lxl.business.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -135,6 +136,14 @@ public class DailyTrainStationServiceImpl implements DailyTrainStationService{
     @Override
     public void delete(Long id) {
         dailyTrainStationMapper.deleteById(id);
+    }
+
+    @Override
+    public List<DailyTrainStation> getDailyTrainStationsById(Long dailyTrainId) {
+        LambdaQueryWrapper<DailyTrainStation> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ObjectUtil.isNotEmpty(dailyTrainId),DailyTrainStation::getDailyTrainId,dailyTrainId);
+        queryWrapper.orderByAsc(DailyTrainStation::getTrainIndex);//升序排列
+        return dailyTrainStationMapper.selectList(queryWrapper);
     }
 }
 
