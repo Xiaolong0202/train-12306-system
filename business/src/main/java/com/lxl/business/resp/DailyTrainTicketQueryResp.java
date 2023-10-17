@@ -1,9 +1,11 @@
 package com.lxl.business.resp;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.lxl.business.domain.DailyTrain;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -118,13 +120,18 @@ public class DailyTrainTicketQueryResp implements Serializable {
     /**
      * 新增时间
      */
-    @JsonFormat(pattern = "HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
     /**
      * 修改时间
      */
-    @JsonFormat(pattern = "HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
+
+    /**
+     * 通过表观联查询出来的dailyTrain
+     */
+    private DailyTrain dailyTrain;
 
 }

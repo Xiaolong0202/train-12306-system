@@ -51,11 +51,10 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
     public PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req) {
         //TODO 可以实现分布式锁防止缓存击穿的问题
         log.info("NO CACHING!!");
-        LambdaQueryWrapper<DailyTrainTicket> dailyTrainTicketLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getDailyTrainId()),DailyTrainTicket::getDailyTrainId,req.getDailyTrainId());
-        dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getStart()),DailyTrainTicket::getStart,req.getStart());
-        dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getEnd()),DailyTrainTicket::getEnd,req.getEnd());
-        dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getStartDate()),DailyTrainTicket::getStartDate,req.getStartDate());
+//        dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getDailyTrainId()),DailyTrainTicket::getDailyTrainId,);
+//        dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getStart()),DailyTrainTicket::getStart,);
+//        dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getEnd()),DailyTrainTicket::getEnd,);
+//        dailyTrainTicketLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(req.getStartDate()),DailyTrainTicket::getStartDate,);
 
 
 
@@ -65,7 +64,8 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
             PageHelper.startPage(req.getCurrentPage(),req.getPageSize());
         }
 
-        List<DailyTrainTicket> dailyTrainTickets = dailyTrainTicketMapper.selectList(dailyTrainTicketLambdaQueryWrapper);
+        List<DailyTrainTicket> dailyTrainTickets = dailyTrainTicketMapper.selectListAndIncludeDailyTrain(req.getDailyTrainId(),req.getStart(),req.getEnd(),req.getStartDate());
+        log.info("得到合适的车票信息:"+dailyTrainTickets);
         PageInfo<DailyTrainTicket> pageInfo = new PageInfo<>(dailyTrainTickets);
         int pages = pageInfo.getPages();
         long total = pageInfo.getTotal();

@@ -9,15 +9,15 @@
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading"
                  style="margin-top: 20px">
             <template #bodyCell="{column , record}">
-                <template v-if="column.dataIndex === 'dailyTrain' && record.train">
-                    {{ record.train.type }}{{ record.train.code }}
+                <template v-if="column.dataIndex === 'dailyTrain' && record.dailyTrain">
+                    {{ record.dailyTrain.type }}{{ record.dailyTrain.code }}
                 </template>
                 <template v-if="column.dataIndex === 'time' ">
                     始：{{ record.startTime }}<br/>
                     终：{{ record.endTime }}
                 </template>
-                <template v-if="column.dataIndex === 'intervalTime' && record.train ">
-                    {{ computedTimeInterval(record, record.startTime, record.endTime, record.train.intervalDay) }}
+                <template v-if="column.dataIndex === 'intervalTime' && record.dailyTrain ">
+                    {{ computedTimeInterval(record, record.startTime, record.endTime, record.dailyTrain.intervalDay) }}
                 </template>
                 <template v-if="column.dataIndex === 'station' ">
                     始：{{ record.start }}<br/>
@@ -73,6 +73,9 @@
                     </a-button>
                     <a-button style="margin-left: 10px" @click="queryStationInfo(record)">
                         车站信息
+                    </a-button>
+                    <a-button style="margin-left: 10px" @click="toTicketsLeft(record)">
+                        余票图
                     </a-button>
                 </template>
             </template>
@@ -225,7 +228,7 @@ const queryDailyTrainTicketList = () => {
             if (res) {
                 if (res.data.success) {
                     for (let i = 0; i < res.data.content.list.length; i++) {
-                        res.data.content.list[i].train = await getDailyTrain(res.data.content.list[i].dailyTrainId)
+                        // res.data.content.list[i].train = await getDailyTrain(res.data.content.list[i].dailyTrainId)
                         sessionStorage.setItem(SESSION_TICKET, JSON.stringify(params))
                         loading.value = true
                     }
@@ -239,19 +242,19 @@ const queryDailyTrainTicketList = () => {
         })
 }
 
-const getDailyTrain = async (id) => {
-    let train = {}
-    await axios.get('/business/dailyTrain/query-one/' + id)
-        .then(res => {
-            if (res) {
-                if (res.data.success) {
-                    train = res.data.content
-                }
-            }
-        })
-    loading.value = false
-    return train
-}
+// const getDailyTrain = async (id) => {
+//     let train = {}
+//     await axios.get('/business/dailyTrain/query-one/' + id)
+//         .then(res => {
+//             if (res) {
+//                 if (res.data.success) {
+//                     train = res.data.content
+//                 }
+//             }
+//         })
+//     loading.value = false
+//     return train
+// }
 
 function toOrder(record) {
     sessionStorage.setItem(SESSION_ORDER, JSON.stringify(record))
@@ -301,6 +304,19 @@ function queryStationInfo(record) {
                 }
             }
         })
+}
+
+function toTicketsLeft(record){
+    router.push({
+        path: '/main/leftTicket',
+        query: {
+            dailyTrainId: record.dailyTrainId,
+            startDate: record.startDate,
+            trainCode: record.dailyTrain.code,
+            startIndex: record.startIndex,
+            endIndex: record.endIndex
+        }
+    })
 }
 
 

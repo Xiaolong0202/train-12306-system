@@ -120,6 +120,13 @@ public class DailyTrainTicket implements Serializable {
      */
     private Date updateTime;
 
+
+    /**
+     * 通过表观联查询出来的dailyTrain
+     */
+    @TableField(exist = false)
+    private DailyTrain dailyTrain;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 

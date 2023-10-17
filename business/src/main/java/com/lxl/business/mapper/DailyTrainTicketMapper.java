@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
+import java.util.List;
+
 /**
 * @author 13430
 * @description 针对表【daily_train_ticket(余票信息)】的数据库操作Mapper
@@ -15,6 +18,8 @@ import org.apache.ibatis.annotations.Param;
 public interface DailyTrainTicketMapper extends BaseMapper<DailyTrainTicket> {
 
     void updateBySell(@Param("daily_train_id") Long dailyTrainId, @Param("seatType") String seatType, @Param("minStart") Integer minStart, @Param("maxStart") Integer maxStart, @Param("minEnd") Integer minEnd, @Param("maxEnd") Integer maxEnd);
+
+    List<DailyTrainTicket> selectListAndIncludeDailyTrain(@Param("dailyTrainId") Long dailyTrainId, @Param("start") String start, @Param("end") String end, @Param("startDate") Date startDate);
 }
 
 

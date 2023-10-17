@@ -29,6 +29,9 @@ const routes = [
             },{
                 path: 'myTickets',
                 component: ()=>import('../views/main/MyTicketView.vue')
+            },{
+                path: 'leftTicket',
+                component: ()=> import('../views/main/LeftTicketsView.vue')
             }
         ]
     },

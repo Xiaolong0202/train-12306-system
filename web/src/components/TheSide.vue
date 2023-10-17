@@ -35,6 +35,7 @@ const items = reactive([
     getItem('passenger', '/main/passenger', h(TeamOutlined),null, null),
     getItem('查找车次', '/main/ticket', h(TeamOutlined),null, null),
     getItem('myTickets', '/main/myTickets', h(TeamOutlined),null, null),
+    getItem('车票余座图', '/main/leftTicket', h(TeamOutlined),null, null),
 ])
 const toPage = ({key,keyPath}) => {
     let finalPath = '';

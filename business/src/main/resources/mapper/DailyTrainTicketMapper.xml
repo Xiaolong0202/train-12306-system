@@ -62,4 +62,101 @@
         and
             `daily_train_id` = #{daily_train_id}
     </update>
+
+
+
+    <resultMap id="selectListAndIncludeDailyTrainResultMap" type="com.lxl.business.domain.DailyTrainTicket">
+        <id property="id" column="dtt.id" jdbcType="BIGINT"/>
+        <result property="dailyTrainId" column="dtt.daily_train_id" jdbcType="BIGINT"/>
+        <result property="startDate" column="dtt.start_date" jdbcType="TIMESTAMP"/>
+        <result property="start" column="dtt.start" jdbcType="VARCHAR"/>
+        <result property="startPinyin" column="dtt.start_pinyin" jdbcType="VARCHAR"/>
+        <result property="startTime" column="dtt.start_time" jdbcType="TIME"/>
+        <result property="startIndex" column="dtt.start_index" jdbcType="TINYINT"/>
+        <result property="end" column="dtt.end" jdbcType="VARCHAR"/>
+        <result property="endPinyin" column="dtt.end_pinyin" jdbcType="VARCHAR"/>
+        <result property="endTime" column="dtt.end_time" jdbcType="TIME"/>
+        <result property="endIndex" column="dtt.end_index" jdbcType="TINYINT"/>
+        <result property="ydz" column="dtt.ydz" jdbcType="INTEGER"/>
+        <result property="ydzPrice" column="dtt.ydz_price" jdbcType="DECIMAL"/>
+        <result property="edz" column="dtt.edz" jdbcType="INTEGER"/>
+        <result property="edzPrice" column="dtt.edz_price" jdbcType="DECIMAL"/>
+        <result property="rw" column="dtt.rw" jdbcType="INTEGER"/>
+        <result property="rwPrice" column="dtt.rw_price" jdbcType="DECIMAL"/>
+        <result property="yw" column="dtt.yw" jdbcType="INTEGER"/>
+        <result property="ywPrice" column="dtt.yw_price" jdbcType="DECIMAL"/>
+        <result property="createTime" column="dtt.create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="dtt.update_time" jdbcType="TIMESTAMP"/>
+        <association property="dailyTrain">
+            <id property="id" column="dt.id" jdbcType="BIGINT"/>
+            <result property="startDate" column="dt.date" jdbcType="DATE"/>
+            <result property="code" column="dt.code" jdbcType="VARCHAR"/>
+            <result property="type" column="dt.type" jdbcType="CHAR"/>
+            <result property="start" column="dt.start" jdbcType="VARCHAR"/>
+            <result property="startPinyin" column="dt.start_pinyin" jdbcType="VARCHAR"/>
+            <result property="startTime" column="dt.start_time" jdbcType="TIME"/>
+            <result property="end" column="dt.end" jdbcType="VARCHAR"/>
+            <result property="endPinyin" column="dt.end_pinyin" jdbcType="VARCHAR"/>
+            <result property="endTime" column="dt.end_time" jdbcType="TIME"/>
+            <result property="intervalDay" column="dt.interval_day" jdbcType="INTEGER"/>
+            <result property="createTime" column="dt.create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="dt.update_time" jdbcType="TIMESTAMP"/>
+        </association>
+    </resultMap>
+
+    <select id="selectListAndIncludeDailyTrain" resultMap="selectListAndIncludeDailyTrainResultMap">
+        select dtt.id as 'dtt.id',
+        dtt.daily_train_id as 'dtt.daily_train_id',
+        dtt.start_date as 'dtt.start_date',
+        dtt.start as 'dtt.start',
+        dtt.start_pinyin as 'dtt.start_pinyin',
+        dtt.start_time as 'dtt.start_time',
+        dtt.start_index as 'dtt.start_index',
+        dtt.end as 'dtt.end',
+        dtt.end_pinyin as 'dtt.end_pinyin',
+        dtt.end_time as 'dtt.end_time',
+        dtt.end_index as 'dtt.end_index',
+        dtt.ydz as 'dtt.ydz',
+        dtt.ydz_price as 'dtt.ydz_price',
+        dtt.edz as 'dtt.edz',
+        dtt.edz_price as 'dtt.edz_price',
+        dtt.rw as 'dtt.rw',
+        dtt.rw_price as 'dtt.rw_price',
+        dtt.yw as 'dtt.yw',
+        dtt.yw_price as 'dtt.yw_price',
+        dtt.create_time as 'dtt.create_time',
+        dtt.update_time as 'dtt.update_time',
+        dt.id as 'dt.id',
+        dt.start_date as 'dt.start_date',
+        dt.code as 'dt.code',
+        dt.type as 'dt.type',
+        dt.start as 'dt.start',
+        dt.start_pinyin as 'dt.start_pinyin',
+        dt.start_time as 'dt.start_time',
+        dt.end as 'dt.end',
+        dt.end_pinyin as 'dt.end_pinyin',
+        dt.end_time as 'dt.end_time',
+        dt.interval_day as 'dt.interval_day',
+        dt.create_time as 'dt.create_time',
+        dt.update_time as 'dt.update_time'
+        from `daily_train_ticket` dtt
+                 left outer join `daily_train` dt on dt.`id` = dtt.`daily_train_id`
+        <where>
+            <if test="dailyTrainId != null">
+               and dtt.`daily_train_id` = #{dailyTrainId}
+            </if>
+            <if test="startDate !=null">
+                and
+                dtt.`start_date` = #{startDate}
+            </if>
+            <if test="start!=null and start.trim() !='' ">
+                and
+                dtt.`start` = #{start}
+            </if>
+            <if test="end!=null and end.trim() !='' ">
+                and
+                dtt.`end` = #{end}
+            </if>
+        </where>
+    </select>
 </mapper>
