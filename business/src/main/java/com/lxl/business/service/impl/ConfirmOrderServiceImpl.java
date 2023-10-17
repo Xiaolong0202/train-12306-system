@@ -183,13 +183,17 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                     confirmOrderMapper.updateById(confirmOrder);
                     try {
                         sell(confirmOrder);
-                    } catch (BusinessException e) {
-                        if (e.getExceptionEnum().equals(BussinessExceptionEnum.TICKET_INSUFFICIENT_ERROR)) {
-                            confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.EMPTY.getCode());
-                            log.info("订单{}的余票不足,将处理下一个订单", confirmOrder.getId());
-                        } else {
-                            log.info("订单{}的购票出现异常,将处理下一个订单", confirmOrder.getId());
-                            confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.FAILURE.getCode());
+                    } catch (Exception e) {
+
+                        if (e instanceof BusinessException businessException){
+                            if (businessException.getExceptionEnum().equals(BussinessExceptionEnum.TICKET_INSUFFICIENT_ERROR)) {
+                                confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.EMPTY.getCode());
+                                log.info("订单{}的余票不足,将处理下一个订单", confirmOrder.getId());
+                            } else {
+                                log.info("订单{}的购票出现业务异常,将处理下一个订单", confirmOrder.getId());
+                                confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.FAILURE.getCode());
+                            }
+                        }else {
                             throw e;
                         }
                     } finally {
