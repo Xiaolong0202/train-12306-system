@@ -1,13 +1,13 @@
 <template>
     <div style="float: left;">
-        <span class="ticketInfo">{{ ticketInfo.train.startDate }}</span>&nbsp;
-        <span class="ticketInfo">{{ ticketInfo.train.type }}{{ ticketInfo.train.code }}</span>次&nbsp;
+        <span class="ticketInfo">{{ ticketInfo.dailyTrain.startDate }}</span>&nbsp;
+        <span class="ticketInfo">{{ ticketInfo.dailyTrain.type }}{{ ticketInfo.dailyTrain.code }}</span>次&nbsp;
         <span class="ticketInfo">{{ ticketInfo.start }}</span>站&nbsp;
         <span class="ticketInfo">({{ ticketInfo.startTime }}开)</span>站&nbsp;
         ——
         <span class="ticketInfo">{{ ticketInfo.end }}</span>&nbsp;
         <span class="ticketInfo">({{ ticketInfo.startTime }}到)</span>&nbsp;
-        <span style="font-weight: bold">(间隔：{{ ticketInfo.train.intervalDay }}天)</span>
+        <span style="font-weight: bold">(间隔：{{ ticketInfo.dailyTrain.intervalDay }}天)</span>
         <br><br>
         <div style="float: left">
             <template v-for="item in seatType" :key="item.code">
@@ -409,7 +409,7 @@ const verifyCodeAndOrder = () => {
 
     axios.post('/business/confirmOrder/do', {
         date: ticketInfo.startDate,
-        trainCode: ticketInfo.train.code,
+        trainCode: ticketInfo.dailyTrain.code,
         start: ticketInfo.start,
         end: ticketInfo.end,
         dailyTrainTicketId: ticketInfo.id,
