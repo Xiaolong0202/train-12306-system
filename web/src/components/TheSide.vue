@@ -47,6 +47,7 @@ const toPage = ({key,keyPath}) => {
 }
 const selectedKeys = ref(['/main/welcome'])
 watch(()=>router.currentRoute.value.path,( ) => {
+    //todo 改变一下该逻辑
     let item = sessionStorage.getItem('12306_selectedKey');
     if (item && typeof(item)!== 'undefined' && item!=='undefined'){
         selectedKeys.value =  JSON.parse(item)

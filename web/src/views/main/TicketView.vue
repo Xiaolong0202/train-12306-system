@@ -74,7 +74,7 @@
                     <a-button style="margin-left: 10px" @click="queryStationInfo(record)">
                         车站信息
                     </a-button>
-                    <a-button style="margin-left: 10px" @click="toTicketsLeft(record)">
+                    <a-button style="margin-left: 10px" @click="toTicketsLeft(record,record.dailyTrain)">
                         余票图
                     </a-button>
                 </template>
@@ -306,15 +306,18 @@ function queryStationInfo(record) {
         })
 }
 
-function toTicketsLeft(record){
+function toTicketsLeft(record,tr){
     router.push({
         path: '/main/leftTicket',
         query: {
             dailyTrainId: record.dailyTrainId,
             startDate: record.startDate,
-            trainCode: record.dailyTrain.code,
+            dailyTrainType: tr.type,
+            dailyTrainCode: tr.code,
             startIndex: record.startIndex,
-            endIndex: record.endIndex
+            endIndex: record.endIndex,
+            start: record.start,
+            end: record.end
         }
     })
 }

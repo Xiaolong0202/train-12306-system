@@ -92,6 +92,16 @@ public class DailyTrainSeatServiceImpl implements DailyTrainSeatService{
     public void delete(Long id) {
         dailyTrainSeatMapper.deleteById(id);
     }
+
+    @Override
+    public List<DailyTrainSeatQueryResp> selectListByDailyTrainId(Long dailyTrainId) {
+        LambdaQueryWrapper<DailyTrainSeat> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByAsc(DailyTrainSeat::getCarriageIndex);
+        queryWrapper.orderByAsc(DailyTrainSeat::getCarriageSeatIndex);//先按照车厢来排序、在按照座位序号来排序
+        queryWrapper.eq(!ObjectUtils.isEmpty(dailyTrainId),DailyTrainSeat::getDailyTrainId,dailyTrainId);
+        List<DailyTrainSeat> dailyTrainSeats = dailyTrainSeatMapper.selectList(queryWrapper);
+        return dailyTrainSeats.stream().map(seat->BeanUtil.copyProperties(seat, DailyTrainSeatQueryResp.class)).toList();
+    }
 }
 
 
