@@ -89,7 +89,7 @@
         <result property="updateTime" column="dtt.update_time" jdbcType="TIMESTAMP"/>
         <association property="dailyTrain">
             <id property="id" column="dt.id" jdbcType="BIGINT"/>
-            <result property="startDate" column="dt.date" jdbcType="DATE"/>
+            <result property="startDate" column="dt.start_date" jdbcType="DATE"/>
             <result property="code" column="dt.code" jdbcType="VARCHAR"/>
             <result property="type" column="dt.type" jdbcType="CHAR"/>
             <result property="start" column="dt.start" jdbcType="VARCHAR"/>

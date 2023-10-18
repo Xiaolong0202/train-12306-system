@@ -8,10 +8,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 /**
  * 每日车次
+ * @author 13430
  * @TableName daily_train
  */
 @TableName(value ="daily_train")
@@ -21,6 +24,7 @@ public class DailyTrain implements Serializable {
      * id
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
