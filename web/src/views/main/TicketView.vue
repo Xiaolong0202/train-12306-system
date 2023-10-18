@@ -4,7 +4,9 @@
             <a-button type="link" @click="queryDailyTrainTicketList">查找</a-button>
             <station-selector v-model:station-name="params.start"/>
             <station-selector v-model:station-name="params.end"/>
-            <input type="date" v-model="params.startDate">
+            <!--            <input type="date" v-model="params.startDate">-->
+            <a-date-picker v-model:value="params.startDate" value-format="YYYY-MM-DD" :disabled-date="disableDate"/>
+            <!--            <input type="date" v-model="">-->
         </div>
         <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="loading"
                  style="margin-top: 20px">
@@ -68,8 +70,8 @@
                     </template>
                 </template>
                 <template v-if="column.dataIndex === 'action' ">
-                    <a-button @click="toOrder(record)">
-                        订票
+                    <a-button @click="toOrder(record)" :disabled="isExpire(record.startDate,record.startTime)">
+                        {{ isExpire(record.startDate,record.startTime) ? '过期' : '订票'}}
                     </a-button>
                     <a-button style="margin-left: 10px" @click="queryStationInfo(record)">
                         车站信息
@@ -94,41 +96,43 @@
                 <a-table-column key="stationName" title="站名" dataIndex="stationName"/>
                 <a-table-column key="inTime" title="入站时间" dataIndex="inTime">
                     <template #default="{record}">
-                        {{record.trainIndex === 0 ? '---':record.inTime}}
+                        {{ record.trainIndex === 0 ? '---' : record.inTime }}
                     </template>
                 </a-table-column>
                 <a-table-column key="outTime" title="出站时间" dataIndex="outTime">
                     <template #default="{record}">
-                        {{record.trainIndex === trainStationList.length-1 ? '---':record.outTime}}
+                        {{ record.trainIndex === trainStationList.length - 1 ? '---' : record.outTime }}
                     </template>
                 </a-table-column>
                 <a-table-column key="stopTime" title="停留时间" dataIndex="stopTime">
                     <template #default="{record}">
-                        {{record.trainIndex === 0||record.trainIndex === trainStationList.length-1 ? '---':record.stopTime}}
+                        {{
+                        record.trainIndex === 0 || record.trainIndex === trainStationList.length - 1 ? '---' : record.stopTime
+                        }}
                     </template>
                 </a-table-column>
 
             </a-table>
-<!--            <a-list item-layout="horizontal" :data-source="trainStationList">-->
-<!--                <template #renderItem="{ item }">-->
-<!--                    <a-list-item>-->
-<!--                        <h3>{{ item.trainIndex }}、{{ item.stationName }}&nbsp;{{ item.namePinyin }}</h3>-->
-<!--                        &lt;!&ndash; 当该站为第一站的时候不显示停留时间与入站时间  当该站为最后一站的时候不显示停留时间与入站时间 &ndash;&gt;-->
-<!--                        入站时间:-->
-<!--                        <template v-if="item.trainIndex===0">-&#45;&#45;</template>-->
-<!--                        <template v-else>{{ item.inTime }}</template>-->
-<!--                        &nbsp;&nbsp;-->
-<!--                        出站时间:-->
-<!--                        <template v-if="item.trainIndex===trainStationList.length-1">-&#45;&#45;</template>-->
-<!--                        <template v-else>{{ item.outTime }}</template>-->
-<!--                        &nbsp;&nbsp;-->
-<!--                        停留时间:-->
-<!--                        <template v-if="item.trainIndex===trainStationList.length-1||item.trainIndex===0">-&#45;&#45;-->
-<!--                        </template>-->
-<!--                        <template v-else>{{ item.stopTime }}</template>-->
-<!--                    </a-list-item>-->
-<!--                </template>-->
-<!--            </a-list>-->
+            <!--            <a-list item-layout="horizontal" :data-source="trainStationList">-->
+            <!--                <template #renderItem="{ item }">-->
+            <!--                    <a-list-item>-->
+            <!--                        <h3>{{ item.trainIndex }}、{{ item.stationName }}&nbsp;{{ item.namePinyin }}</h3>-->
+            <!--                        &lt;!&ndash; 当该站为第一站的时候不显示停留时间与入站时间  当该站为最后一站的时候不显示停留时间与入站时间 &ndash;&gt;-->
+            <!--                        入站时间:-->
+            <!--                        <template v-if="item.trainIndex===0">-&#45;&#45;</template>-->
+            <!--                        <template v-else>{{ item.inTime }}</template>-->
+            <!--                        &nbsp;&nbsp;-->
+            <!--                        出站时间:-->
+            <!--                        <template v-if="item.trainIndex===trainStationList.length-1">-&#45;&#45;</template>-->
+            <!--                        <template v-else>{{ item.outTime }}</template>-->
+            <!--                        &nbsp;&nbsp;-->
+            <!--                        停留时间:-->
+            <!--                        <template v-if="item.trainIndex===trainStationList.length-1||item.trainIndex===0">-&#45;&#45;-->
+            <!--                        </template>-->
+            <!--                        <template v-else>{{ item.stopTime }}</template>-->
+            <!--                    </a-list-item>-->
+            <!--                </template>-->
+            <!--            </a-list>-->
         </a-modal>
     </div>
 </template>
@@ -306,7 +310,7 @@ function queryStationInfo(record) {
         })
 }
 
-function toTicketsLeft(record,tr){
+function toTicketsLeft(record, tr) {
     router.push({
         path: '/main/leftTicket',
         query: {
@@ -320,6 +324,16 @@ function toTicketsLeft(record,tr){
             end: record.end
         }
     })
+}
+
+function disableDate(chooseDate) {
+    return chooseDate && (chooseDate <= dayjs().add(-1, 'day') || chooseDate > dayjs().add(14, 'day'))
+}
+
+function isExpire(startDate,startTime) {
+    let now = new Date()
+    let startDateTime = new Date(String(startDate).replace(/-/g, "/") + " " + startTime);
+    return now.getTime() > startDateTime.getTime()
 }
 
 
