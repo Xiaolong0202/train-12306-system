@@ -49,6 +49,7 @@ public class ConfirmOrderAfterService {
         String trainTypeById = dailyTrainMapper.selectTrainTypeById(dailyTrainTicket.getDailyTrainId());
         for (int j = 0; j < dailyTrainSeats.size(); j++) {
             DailyTrainSeat dailyTrainSeat = dailyTrainSeats.get(j);
+            //在数据库中更新选座信息
             dailyTrainSeatMapper.updateBatchSell(dailyTrainSeat);
 
             char[] charArray = dailyTrainSeat.getSeatSell().toCharArray();
@@ -70,6 +71,7 @@ public class ConfirmOrderAfterService {
                     break;
                 }
             }
+            //修改车次的对应的座位类型的余票的数量
             dailyTrainTicketMapper.updateBySell(dailyTrainTicket.getDailyTrainId(), dailyTrainSeat.getSeatType(), minStart, maxStart, minEnd, maxEnd);
             log.info("余座{} {} {} 更新成功",dailyTrainSeat.getId(),dailyTrainSeat.getSeatType(),dailyTrainSeat.getSeatCol());
 
@@ -91,7 +93,10 @@ public class ConfirmOrderAfterService {
             ticketSaveOrEditReq.setEndTime(dailyTrainTicket.getEndTime());
             ticketSaveOrEditReq.setSeatType(dailyTrainSeat.getSeatType());
 
+            //通过openFeign远程调用，生成乘客的车票
             CommonResp<?> save = memberFeign.save(ticketSaveOrEditReq);
+
+            //保存订单的信息
             if (save.isSuccess()){
                 confirmOrder.setUpdateTime(new Date());
                 confirmOrder.setStatus(ConfirmOrderStatusTypeEnum.SUCCESS.getCode());

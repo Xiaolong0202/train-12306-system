@@ -47,6 +47,11 @@ public enum SeatColTypeEnum {
         this.type = type;
     }
 
+    /**
+     * 根据车厢的type,得到该车厢当中的所有列的枚举
+     * @param type
+     * @return
+     */
     public static List<SeatColTypeEnum> getSeatCols(String type){
         List<SeatColTypeEnum> list = new ArrayList<>();
         EnumSet<SeatColTypeEnum> seatColTypeEnums = EnumSet.allOf(SeatColTypeEnum.class);

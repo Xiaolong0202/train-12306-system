@@ -237,14 +237,14 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         log.info("查出余票记录{}", dailyTrainTicket.toString());
 
         List<ConfirmOrderTicketReq> tickets = JSON.parseArray(confirmOrder.getTickets(), ConfirmOrderTicketReq.class);
-        //判断余票的数量
+        //修改该车次的余票信息，在内存中先扣减票数
         reduceTickets(tickets, dailyTrainTicket);
 
         Long dailyTrainId = dailyTrainTicket.getDailyTrainId();
-        //计算ticket选座的偏移值
-
-        ConfirmOrderTicketReq ticketReq0 = tickets.get(0);
+        //用于装被选择的座位，这些座位被选择好之后，信息在数据库当中需要被更新
         List<DailyTrainSeat> res = new ArrayList<>();
+        //计算ticket选座的偏移值
+        ConfirmOrderTicketReq ticketReq0 = tickets.get(0);
         if (CollUtil.isNotEmpty(tickets) && StringUtils.hasText(ticketReq0.getSeat())) {
             log.info("会员有进行选座");
             //构建选座
@@ -255,13 +255,13 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                     referSeatList.add(seatCol.code + String.valueOf(i));
                 }
             }
-            //先获取绝对的偏移量
+            //先获取绝对的偏移量,也就是相对于第一排第一个座位的偏移量
             List<Integer> offsetList = tickets.stream().map(confirmOrderTicketReq -> referSeatList.indexOf(confirmOrderTicketReq.getSeat())).toList();
             //再将所有元素减去第一个座位的绝对偏移量
             Integer firstAbsoluteOffset = offsetList.get(0);
+            //获取每个座位相对于第一个座位的偏移量
             offsetList = offsetList.stream().map(offset -> offset - firstAbsoluteOffset).toList();
             log.info("所有座位相对于第一个座位的偏移量{}", offsetList.toString());
-
             getSeat(res,
                     dailyTrainId,
                     ticketReq0.getSeatType(),
@@ -300,10 +300,17 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
 
     /**
-     * 一个车厢一个车厢的查找
+     * 一个车厢一个车厢的查找,合适的座位
+     * @param res 用于承载选座结果的集合
+     * @param dailyTrainId 车次的id
+     * @param seatTypeCode 表示座位的类型，用于选择车厢
+     * @param startIndex 订单开始的车站
+     * @param endIndex 订单结束的车站
+     * @param seatCol 订单中第一个座位的作为类型
+     * @param offsetList 每个座位相对于第一个座位的座位偏移量
      */
     private void getSeat(List<DailyTrainSeat> res, Long dailyTrainId, String seatTypeCode, Integer startIndex, Integer endIndex, String seatCol, List<Integer> offsetList) {
-        //避免选择已经选择了的座位
+        //该集合用于避免座位的重复选择
         HashSet<Long> set = new HashSet<>();
         res.forEach(seat -> set.add(seat.getId()));
         //一个车厢一个车厢的查找
@@ -316,7 +323,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         for (DailyTrainCarriage carriage : dailyTrainCarriages) {
             List<DailyTrainSeat> tempList = new ArrayList<>();
             if (!carriage.getSeatType().equals(seatTypeCode)) {
-                log.info("座位类型与车位类型不匹配,当前车厢座位类型：{},目标的席位类型：{}", carriage.getSeatType(), seatTypeCode);
+                log.info("座位类型与车位类型不匹配,当前车厢座位类型：{},目标的席位类型：{},将继续寻找下一列车厢", carriage.getSeatType(), seatTypeCode);
                 continue;
             }
             //找出所有的座位
@@ -325,6 +332,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             dailyTrainSeatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyCarriageId), DailyTrainSeat::getCarriageId, dailyCarriageId);
             dailyTrainSeatLambdaQueryWrapper.eq(!ObjectUtils.isEmpty(dailyTrainId), DailyTrainSeat::getDailyTrainId, dailyTrainId);
             dailyTrainSeatLambdaQueryWrapper.orderByAsc(DailyTrainSeat::getCarriageSeatIndex);//按照座位序号升序排列
+            //从数据库当中查找当前车厢得到所有的车座
             List<DailyTrainSeat> seatList = dailyTrainSeatMapper.selectList(dailyTrainSeatLambdaQueryWrapper);
             log.info("查找到的车厢{}的座位数为" + seatList.size(), carriage.getTrainIndex());
 
@@ -333,7 +341,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                 DailyTrainSeat dailyTrainSeat = seatList.get(i);
 
                 if (!StringUtils.hasText(seatCol)) {
-                    log.info("没有进行选座");
+                    log.info("该订单中，用户没有进行选座，");
                 } else {
                     log.info("进行了选座");
                     if (!seatCol.equals(dailyTrainSeat.getSeatCol())) {
@@ -347,14 +355,14 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
                 DailyTrainSeat checkedSeat = BeanUtil.copyProperties(dailyTrainSeat, DailyTrainSeat.class);
                 if (!set.contains(checkedSeat.getId()) && canSell(checkedSeat, startIndex, endIndex)) {
-                    log.info("座位{}被选中", dailyTrainSeat.getCarriageSeatIndex());
+                    log.info("座位{}符合条件,可以被选中", dailyTrainSeat.getCarriageSeatIndex());
                     tempList.add(checkedSeat);
                 } else {
-                    log.info("没有选中座位{}", dailyTrainSeat.getCarriageSeatIndex());
+                    log.info("没有选中座位{},将迭代至下一个座位", dailyTrainSeat.getCarriageSeatIndex());
                     continue;
                 }
 
-                boolean isGetAllOffsetSeat = true;
+                boolean isGetAllOffsetSeat = true;//该变量用于判断本轮选票中，是否订单中所有的座位都选到了合适的座位
                 if (CollUtil.isNotEmpty(offsetList)) {
                     log.info("偏移值有{}可选", offsetList);
                     for (int j = 1; j < offsetList.size(); j++) {
@@ -380,13 +388,20 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                     tempList = new ArrayList<>();
                     continue;
                 }
-
+                //完成订单的座位选择，并返回
                 res.addAll(tempList);
                 return;
             }
         }
     }
 
+    /**
+     * 判断当前座位 在指定车站区间内是否能够购买
+     * @param dailyTrainSeat
+     * @param startIndex
+     * @param endIndex
+     * @return
+     */
     private boolean canSell(DailyTrainSeat dailyTrainSeat, Integer startIndex, Integer endIndex) {
         String sell = dailyTrainSeat.getSeatSell();
         String part = sell.substring(startIndex, endIndex);
@@ -402,6 +417,11 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         }
     }
 
+    /**
+     * 在内存中预扣减票
+     * @param tickets
+     * @param dailyTrainTicket
+     */
     private static void reduceTickets(List<ConfirmOrderTicketReq> tickets, DailyTrainTicket dailyTrainTicket) {
         //预扣减余票数量,并且判断余票是否不足
         for (ConfirmOrderTicketReq ticket : tickets) {
