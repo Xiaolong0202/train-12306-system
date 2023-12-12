@@ -177,9 +177,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                 }
 
 
-                confirmOrdersDB.forEach(confirmOrder -> {
 
-                });
                 log.info("本轮将要处理{}条订单", confirmOrdersDB.size());
                 confirmOrdersDB.forEach(confirmOrder -> {
                     //这里使用休眠使得排队情况等待的效果变得明显

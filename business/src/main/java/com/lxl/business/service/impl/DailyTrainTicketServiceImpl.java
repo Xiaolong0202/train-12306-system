@@ -46,6 +46,7 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
     }
 
 
+    //车票的缓存
     @Cacheable(cacheNames = "DailyTrainTicketServiceImpl.queryList")
     @Override
     public PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req) {

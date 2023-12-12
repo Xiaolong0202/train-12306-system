@@ -24,8 +24,6 @@ import org.springframework.stereotype.Service;
 public class ConfirmOrderConsumer implements  RocketMQListener<String> {
 
     @Autowired
-    ObjectMapper objectMapper;
-    @Autowired
     ConfirmOrderService confirmOrderService;
 
     @Override
