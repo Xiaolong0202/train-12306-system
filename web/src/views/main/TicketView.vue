@@ -197,7 +197,7 @@ const columns = [
 const pagination = reactive({
     total: 0,
     current: 1,
-    pageSize: 2,
+    pageSize: 200,
 })
 
 const trainStationList = ref([])
