@@ -13,6 +13,7 @@ import com.lxl.business.service.DailyTrainTicketService;
 import com.lxl.common.resp.PageResp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -39,10 +40,9 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
      * @param req
      * @return
      */
-    @CachePut(cacheNames = "DailyTrainTicketServiceImpl.queryList")
-    public PageResp<DailyTrainTicketQueryResp> updateDailyTrainTicket(DailyTrainTicketQueryReq req){
-        log.info("更新缓存！");
-        return queryList(req);
+    @CacheEvict(cacheNames = "DailyTrainTicketServiceImpl.queryList",beforeInvocation = true)//执行该方法之前先删除缓存
+    public void deleteTicketCache(DailyTrainTicketQueryReq req){
+        log.info("删除查询条件【{}】缓存！",req.toString());
     }
 
 

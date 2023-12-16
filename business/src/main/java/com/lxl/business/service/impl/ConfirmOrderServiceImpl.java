@@ -21,8 +21,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.req.ConfirmOrderQueryReq;
+import com.lxl.business.req.DailyTrainTicketQueryReq;
 import com.lxl.business.resp.ConfirmOrderQueryResp;
 import com.lxl.business.service.ConfirmOrderService;
+import com.lxl.business.service.DailyTrainTicketService;
 import com.lxl.common.constant.RedisKeyPrefix;
 import com.lxl.common.exception.BusinessException;
 import com.lxl.common.exception.exceptionEnum.BussinessExceptionEnum;
@@ -61,6 +63,8 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     StringRedisTemplate stringRedisTemplate;
     @Autowired
     TrainTokenMapper trainTokenMapper;
+    @Autowired
+    DailyTrainTicketService dailyTrainTicketService;
 
     public static final int tryTimes = 3;//设置重试获取锁的次数
 
@@ -168,19 +172,26 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             confirmOrderLambdaQueryWrapper.eq(ObjectUtil.isNotEmpty(mqdto.getDate()), ConfirmOrder::getDate, mqdto.getDate());
             confirmOrderLambdaQueryWrapper.eq(ObjectUtil.isNotEmpty(mqdto.getTrainCode()), ConfirmOrder::getTrainCode, mqdto.getTrainCode());
             confirmOrderLambdaQueryWrapper.eq(ConfirmOrder::getStatus, ConfirmOrderStatusTypeEnum.INIT.getCode());//找出所有该车次初始化的订单
+
             while (true) {
-                PageHelper.startPage(1, 10);//每次处理五个订单
+                PageHelper.startPage(1, 20);//每次处理20个订单
                 List<ConfirmOrder> confirmOrdersDB = confirmOrderMapper.selectList(confirmOrderLambdaQueryWrapper);
                 if (CollUtil.isEmpty(confirmOrdersDB)) {
                     log.info("车次{}已经暂时没有要处理的订单", lockKey);
                     break;
                 }
+                ConfirmOrder confirmOrder0 = confirmOrdersDB.get(0);
+                DailyTrainTicketQueryReq deleteCache = new DailyTrainTicketQueryReq(); //构建一个用于删除缓存的请求
+                deleteCache.setStart(confirmOrder0.getStart());
+                deleteCache.setEnd(confirmOrder0.getEnd());
+                deleteCache.setStartDate(confirmOrder0.getDate());
 
-
+                //使用延迟双删，删除缓存
+                dailyTrainTicketService.deleteTicketCache(deleteCache);
 
                 log.info("本轮将要处理{}条订单", confirmOrdersDB.size());
-                confirmOrdersDB.forEach(confirmOrder -> {
-                    //这里使用休眠使得排队情况等待的效果变得明显
+
+                for (ConfirmOrder confirmOrder : confirmOrdersDB) {//这里使用休眠使得排队情况等待的效果变得明显
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException e) {
@@ -207,7 +218,17 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                     } finally {
                         confirmOrderMapper.updateById(confirmOrder);//更新订单的状态
                     }
-                });
+                }
+
+                new Thread(()->{
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                        //更新玩一批订单之后延迟一秒之后再删一次
+                        dailyTrainTicketService.deleteTicketCache(deleteCache);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
             }
         } finally {
             //解锁

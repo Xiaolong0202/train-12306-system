@@ -14,4 +14,6 @@ import com.lxl.common.resp.PageResp;
 public interface DailyTrainTicketService {
 
     PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req);
+
+    void deleteTicketCache(DailyTrainTicketQueryReq req);
 }

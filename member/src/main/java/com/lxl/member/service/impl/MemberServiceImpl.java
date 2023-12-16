@@ -65,6 +65,7 @@ public class MemberServiceImpl implements MemberService {
         }
         String code = RandomUtil.randomString(4);
         log.info("验证码{}", code);
+        //生成验证码，交给服务商处理  再 放入redis
     }
 
     @Override
@@ -73,7 +74,7 @@ public class MemberServiceImpl implements MemberService {
         if (ObjectUtils.isEmpty(member)){
             throw new BusinessException(BussinessExceptionEnum.MEMBER_MOBILE_NOT_EXIST);
         }
-        if (!"8888".equals(req.getCode())){
+        if (!"8888".equals(req.getCode())){//与redis中的数据进行对比
             throw new BusinessException(BussinessExceptionEnum.MEMBER_CODE_ERROR);
         }
         MemberLoginResp memberLoginResp = new MemberLoginResp();

@@ -81,6 +81,12 @@ public class ConfirmOrderBeforeService {
         return confirmOrder.getId();
     }
 
+    /**
+     * 校验令牌大闸与重复下单,将数据库中的令牌大闸放入redis当中
+     * @param memberId
+     * @param date
+     * @param trainCode
+     */
     private void validateToken(Long memberId, Date date, String trainCode) {
         if (StringUtil.equals(env, EnvironmentConstant.DEV)) {
             log.info("当前环境为开发环境，无需校验会员重复下单");
