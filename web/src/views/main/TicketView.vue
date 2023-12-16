@@ -82,13 +82,13 @@
                 </template>
             </template>
         </a-table>
-        <a-pagination v-model:current="pagination.current"
-                      v-model:page-size="pagination.pageSize"
-                      v-model:total="pagination.total"
-                      :pageSizeOptions="['2','5','10','15']"
-                      :showSizeChanger="true"
-                      @change="queryDailyTrainTicketList"
-        />
+<!--        <a-pagination v-model:current="pagination.current"-->
+<!--                      v-model:page-size="pagination.pageSize"-->
+<!--                      v-model:total="pagination.total"-->
+<!--                      :pageSizeOptions="['2','5','10','15']"-->
+<!--                      :showSizeChanger="true"-->
+<!--                      @change="queryDailyTrainTicketList"-->
+<!--        />-->
         <a-modal :footer="[]" @cancel="trainStationListVisible=false;trainStationList=[]"
                  :open="trainStationListVisible">
             <a-table :data-source="trainStationList" :pagination="false">
@@ -194,11 +194,11 @@ const columns = [
         key: 'action'
     }
 ]
-const pagination = reactive({
-    total: 0,
-    current: 1,
-    pageSize: 200,
-})
+// const pagination = reactive({
+//     total: 0,
+//     current: 1,
+//     pageSize: 200,
+// })
 
 const trainStationList = ref([])
 const trainStationListVisible = ref(false)
@@ -221,8 +221,8 @@ const queryDailyTrainTicketList = () => {
     axios.get("/business/ticket/query-list",
         {
             params: {
-                currentPage: pagination.current,
-                pageSize: pagination.pageSize,
+                // currentPage: pagination.current,
+                // pageSize: pagination.pageSize,
                 startDate: params.startDate,
                 start: params.start,
                 end: params.end,
@@ -238,7 +238,7 @@ const queryDailyTrainTicketList = () => {
                     }
 
                     dataSource.value = res.data.content.list
-                    pagination.total = res.data.content.total
+                    // pagination.total = res.data.content.total
 
                 }
             }
