@@ -67,3 +67,19 @@ Ant Design Vue
 
 ![image-20231217143033855](mdPic/README/image-20231217143033855.png)
 
+## Sharding-sphere分库分表策略
+
+两个数据源，分别是ds0和ds1，每个数据源都连接到一个MySQL数据库。  您配置了12个逻辑表，每个逻辑表都配置了分库和分表策略。这些逻辑表包括：  
+confirm_order
+daily_train
+daily_train_carriage
+daily_train_seat
+daily_train_station
+daily_train_ticket
+station
+train
+train_carriage
+train_seat
+train_station
+train_token
+每个逻辑表都被分为两个实际的数据节点，分别位于ds0和ds1数据源中。每个数据节点又被分为**两个表**。  分库策略是基于id字段的，使用的是database_inline_id分片算法，该算法是一个内联表达式分片算法，通过id字段的奇偶性来决定分配到哪个数据源。  分表策略也是基于id字段的，使用的是order_table_inline_id分片算法，该算法也是一个内联表达式分片算法，通过id字段的奇偶性来决定分配到哪个表。 

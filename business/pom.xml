@@ -53,6 +53,11 @@
             <artifactId>redisson</artifactId>
             <version>3.24.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core</artifactId>
+            <version>5.4.0</version>
+        </dependency>
     </dependencies>
 
 </project>

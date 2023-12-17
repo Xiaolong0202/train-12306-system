@@ -1,0 +1,204 @@
+props:
+    sql-show: true
+dataSources:
+  ds0:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/business_sharding?useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true&allowMultiQueries=true
+    username: "root"
+    password: "040202"
+  ds1:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3307/business_sharding?useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true&allowMultiQueries=true
+    username: "root"
+    password: "wdnmd2004"
+
+rules:
+- !SHARDING
+  tables:
+    confirm_order:
+      actualDataNodes: ds$->{0..1}.confirm_order_$->{0..1} #配置多个表，支持inline表达式
+      tableStrategy:  #配置分表策略
+        standard:
+          shardingColumn:  id #分片的列
+          shardingAlgorithmName:  order_table_inline_id_confirm_order #分片算法,根据该列分配到不同库与表当中
+      databaseStrategy:
+        standard:  #配置分库策略
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    daily_train:
+      actualDataNodes: ds$->{0..1}.daily_train_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_daily_train
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    daily_train_carriage:
+      actualDataNodes: ds$->{0..1}.daily_train_carriage_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_daily_train_carriage
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    daily_train_seat:
+      actualDataNodes: ds$->{0..1}.daily_train_seat_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_daily_train_seat
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    daily_train_station:
+      actualDataNodes: ds$->{0..1}.daily_train_station_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_daily_train_station
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    daily_train_ticket:
+      actualDataNodes: ds$->{0..1}.daily_train_ticket_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_daily_train_ticket
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    station:
+      actualDataNodes: ds$->{0..1}.station_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_station
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    train:
+      actualDataNodes: ds$->{0..1}.train_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_train
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    train_carriage:
+      actualDataNodes: ds$->{0..1}.train_carriage_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_train_carriage
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    train_seat:
+      actualDataNodes: ds$->{0..1}.train_seat_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_train_seat
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    train_station:
+      actualDataNodes: ds$->{0..1}.train_station_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  id
+          shardingAlgorithmName:  order_table_inline_id_train_station
+      databaseStrategy:
+        standard:
+          shardingColumn: id
+          shardingAlgorithmName: database_inline_id
+    train_token:
+      actualDataNodes: ds$->{0..1}.train_token_$->{0..1}
+      tableStrategy:
+        standard:
+          shardingColumn:  token
+          shardingAlgorithmName:  order_table_inline_mod_id_train_token
+      databaseStrategy:
+        standard:
+          shardingColumn: token
+          shardingAlgorithmName: database_inline_id
+
+
+
+
+
+  shardingAlgorithms:
+    database_inline_id:  #这个算法用来分库
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: ds$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_confirm_order:  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: t_order_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_daily_train:  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: daily_train_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_daily_train_carriage:  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: daily_train_carriage_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_daily_train_seat:  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: daily_train_seat_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_daily_train_station:  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: daily_train_station_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_daily_train_ticket:  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: daily_train_ticket_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_station:  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: station_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_train:  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: train_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_train_carriage:  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: train_carriage_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_train_seat:  #这个算法用来分  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: train_seat_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_id_train_station:  #这个算法用来分  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: train_station_$->{id % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+    order_table_inline_mod_id_train_token:  #这个算法用来分  #这个算法用来分
+      type: INLINE  #自定义行表达式分片算法
+      props:
+        algorithm-expression: train_token_$->{token % 2} #通过行表达式动态计算出该分配到哪个数据源,取奇数偶数
+
+#  keyGenerators:
+#    alg_snowflake:
+#      type: SNOWFLAKE
+- !BROADCAST
+  tables:
+    - undo_log
