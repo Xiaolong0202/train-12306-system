@@ -24,6 +24,9 @@ public interface DailyTrainMapper extends BaseMapper<DailyTrain> {
 
     @Select("select `type` from train_business.daily_train where id = #{dailyTrainId}")
     String selectTrainTypeById(Long dailyTrainId);
+
+    @Select("select * from train_business.daily_train where id = #{id}")
+    DailyTrain  selectByPrimaryKey(Long id);
 }
 
 

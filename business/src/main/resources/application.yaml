@@ -81,3 +81,5 @@ rocketmq:
     retryTimesWhenSendFailed: 3
   consumer:
     group: TRAIN_TICKET_ORDER_CONSUMER
+pagehelper:
+  helper-dialect: mysql
