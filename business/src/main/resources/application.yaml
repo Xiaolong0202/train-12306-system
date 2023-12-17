@@ -29,6 +29,8 @@ spring:
             groupId: TRAIN_GROUP
             dataId: sentinel
             ruleType: flow
+  main:
+    allow-circular-references: true
 
 #spring:
 #  cloud:

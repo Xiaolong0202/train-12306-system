@@ -1,9 +1,8 @@
 package com.lxl.business.service;
 
 import com.lxl.business.req.DailyTrainTicketQueryReq;
-import com.lxl.business.req.TrainSeatQueryReq;
+import com.lxl.business.req.WebDailyTrainTicketQueryReq;
 import com.lxl.business.resp.DailyTrainTicketQueryResp;
-import com.lxl.business.resp.TrainSeatQueryResp;
 import com.lxl.common.resp.PageResp;
 
 /**
@@ -13,7 +12,10 @@ import com.lxl.common.resp.PageResp;
  **/
 public interface DailyTrainTicketService {
 
-    PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req);
+    PageResp<DailyTrainTicketQueryResp> queryAdminList(DailyTrainTicketQueryReq req);
 
-    void deleteTicketCache(DailyTrainTicketQueryReq req);
+    PageResp<DailyTrainTicketQueryResp> queryWebList(WebDailyTrainTicketQueryReq req);
+    PageResp<DailyTrainTicketQueryResp> queryWebCache(WebDailyTrainTicketQueryReq req);
+
+    void deleteTicketCache(WebDailyTrainTicketQueryReq req);
 }

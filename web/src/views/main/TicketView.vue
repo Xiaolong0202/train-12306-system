@@ -216,7 +216,7 @@ const queryDailyTrainTicketList = () => {
         info('error', "请输入出发日期")
         return
     }
-
+    console.log(params.startDate)
     loading.value = true
     axios.get("/business/ticket/query-list",
         {

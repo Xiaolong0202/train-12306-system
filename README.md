@@ -61,5 +61,9 @@ Ant Design Vue
 ![view1](/pic/view1.png)  
 ![view2](/pic/view2.png)  
 
+## 缓存设计效率对比（使用购票时余票查询的接口为例子）
 
+![image-20231217143357957](mdPic/README/image-20231217143357957.png)
+
+![image-20231217143033855](mdPic/README/image-20231217143033855.png)
 

@@ -22,7 +22,7 @@ public class DailyTrainTicketController {
 
     @GetMapping("/query-list")
     public CommonResp<?> queryList(DailyTrainTicketQueryReq dailyTrainTicketQueryReq){
-        return CommonResp.buildSuccess(dailyTrainTicketService.queryList(dailyTrainTicketQueryReq),"查询成功");
+        return CommonResp.buildSuccess(dailyTrainTicketService.queryAdminList(dailyTrainTicketQueryReq),"查询成功");
     }
 
 }

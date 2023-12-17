@@ -22,6 +22,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.req.ConfirmOrderQueryReq;
 import com.lxl.business.req.DailyTrainTicketQueryReq;
+import com.lxl.business.req.WebDailyTrainTicketQueryReq;
 import com.lxl.business.resp.ConfirmOrderQueryResp;
 import com.lxl.business.service.ConfirmOrderService;
 import com.lxl.business.service.DailyTrainTicketService;
@@ -181,7 +182,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                     break;
                 }
                 ConfirmOrder confirmOrder0 = confirmOrdersDB.get(0);
-                DailyTrainTicketQueryReq deleteCache = new DailyTrainTicketQueryReq(); //构建一个用于删除缓存的请求
+                WebDailyTrainTicketQueryReq deleteCache = new WebDailyTrainTicketQueryReq(); //构建一个用于删除缓存的请求
                 deleteCache.setStart(confirmOrder0.getStart());
                 deleteCache.setEnd(confirmOrder0.getEnd());
                 deleteCache.setStartDate(confirmOrder0.getDate());

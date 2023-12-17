@@ -1,6 +1,7 @@
 package com.lxl.business.controller.web;
 
 import com.lxl.business.req.DailyTrainTicketQueryReq;
+import com.lxl.business.req.WebDailyTrainTicketQueryReq;
 import com.lxl.business.service.DailyTrainTicketService;
 import com.lxl.common.resp.CommonResp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class TicketController {
     DailyTrainTicketService dailyTrainTicketService;
 
     @GetMapping("/query-list")
-    public CommonResp<?> queryList(DailyTrainTicketQueryReq dailyTrainTicketQueryReq){
-        return CommonResp.buildSuccess(dailyTrainTicketService.queryList(dailyTrainTicketQueryReq),"查询成功");
+    public CommonResp<?> queryList(WebDailyTrainTicketQueryReq webDailyTrainTicketQueryReq){
+        return CommonResp.buildSuccess(dailyTrainTicketService.queryWebList(webDailyTrainTicketQueryReq),"查询成功");
     }
 }
