@@ -32,6 +32,7 @@ Nacos配置中心
 Seata分布式事务  
 Sentinel限流降级  
 Feign服务调用  
+sharding-jdbc进行分库分表    
 ###  第三方组件集成
 Mybatis  
 Redis  
