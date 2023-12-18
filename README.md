@@ -69,7 +69,7 @@ Ant Design Vue
 
 ## Sharding-sphere分库分表策略
 
-两个数据源，分别是ds0和ds1，每个数据源都连接到一个MySQL数据库。  您配置了12个逻辑表，每个逻辑表都配置了分库和分表策略。这些逻辑表包括：  
+两个数据源，分别是ds0和ds1，每个数据源都连接到一个MySQL数据库。  我配置了12个逻辑表，每个逻辑表都配置了分库和分表策略。这些逻辑表包括：  
 confirm_order
 daily_train
 daily_train_carriage
