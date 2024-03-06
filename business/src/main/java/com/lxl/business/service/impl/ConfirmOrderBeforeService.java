@@ -6,19 +6,21 @@ import com.alibaba.csp.sentinel.util.StringUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
-import com.lxl.business.domain.ConfirmOrder;
+
 import com.lxl.business.domain.TrainToken;
 import com.lxl.business.dto.ConfirmOrderMQDTO;
-import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
-import com.lxl.business.mapper.ConfirmOrderMapper;
+import com.lxl.common.enums.ConfirmOrderStatusTypeEnum;
+
 import com.lxl.business.mapper.TrainTokenMapper;
 import com.lxl.business.req.ConfirmOrderDoReq;
 import com.lxl.common.constant.EnvironmentConstant;
 import com.lxl.common.constant.MQ_TOPIC;
 import com.lxl.common.constant.RedisKeyPrefix;
 import com.lxl.common.context.MemberInfoContext;
+import com.lxl.common.domain.ConfirmOrder;
 import com.lxl.common.exception.BusinessException;
 import com.lxl.common.exception.exceptionEnum.BussinessExceptionEnum;
+import com.lxl.common.mapper.ConfirmOrderMapper;
 import com.lxl.common.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;

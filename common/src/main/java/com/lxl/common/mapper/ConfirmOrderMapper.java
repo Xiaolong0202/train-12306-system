@@ -1,7 +1,7 @@
-package com.lxl.business.mapper;
+package com.lxl.common.mapper;
 
-import com.lxl.business.domain.ConfirmOrder;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lxl.common.domain.ConfirmOrder;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

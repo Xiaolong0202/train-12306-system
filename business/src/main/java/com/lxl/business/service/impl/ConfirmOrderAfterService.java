@@ -1,15 +1,17 @@
 package com.lxl.business.service.impl;
 
-import com.lxl.business.domain.ConfirmOrder;
+
 import com.lxl.business.domain.DailyTrainSeat;
 import com.lxl.business.domain.DailyTrainTicket;
-import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
+import com.lxl.common.enums.ConfirmOrderStatusTypeEnum;
 import com.lxl.business.feign.MemberFeign;
-import com.lxl.business.mapper.ConfirmOrderMapper;
+
 import com.lxl.business.mapper.DailyTrainMapper;
 import com.lxl.business.mapper.DailyTrainSeatMapper;
 import com.lxl.business.mapper.DailyTrainTicketMapper;
 import com.lxl.business.req.ConfirmOrderTicketReq;
+import com.lxl.common.domain.ConfirmOrder;
+import com.lxl.common.mapper.ConfirmOrderMapper;
 import com.lxl.common.req.TicketSaveOrEditReq;
 import com.lxl.common.resp.CommonResp;
 import lombok.extern.slf4j.Slf4j;

@@ -55,6 +55,7 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
      * @param ticketQueryReq
      * @return
      */
+    @Override
     @CacheEvict(cacheNames = "DailyTrainTicketServiceImpl.queryList", beforeInvocation = true)//执行该方法之前先删除缓存
     public void deleteTicketCache(WebDailyTrainTicketQueryReq ticketQueryReq) {
         log.info("删除查询条件【{}】缓存！", ticketQueryReq.toString());
@@ -107,6 +108,7 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
      * @param req
      * @return
      */
+    @Override
     @Cacheable(cacheNames = "DailyTrainTicketServiceImpl.queryList")
     public PageResp<DailyTrainTicketQueryResp> queryWebList(WebDailyTrainTicketQueryReq req){
 //        没有获取到缓存说明
@@ -148,6 +150,7 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
         }
     }
 
+    @Override
     @Cacheable(cacheNames = "DailyTrainTicketServiceImpl.queryList")
     public PageResp<DailyTrainTicketQueryResp> queryWebCache(WebDailyTrainTicketQueryReq req){
         return null;

@@ -1,5 +1,6 @@
 package com.lxl.business.service.impl;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -11,7 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lxl.business.domain.*;
 import com.lxl.business.dto.ConfirmOrderMQDTO;
-import com.lxl.business.enums.ConfirmOrderStatusTypeEnum;
+import com.lxl.common.enums.ConfirmOrderStatusTypeEnum;
 import com.lxl.business.enums.SeatColTypeEnum;
 import com.lxl.business.enums.SeatTypeEnum;
 import com.lxl.business.mapper.*;
@@ -21,14 +22,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxl.business.req.ConfirmOrderQueryReq;
-import com.lxl.business.req.DailyTrainTicketQueryReq;
 import com.lxl.business.req.WebDailyTrainTicketQueryReq;
 import com.lxl.business.resp.ConfirmOrderQueryResp;
 import com.lxl.business.service.ConfirmOrderService;
 import com.lxl.business.service.DailyTrainTicketService;
 import com.lxl.common.constant.RedisKeyPrefix;
+import com.lxl.common.domain.ConfirmOrder;
 import com.lxl.common.exception.BusinessException;
 import com.lxl.common.exception.exceptionEnum.BussinessExceptionEnum;
+import com.lxl.common.mapper.ConfirmOrderMapper;
 import com.lxl.common.resp.PageResp;
 import com.lxl.common.utils.SnowUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -110,6 +112,8 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             int result = switch (typeEnum) {
                 case INIT -> 999;
                 case SUCCESS -> -1;
+                case PAY_SUCCESS -> -5;
+                case PAY_PENDING -> -6;
                 case FAILURE -> -2;
                 case EMPTY -> -3;
                 case CANCEL -> -4;
@@ -127,10 +131,10 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
     @Override
     public Integer cancel(Long confirmOrderId) {
         LambdaQueryWrapper<ConfirmOrder> confirmOrderLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        confirmOrderLambdaQueryWrapper.eq(ObjectUtil.isNotEmpty(confirmOrderId),ConfirmOrder::getId,confirmOrderId);
-        confirmOrderLambdaQueryWrapper.eq(ConfirmOrder::getStatus,ConfirmOrderStatusTypeEnum.INIT.getCode());
+        confirmOrderLambdaQueryWrapper.eq(ObjectUtil.isNotEmpty(confirmOrderId), ConfirmOrder::getId, confirmOrderId);
+        confirmOrderLambdaQueryWrapper.eq(ConfirmOrder::getStatus, ConfirmOrderStatusTypeEnum.INIT.getCode());
         //找到所有的正在初始化的订单并将订单的状态设置为取消
-       return confirmOrderMapper.update(ConfirmOrder.builder().status(ConfirmOrderStatusTypeEnum.CANCEL.getCode()).build(),
+        return confirmOrderMapper.update(ConfirmOrder.builder().status(ConfirmOrderStatusTypeEnum.CANCEL.getCode()).build(),
                 confirmOrderLambdaQueryWrapper);
     }
 
@@ -221,7 +225,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                     }
                 }
 
-                new Thread(()->{
+                new Thread(() -> {
                     try {
                         TimeUnit.SECONDS.sleep(1);
                         //更新玩一批订单之后延迟一秒之后再删一次
@@ -318,18 +322,34 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                 throw new BusinessException(BussinessExceptionEnum.SERVER_BUSY);
             }
         }
+        //计算价格
+        List<SeatColTypeEnum> seatCols = SeatColTypeEnum.getSeatCols(ticketReq0.getSeatType());
+        BigDecimal sumPrice = new BigDecimal("0");
+        for (SeatColTypeEnum seatCol : seatCols) {
+            if ("1".equals(seatCol.type)) {
+                sumPrice = sumPrice.add(dailyTrainTicket.getYdzPrice());
+            } else if ("2".equals(seatCol.type)) {
+                sumPrice = sumPrice.add(dailyTrainTicket.getEdzPrice());
+            } else if ("3".equals(seatCol.type)) {
+                sumPrice = sumPrice.add(dailyTrainTicket.getYwPrice());
+            } else if ("4".equals(seatCol.type)) {
+                sumPrice = sumPrice.add(dailyTrainTicket.getRwPrice());
+            }
+        }
+        confirmOrder.setSumPrice(sumPrice);
     }
 
 
     /**
      * 一个车厢一个车厢的查找,合适的座位
-     * @param res 用于承载选座结果的集合
+     *
+     * @param res          用于承载选座结果的集合
      * @param dailyTrainId 车次的id
      * @param seatTypeCode 表示座位的类型，用于选择车厢
-     * @param startIndex 订单开始的车站
-     * @param endIndex 订单结束的车站
-     * @param seatCol 订单中第一个座位的作为类型
-     * @param offsetList 每个座位相对于第一个座位的座位偏移量
+     * @param startIndex   订单开始的车站
+     * @param endIndex     订单结束的车站
+     * @param seatCol      订单中第一个座位的作为类型
+     * @param offsetList   每个座位相对于第一个座位的座位偏移量
      */
     private void getSeat(List<DailyTrainSeat> res, Long dailyTrainId, String seatTypeCode, Integer startIndex, Integer endIndex, String seatCol, List<Integer> offsetList) {
         //该集合用于避免座位的重复选择
@@ -419,6 +439,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
     /**
      * 判断当前座位 在指定车站区间内是否能够购买
+     *
      * @param dailyTrainSeat
      * @param startIndex
      * @param endIndex
@@ -441,6 +462,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
     /**
      * 在内存中预扣减票
+     *
      * @param tickets
      * @param dailyTrainTicket
      */
